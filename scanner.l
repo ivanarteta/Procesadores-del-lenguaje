@@ -59,6 +59,8 @@ DR_precondicion \{(?i:prec)([^\}]|\/\})*\}
 DR_postcondicion \{(?i:post)([^\}]|\/\})*\}
  /*DR_nombre       \b\w+\b(?=\algoritmo )*/
 
+
+
  /* Operadores: No se si son con o sin comillas */
 DR_asignacion              :=
 DR_composicion_secuencial  ;
@@ -72,6 +74,10 @@ DR_fin_array               \]
 DR_inicio_parentesis        \(
 DR_fin_parentesis           \)
 DR_operadores_relacionales =|>|<|<>|>=|<=
+
+DR_literal_cadena      \'(([^\'])|\/\')*\'
+DR_literal_caracter    \"[^\"]\"
+DR_literal_entero      {DR_cifra}+(e{DR_cifra}+)?
 
 
  /* Identificadores */
