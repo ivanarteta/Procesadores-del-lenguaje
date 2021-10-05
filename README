@@ -1,0 +1,6 @@
+Iván Arteta, Íñigo Fernández y Maider Pérez
+
+Para compilar y ejecutar los programas: make all (se ejecutará el scanner para los 3 algoritmos que hemos probado)
+Para eliminar los archivos a.out y lex.yy.c: make clear
+
+Hemos separado los comentarios en 3 tipos: postcondición, precondición y comentario
