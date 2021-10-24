@@ -7,6 +7,24 @@
     #include <ctype.h>
     #include <math.h>
 	#include <stdlib.h>
+
+    /*
+        DANO:
+        	#include "tablaSimbolos.h"
+            #include "tablaCuadruplas.h"
+            #define NULO -99
+            
+            extern FILE *yyin;
+            extern int yylex();
+            extern int yyparse();
+            
+            void yyerror(char const *);
+            
+            //Creamos las estructuras 
+            lista tabla_s;
+            tC tc;
+    */
+
 %}
     /*Declaraciones Yacc/Bison
     #%token <campo_union> NOMBRE_TOKEN
@@ -14,140 +32,223 @@
     #por ejemplo:
     #%token IF
     #%token <cadena> ID*/
-    %union{
-        int itype;
-        double dtype;
-        float ftype;
-        char* stype;
-        char ctype;
-    }
+%union{
+    int itype;
+    double dtype;
+    float ftype;
+    char* stype;
+    char ctype;
+}
 
 
-    %token <stype> TK_LITERAL_CADENA
-    %token <ctype> TK_LITERAL_CARACTER
-    %token <itype> TK_LITERAL_ENTERO
-    %token <ftype> TK_LITERAL_REAL
+%token <stype> TK_LITERAL_CADENA
+%token <ctype> TK_LITERAL_CARACTER
+%token <itype> TK_LITERAL_ENTERO
+%token <ftype> TK_LITERAL_REAL
+/* %token <sval>TK_LITERAL_BOOLEANO  */
 
-    %token TK_ACCION
-    %token TK_ALGORITMO
-    %token TK_BOOLEANO
-    %token TK_CADENA
-    %token TK_CARACTER
-    %token TK_CONST
-    %token TK_CONTINUAR
-    %token TK_DE 
-    %token TK_DEV
-    %token TK_DIV
-    %token TK_ENT
-    %token TK_ENTERO
-    %token TK_ENT_SAL
-    %token TK_FACCION
-    %token TK_FALGORITMO
-    %token TK_FALSO
-    %token TK_FCONST
-    %token TK_FFUNCION
-    %token TK_FMIENTRAS
-    %token TK_FPARA
-    %token TK_FSI 
-    %token TK_FTIPO
-    %token TK_FTUPLA
-    %token TK_FUNCION 
-    %token TK_FVAR
-    %token TK_HACER
-    %token TK_HASTA
-    %token TK_MIENTRAS 
-    %token TK_MOD
-    %token TK_NO 
-    %token TK_O 
-    %token TK_PARA 
-    %token TK_REAL
-    %token TK_REF
-    %token TK_SAL 
-    %token TK_SI 
-    %token TK_TABLA
-    %token TK_TIPO 
-    %token TK_TUPLA 
-    %token TK_VAR 
-    %token TK_VERDADERO
-    %token TK_Y
-    
-    %token TK_ASIGNACION
-    %token TK_COMPOSICION_SECUENCIAL
-    %token TK_SEPARADOR
-    %token TK_SUBRANGO
-    %token TK_DEF_TIPO
-    %token TK_ENTONCES
-    %token TK_SI_NO_SI
-    %token TK_CREACION_TIPO
-    %token TK_INICIO_ARRAY
-    %token TK_FIN_ARRAY
-    %token TK_IGUAL_QUE
-    %token TK_MAYOR_QUE
-    %token TK_MENOR_QUE
-    %token TK_DISTINTO_QUE
-    %token TK_MAYOR_O_IGUAL
-    %token TK_MENOR_O_IGUAL
+%token TK_ACCION
+%token TK_ALGORITMO
+%token TK_BOOLEANO
+%token TK_CADENA
+%token TK_CARACTER
+%token TK_CONST
+%token TK_CONTINUAR
+%token TK_DE 
+%token TK_DEV
+%token TK_DIV
+%token TK_ENT
+%token TK_ENTERO
+%token TK_ENT_SAL
+%token TK_FACCION
+%token TK_FALGORITMO
+%token TK_FALSO
+%token TK_FCONST
+%token TK_FFUNCION
+%token TK_FMIENTRAS
+%token TK_FPARA
+%token TK_FSI 
+%token TK_FTIPO
+%token TK_FTUPLA
+%token TK_FUNCION 
+%token TK_FVAR
+%token TK_HACER
+%token TK_HASTA
+%token TK_MIENTRAS 
+%token TK_MOD
+%token TK_NO /* NONASOC */
+%token TK_O /* LEFT */
+%token TK_PARA 
+%token TK_REAL
+%token TK_REF /* RIGHT */
+%token TK_SAL 
+%token TK_SI 
+%token TK_TABLA
+%token TK_TIPO 
+%token TK_TUPLA 
+%token TK_VAR 
+%token TK_VERDADERO
+%token TK_Y /* LEFT */
+
+%token TK_ASIGNACION
+%token TK_COMPOSICION_SECUENCIAL
+%token TK_SEPARADOR
+%token TK_SUBRANGO
+%token TK_DEF_TIPO
+%token TK_ENTONCES
+%token TK_SI_NO_SI
+%token TK_CREACION_TIPO
+%token TK_INICIO_ARRAY
+%token TK_FIN_ARRAY
+%token TK_IGUAL_QUE
+%token TK_MAYOR_QUE /* NONASOC */
+%token TK_MENOR_QUE /* NONASOC */
+%token TK_DISTINTO_QUE
+%token TK_MAYOR_O_IGUAL
+%token TK_MENOR_O_IGUAL
+
+
+/*Faltaban por poner: */
+%token TK_IDENTIFICADOR
+%token TK_COMENTARIO
+%token TK_SUMA 
+%token TK_RESTA 
+%token TK_DIVISION
+%token TK_INICIO_PARENTESIS
+%token TK_FIN_PARENTESIS
+%token TK_OPERADOR_RELACIONAL
+%token TK_TIPO_VARIABLE
 
 %%
-    /* Reglas de la gramatica */
+/* Reglas de la gramatica */
 
-    descripcion_algoritmo: TK_ALGORITMO TK_IDENTIFICADOR TK_COMPOSICION_SECUENCIAL cabecera_algoritmo bloque_algoritmo TK_FALGORITMO;
-    cabecera_algoritmo: definiciones_globales definiciones_acciones_funciones definiciones_variables_interaccion TK_COMENTARIO;
-    bloque_algoritmo: bloque TK_COMENTARIO;
-    definiciones_globales:  definicion_tipo definiciones_globales
-                            | definicion_const definiciones_globales
+descripcion_algoritmo: TK_ALGORITMO TK_IDENTIFICADOR TK_COMPOSICION_SECUENCIAL cabecera_algoritmo bloque_algoritmo TK_FALGORITMO;
+cabecera_algoritmo: definiciones_globales definiciones_acciones_funciones definiciones_variables_interaccion TK_COMENTARIO;
+bloque_algoritmo: bloque TK_COMENTARIO;
+definiciones_globales:  definicion_tipo definiciones_globales
+                        | definicion_const definiciones_globales
+                        | /* vacio */
+                        ;
+definiciones_acciones_funciones:    (definicion_accion | definicion_funcion) definiciones_acciones_funciones
+                                    | /* vacio */
+                                    ;
+bloque: declaraciones instrucciones;
+declaraciones:  (definicion_tipo | definicion_const | definicion_var) declaraciones
+                | /* vacio */
+                ;
+
+/* DEFINICIONES */
+definicion_tipo: TK_TIPO lista_definiciones_tipo TK_FTIPO;
+definicion_const: TK_CONST lista_definiciones_const TK_FCONST;
+definicion_var: TK_VAR lista_definiciones_var TK_FVAR;
+
+/* DEFINICIONES DE TIPOS */
+lista_definiciones_tipo:    TK_IDENTIFICADOR TK_CREACION_TIPO definicion_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_tipo
                             | /* vacio */
                             ;
-    definiciones_acciones_funciones:    (definicion_accion | definicion_funcion) definiciones_acciones_funciones
-                                        | /* vacio */
-                                        ;
-    bloque: declaraciones instrucciones;
-    declaraciones:  (definicion_tipo | definicion_const | definicion_var) declaraciones
-                    | /* vacio */
+definicion_tipo:    TK_TUPLA lista_campos TK_FTUPLA
+                    | TK_TABLA TK_INICIO_ARRAY expresionT TK_SUBRANGO expresionT TK_FIN_ARRAY TK_DE definicion_tipo
+                    | TK_IDENTIFICADOR
+                    | expresionT TK_SUBRANGO expresionT
+                    | TK_REF definicion_tipo
+                    | TK_TIPO_BASE /*WTF*/
                     ;
+expresionT: TK_LITERAL_ENTERO 
+            | TK_LITERAL_CARACTER
+            ;
+lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO definicion_tipo TK_COMPOSICION_SECUENCIAL lista_campos
+                | /* vacio */
+                ;
 
-    /* DEFINICIONES */
-    definicion_tipo: TK_TIPO lista_definiciones_tipo TK_FTIPO;
-    definicion_const: TK_CONST lista_definiciones_const TK_FCONST;
-    definicion_var: TK_VAR lista_definiciones_var TK_FVAR;
+/* DECLARACION DE CONSTANTES Y VARIABLES */
+lista_definiciones_const:   TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_CADENA TK_COMPOSICION_SECUENCIAL lista_definiciones_const
+                            | TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_CARACTER TK_COMPOSICION_SECUENCIAL lista_definiciones_const
+                            | TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_ENTERO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
+                            | TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_REAL TK_COMPOSICION_SECUENCIAL lista_definiciones_const
+                            | /* vacio */
+                            ;
+lista_definiciones_var:     lista_id TK_DEF_TIPO definicion_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_var
+                            | /* vacio */
+                            ;
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
+            | TK_IDENTIFICADOR
+            ;
+definiciones_variables_interaccion: definicion_entrada
+                                    | definicion_entrada definicion_salida
+                                    | definicion_salida
+                                    ;
+definicion_entrada: TK_ENT lista_definiciones_var;
+definicion_salida:  TK_SAL lista_definiciones_var;
 
-    /* DEFINICIONES DE TIPOS */
-    lista_definiciones_tipo:    TK_IDENTIFICADOR TK_CREACION_TIPO definicion_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_tipo
-                                | /* vacio */
-                                ;
-    definicion_tipo:    TK_TUPLA lista_campos TK_FTUPLA
-                        | TK_TABLA TK_INICIO_ARRAY expresionT TK_SUBRANGO expresionT TK_FIN_ARRAY TK_DE definicion_tipo
-                        | TK_IDENTIFICADOR
-                        | expresionT TK_SUBRANGO expresionT
-                        | TK_REF definicion_tipo
-                        | TK_TIPO_BASE /*WTF*/
+/* EXPRESIONES */
+expresion:  expresion_aritmetica
+            | expresion_booleana
+            | llamada_funcion
+            ;
+expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
+                        | expresion_aritmetica TK_RESTA expresion_aritmetica
+                        | expresion_aritmetica TK_DIVISION expresion_aritmetica
+                        | expresion_aritmetica TK_DIV expresion_aritmetica
+                        | expresion_aritmetica TK_MOD expresion_aritmetica
+                        | TK_INICIO_PARENTESIS expresion_aritmetica TK_FIN_PARENTESIS
+                        | operando
+                        | TK_RESTA expresion_aritmetica
+                        | TK_LITERAL_ENTERO /*LITERAL NUMERICO??? */
                         ;
-    expresionT: TK_LITERAL_ENTERO 
-                | TK_LITERAL_CARACTER
+expresion_booleana:     expresion_booleana TK_Y expresion_booleana
+                        | expresion_booleana TK_O expresion_booleana
+                        | TK_NO expresion_booleana
+                        | operando
+                        | TK_VERDADERO
+                        | TK_FALSO
+                        | expresion_booleana TK_OPERADOR_RELACIONAL expresion_booleana
+                        | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS
+                        ;
+operando:   TK_IDENTIFICADOR
+            | operando /* PUNTO */ operando
+            | operando TK_INICIO_ARRAY expresion TK_FIN_ARRAY
+            | operando TK_REF
+            ;
+
+/* INSTRUCCIONES */
+instrucciones:  instruccion TK_COMPOSICION_SECUENCIAL instrucciones
+                | instruccion
                 ;
-    lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO definicion_tipo TK_COMPOSICION_SECUENCIAL lista_campos
-                    | /* vacio */
+instruccion:    TK_CONTINUAR
+                | asignacion 
+                | alternativa
+                | iteracion 
+                | llamada_accion
+                ;
+asignacion:     operando TK_ASIGNACION expresion;
+alternativa:    TK_SI expresion TK_ENTONCES instrucciones lista_opciones TK_FSI;
+lista_opciones: TK_SI_NO_SI expresion TK_ENTONCES instrucciones lista_opciones
+                | /* vacio */
+                ;
+iteracion:  it_cota_fija
+            | it_cota_variable
+            ;
+it_cota_variable: TK_MIENTRAS expresion TK_HACER instrucciones TK_FMIENTRAS;
+it_cota_fija:   TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA;
+
+/* ACCIONES Y FUNCIONES */
+definicion_accion: TK_ACCION cabecera_accion bloque TK_FACCION;
+definicion_funcion_d: TK_FUNCION cabecera_funcion bloque TK_DEV expresion TK_FFUNCION;
+cabecera_accion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS defParForm TK_FIN_PARENTESIS TK_COMPOSICION_SECUENCIAL;
+cabecera_funcion:   TK_IDENTIFICADOR TK_INICIO_PARENTESIS listaDeclsVariables TK_FIN_PARENTESIS TK_DEV dtipo TK_COMPOSICION_SECUENCIAL;
+defParForm:     dParForm TK_COMPOSICION_SECUENCIAL defParForm
+                | defParForm
+                | /* vacio */
+                ;
+dParForm:     TK_ENT lista_id TK_TIPO_VARIABLE definicion_tipo
+                | TK_SAL lista_id TK_TIPO_VARIABLE definicion_tipo
+                | TK_ENT_SAL lista_id TK_TIPO_VARIABLE definicion_tipo
+                ;
+llamada_funcion: TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS;
+llamada_accion:  TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS;
+parametros_reales:  expresion TK_SEPARADOR parametros_reales
+                    | expresion
+                    | /*vacio */
                     ;
-
-    /* DECLARACION DE CONSTANTES Y VARIABLES */
-    lista_definiciones_const:   TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_CADENA TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                                | TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_CARACTER TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                                | TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_ENTERO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                                | TK_IDENTIFICADOR TK_ASIGNACION TK_LITERAL_REAL TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                                | /* vacio */
-                                ;
-    lista_definiciones_var:     lista_id TK_DEF_TIPO definicion_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_var
-                                | /* vacio */
-                                ;
-    lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
-                | TK_IDENTIFICADOR
-                ;
-    definiciones_variables_interaccion: definicion_entrada
-                                        | definicion_entrada definicion_salida
-                                        | definicion_salida
-                                        ;
-    definicion_entrada: TK_ENT lista_definiciones_var;
-    definicion_salida:  TK_SAL lista_definiciones_var;
-
 %%
     /* Código C */
