@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_SINTACTICO_TAB_H_INCLUDED
-# define YY_YY_SINTACTICO_TAB_H_INCLUDED
+#ifndef YY_YY_PARSER_TAB_H_INCLUDED
+# define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -49,33 +49,13 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    TKN_NUM = 258,
-    TKN_ASIGN = 259,
-    TKN_PTOCOMA = 260,
-    TKN_MULT = 261,
-    TKN_DIV = 262,
-    TKN_MAS = 263,
-    TKN_MENOS = 264,
-    TKN_PAA = 265,
-    TKN_PAC = 266,
-    TKN_COS = 267,
-    TKN_SEN = 268,
-    TKN_ID = 269
+    NUMBER = 258
   };
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 15 "sintactico.y"
-
- float real;
-
-#line 76 "sintactico.tab.h"
-
-};
-typedef union YYSTYPE YYSTYPE;
+typedef int YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -85,4 +65,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_SINTACTICO_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */

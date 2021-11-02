@@ -24,7 +24,19 @@
             lista tabla_s;
             tC tc;
     */
-
+    /*%union{
+    int itype;
+    double dtype;
+    float ftype;
+    char* stype;
+    char ctype;
+}*/
+    /*%token TK_IGUAL_QUE
+%token TK_MAYOR_QUE 
+%token TK_MENOR_QUE 
+%token TK_DISTINTO_QUE
+%token TK_MAYOR_O_IGUAL
+%token TK_MENOR_O_IGUAL*/
 %}
     /*Declaraciones Yacc/Bison
     #%token <campo_union> NOMBRE_TOKEN
@@ -32,20 +44,13 @@
     #por ejemplo:
     #%token IF
     #%token <cadena> ID*/
-%union{
-    int itype;
-    double dtype;
-    float ftype;
-    char* stype;
-    char ctype;
-}
 
-
-%token <stype> TK_LITERAL_CADENA
-%token <ctype> TK_LITERAL_CARACTER
-%token <itype> TK_LITERAL_ENTERO
-%token <ftype> TK_LITERAL_REAL
+%token TK_LITERAL_CADENA
+%token TK_LITERAL_CARACTER
+%token TK_LITERAL_ENTERO
+%token TK_LITERAL_REAL
 /* %token <sval>TK_LITERAL_BOOLEANO  */
+%token TK_IDENTIFICADOR
 
 %token TK_ACCION
 %token TK_ALGORITMO
@@ -56,7 +61,6 @@
 %token TK_CONTINUAR
 %token TK_DE 
 %token TK_DEV
-%token TK_DIV
 %token TK_ENT
 %token TK_ENTERO
 %token TK_ENT_SAL
@@ -75,12 +79,8 @@
 %token TK_HACER
 %token TK_HASTA
 %token TK_MIENTRAS 
-%token TK_MOD
-%token TK_NO /* NONASOC */
-%token TK_O /* LEFT */
 %token TK_PARA 
 %token TK_REAL
-%token TK_REF /* RIGHT */
 %token TK_SAL 
 %token TK_SI 
 %token TK_TABLA
@@ -88,36 +88,53 @@
 %token TK_TUPLA 
 %token TK_VAR 
 %token TK_VERDADERO
-%token TK_Y /* LEFT */
 
 %token TK_ASIGNACION
 %token TK_COMPOSICION_SECUENCIAL
-%token TK_SEPARADOR
 %token TK_SUBRANGO
 %token TK_DEF_TIPO
 %token TK_ENTONCES
 %token TK_SI_NO_SI
 %token TK_CREACION_TIPO
-%token TK_INICIO_ARRAY
 %token TK_FIN_ARRAY
-%token TK_IGUAL_QUE
-%token TK_MAYOR_QUE /* NONASOC */
-%token TK_MENOR_QUE /* NONASOC */
-%token TK_DISTINTO_QUE
-%token TK_MAYOR_O_IGUAL
-%token TK_MENOR_O_IGUAL
-
 
 /*Faltaban por poner: */
-%token TK_IDENTIFICADOR
 %token TK_COMENTARIO
-%token TK_SUMA 
-%token TK_RESTA 
-%token TK_DIVISION
-%token TK_INICIO_PARENTESIS
 %token TK_FIN_PARENTESIS
-%token TK_OPERADOR_RELACIONAL
 %token TK_TIPO_VARIABLE
+/*%token TK_PUNTO*/
+
+/* Prioridades */
+%nonassoc TK_NO
+%right TK_REF 
+%right TK_INICIO_ARRAY TK_INICIO_PARENTESIS
+
+%left TK_SEPARADOR TK_FIN_PARENTESIS
+
+%left TK_OPERADOR_RELACIONAL
+%left TK_SUMA TK_RESTA TK_PUNTO /* TK_PUNTO AQUÍ? */
+%left TK_DIVISION TK_MOD TK_DIV TK_MULTIPLICACION
+/* AQUÍ TIENE QUE IR EL PARENTESIS DE APERTURA CON ASOCIATIVIDAD IZQUIERDA */
+%left TK_O TK_Y  /* ESTE AQUÍ? */
+/* AQUÍ EL MENOS UNARIO */
+
+
+
+
+
+/* Otros */
+/*%left '='
+%left '+' '-'
+%left '*' '/'*/
+
+/* LOS TOKENS DE UN ÚNICO CARÁCTER NO ES NECESARIO DECLARARLOS, PORQUE ESTÁN DECLARADOS IMPLICITAMENTE EN BISON CON SU
+CORRESPONDIENTE VALOR ASCII */
+
+ /* 
+ Preguntas: 
+    ¿Mejor declarar la suma, resta, ... como TK_SUMA o como '+'?
+    
+*/
 
 %%
 /* Reglas de la gramatica */
@@ -129,11 +146,14 @@ definiciones_globales:  definicion_tipo definiciones_globales
                         | definicion_const definiciones_globales
                         | /* vacio */
                         ;
-definiciones_acciones_funciones:    (definicion_accion | definicion_funcion) definiciones_acciones_funciones
+definiciones_acciones_funciones:    definicion_accion definiciones_acciones_funciones
+                                    | definicion_funcion definiciones_acciones_funciones
                                     | /* vacio */
                                     ;
 bloque: declaraciones instrucciones;
-declaraciones:  (definicion_tipo | definicion_const | definicion_var) declaraciones
+declaraciones:  definicion_tipo declaraciones
+                | definicion_const declaraciones 
+                | definicion_var declaraciones
                 | /* vacio */
                 ;
 
@@ -147,13 +167,20 @@ lista_definiciones_tipo:    TK_IDENTIFICADOR TK_CREACION_TIPO definicion_tipo TK
                             | /* vacio */
                             ;
 definicion_tipo:    TK_TUPLA lista_campos TK_FTUPLA
-                    | TK_TABLA TK_INICIO_ARRAY expresionT TK_SUBRANGO expresionT TK_FIN_ARRAY TK_DE definicion_tipo
+                    | TK_TABLA TK_INICIO_ARRAY expresion_tabla TK_SUBRANGO expresion_tabla TK_FIN_ARRAY TK_DE definicion_tipo
                     | TK_IDENTIFICADOR
-                    | expresionT TK_SUBRANGO expresionT
+                    | expresion_tabla TK_SUBRANGO expresion_tabla
                     | TK_REF definicion_tipo
-                    | TK_TIPO_BASE /*WTF*/
+                    | /*TK_TIPO_BASE*/ tipo_base
                     ;
-expresionT: TK_LITERAL_ENTERO 
+tipo_base:  TK_ENTERO 
+            | TK_BOOLEANO 
+            | TK_CARACTER 
+            | TK_REAL 
+            | TK_CADENA 
+            ;
+
+expresion_tabla: TK_LITERAL_ENTERO 
             | TK_LITERAL_CARACTER
             ;
 lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO definicion_tipo TK_COMPOSICION_SECUENCIAL lista_campos
@@ -190,10 +217,12 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                         | expresion_aritmetica TK_DIVISION expresion_aritmetica
                         | expresion_aritmetica TK_DIV expresion_aritmetica
                         | expresion_aritmetica TK_MOD expresion_aritmetica
+                        | expresion_aritmetica TK_MULTIPLICACION expresion_aritmetica
                         | TK_INICIO_PARENTESIS expresion_aritmetica TK_FIN_PARENTESIS
                         | operando
                         | TK_RESTA expresion_aritmetica
-                        | TK_LITERAL_ENTERO /*LITERAL NUMERICO??? */
+                        | TK_LITERAL_ENTERO 
+                        | TK_LITERAL_REAL /*LITERAL NUMERICO??? */
                         ;
 expresion_booleana:     expresion_booleana TK_Y expresion_booleana
                         | expresion_booleana TK_O expresion_booleana
@@ -205,7 +234,7 @@ expresion_booleana:     expresion_booleana TK_Y expresion_booleana
                         | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS
                         ;
 operando:   TK_IDENTIFICADOR
-            | operando /* PUNTO */ operando
+            | operando TK_PUNTO operando
             | operando TK_INICIO_ARRAY expresion TK_FIN_ARRAY
             | operando TK_REF
             ;
@@ -233,18 +262,18 @@ it_cota_fija:   TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expres
 
 /* ACCIONES Y FUNCIONES */
 definicion_accion: TK_ACCION cabecera_accion bloque TK_FACCION;
-definicion_funcion_d: TK_FUNCION cabecera_funcion bloque TK_DEV expresion TK_FFUNCION;
+definicion_funcion: TK_FUNCION cabecera_funcion bloque TK_DEV expresion TK_FFUNCION;
 cabecera_accion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS defParForm TK_FIN_PARENTESIS TK_COMPOSICION_SECUENCIAL;
-cabecera_funcion:   TK_IDENTIFICADOR TK_INICIO_PARENTESIS listaDeclsVariables TK_FIN_PARENTESIS TK_DEV dtipo TK_COMPOSICION_SECUENCIAL;
+cabecera_funcion:   TK_IDENTIFICADOR TK_INICIO_PARENTESIS lista_definiciones_var TK_FIN_PARENTESIS TK_DEV definicion_tipo TK_COMPOSICION_SECUENCIAL;
 defParForm:     dParForm TK_COMPOSICION_SECUENCIAL defParForm
-                | defParForm
+                /*| defParForm*/
                 | /* vacio */
                 ;
-dParForm:     TK_ENT lista_id TK_TIPO_VARIABLE definicion_tipo
+dParForm:       TK_ENT lista_id TK_TIPO_VARIABLE definicion_tipo
                 | TK_SAL lista_id TK_TIPO_VARIABLE definicion_tipo
                 | TK_ENT_SAL lista_id TK_TIPO_VARIABLE definicion_tipo
                 ;
-llamada_funcion: TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS;
+llamada_funcion: TK_IDENTIFICADOR TK_ASIGNACION TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS;
 llamada_accion:  TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS;
 parametros_reales:  expresion TK_SEPARADOR parametros_reales
                     | expresion
