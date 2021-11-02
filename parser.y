@@ -7,6 +7,8 @@
     #include <ctype.h>
     #include <math.h>
 	#include <stdlib.h>
+    int yyerror(char *s);
+    int yylex(void);
 
     /*
         DANO:
@@ -49,7 +51,6 @@
 %token TK_LITERAL_CARACTER
 %token TK_LITERAL_ENTERO
 %token TK_LITERAL_REAL
-/* %token <sval>TK_LITERAL_BOOLEANO  */
 %token TK_IDENTIFICADOR
 
 %token TK_ACCION
@@ -100,41 +101,22 @@
 
 /*Faltaban por poner: */
 %token TK_COMENTARIO
-%token TK_FIN_PARENTESIS
 %token TK_TIPO_VARIABLE
-/*%token TK_PUNTO*/
+%token TK_SEPARADOR /* LEFT */
+%token TK_FIN_PARENTESIS /* LEFT */
 
 /* Prioridades */
 %nonassoc TK_NO
-%right TK_REF 
-%right TK_INICIO_ARRAY TK_INICIO_PARENTESIS
-
-%left TK_SEPARADOR TK_FIN_PARENTESIS
-
+%right TK_REF
+%left TK_O TK_Y
 %left TK_OPERADOR_RELACIONAL
 %left TK_SUMA TK_RESTA TK_PUNTO /* TK_PUNTO AQUÍ? */
 %left TK_DIVISION TK_MOD TK_DIV TK_MULTIPLICACION
-/* AQUÍ TIENE QUE IR EL PARENTESIS DE APERTURA CON ASOCIATIVIDAD IZQUIERDA */
-%left TK_O TK_Y  /* ESTE AQUÍ? */
+%right TK_INICIO_PARENTESIS /* ASOCIATIVIDAD DERECHA???? */
+%right TK_INICIO_ARRAY
+%left UMINUS
 /* AQUÍ EL MENOS UNARIO */
 
-
-
-
-
-/* Otros */
-/*%left '='
-%left '+' '-'
-%left '*' '/'*/
-
-/* LOS TOKENS DE UN ÚNICO CARÁCTER NO ES NECESARIO DECLARARLOS, PORQUE ESTÁN DECLARADOS IMPLICITAMENTE EN BISON CON SU
-CORRESPONDIENTE VALOR ASCII */
-
- /* 
- Preguntas: 
-    ¿Mejor declarar la suma, resta, ... como TK_SUMA o como '+'?
-    
-*/
 
 %%
 /* Reglas de la gramatica */
@@ -220,14 +202,13 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                         | expresion_aritmetica TK_MULTIPLICACION expresion_aritmetica
                         | TK_INICIO_PARENTESIS expresion_aritmetica TK_FIN_PARENTESIS
                         | operando
-                        | TK_RESTA expresion_aritmetica
+                        | TK_RESTA expresion_aritmetica %prec UMINUS
                         | TK_LITERAL_ENTERO 
-                        | TK_LITERAL_REAL /*LITERAL NUMERICO??? */
+                        | TK_LITERAL_REAL 
                         ;
 expresion_booleana:     expresion_booleana TK_Y expresion_booleana
                         | expresion_booleana TK_O expresion_booleana
                         | TK_NO expresion_booleana
-                        | operando
                         | TK_VERDADERO
                         | TK_FALSO
                         | expresion_booleana TK_OPERADOR_RELACIONAL expresion_booleana
@@ -281,3 +262,6 @@ parametros_reales:  expresion TK_SEPARADOR parametros_reales
                     ;
 %%
     /* Código C */
+int yyerror(char *s){
+    printf("Error: %s\n", s);
+}

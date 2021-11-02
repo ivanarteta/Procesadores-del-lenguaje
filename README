@@ -3,4 +3,8 @@ Iván Arteta, Íñigo Fernández y Maider Pérez
 Para compilar y ejecutar los programas: make all (se ejecutará el scanner para los 3 algoritmos que hemos probado)
 Para eliminar los archivos a.out y lex.yy.c: make clear
 
-Hemos separado los comentarios en 3 tipos: postcondición, precondición y comentario
+Hemos separado los comentarios en 3 tipos: postcondición, precondición y comentario.
+
+Parte de Bison:
+Hemos decidido ante la ambigüedad intrínseca de las expresiones aritmeticas y las booleanas, utilizar el método 1º GII, 
+que hemos acordado en clase, y que consiste en cargarnos la producción operando en la expresion booleana.
