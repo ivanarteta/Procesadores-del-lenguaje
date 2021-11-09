@@ -4,7 +4,6 @@
 /* Podemos crear una lista con defines para todos los posibles operadores de las cuádruplas */
 /* O bien definir un enum con los valores de los posibles operadores */
 
-
 /* Lo que tiene una cuadrupla es un campo para el operador, un campo para cada operando y una para el resultado*/
 typedef struct TC_cuadrupla{
     /* Operador */
