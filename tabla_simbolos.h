@@ -6,20 +6,17 @@
 /* Es la tabla que construimos en los parsers, más o menos */
 /* Es una lista de celdas o casillas */
 /* Por cada fila tenemos X casillas */
-typedef struct dato{
-    /* Nombre */
-    /* Tipo => Dato (TABLA, TUPLA, PUNTERO, ENTERO, REAL, BOOLEANO, CARACTER O STRING) o Simbolo (VAR, TIPO, CTE, FUNCION, ACCION) */
-    /* Id */
-}TS_dato;
+/*typedef struct dato{
+}TS_dato;*/
 
 
 typedef struct ts_celda{
     /* Nombre */
     /* Tipo => Dato (TABLA, TUPLA, PUNTERO, ENTERO, REAL, BOOLEANO, CARACTER O STRING) o Simbolo (VAR, TIPO, CTE, FUNCION, ACCION) */
     /* Id */
-    TS_dato elemento;
+    //TS_dato elemento;
     /* Puntero al elemento anterior y al siguiente */
-    struct ts_celda *siguiente, *anterior;
+    struct ts_celda *siguiente/*,anterior*/;
 }TS_celda;
 
 typedef struct ts_fila{
@@ -39,8 +36,8 @@ typedef struct TS_tipo{
 Por ejemplo: 
     nombres de variables: nombre, tipo, ámbito de validez
     nombres de constantes: nombre, tipo, valor, ámbito de validez
-    nombres de acciones: nombre, lista de parámetros (tipo, nombre, tipo de peso?)
-    nombres de funciones: nombre, lista de parámetros (tipo, nombre, tipo de peso?), devolución
+    nombres de acciones: nombre, lista de parámetros (tipo, nombre, tipo de paso)
+    nombres de funciones: nombre, lista de parámetros (tipo, nombre, tipo de paso), devolución
     nombres de tipos
 */
 

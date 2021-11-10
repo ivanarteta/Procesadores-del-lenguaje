@@ -1,7 +1,7 @@
 all:
-	bison -v -d parser.y
+	bison -v -d -t parser.y
 	flex scanner.l
-	gcc lex.yy.c
+	gcc -c lex.yy.c 
 	gcc parser.tab.c lex.yy.o -lfl -lm
 	
 clean:

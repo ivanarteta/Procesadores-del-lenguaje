@@ -2,6 +2,7 @@
 %{
  /* Aquí van los includes */
 #include <stdio.h>
+
 %}
 
  /* Definitions */
@@ -163,12 +164,4 @@ DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra
 .                           {printf("caracter no reconocido: %s \n", yytext);}
 
 %%
- /* user code */
-int main(int argc, char **argv){
-    ++argv, --argc; /* skip over program name */
-    if ( argc > 0 )
-        yyin = fopen( argv[0], "r" );
-    else
-        yyin = stdin;
-    yylex();
-}
+

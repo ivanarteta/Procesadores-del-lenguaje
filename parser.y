@@ -7,49 +7,23 @@
     #include <ctype.h>
     #include <math.h>
 	#include <stdlib.h>
+
     int yyerror(char *s);
     int yylex(void);
-
-    /*
-        DANO:
-        	#include "tablaSimbolos.h"
-            #include "tablaCuadruplas.h"
-            #define NULO -99
-            
-            extern FILE *yyin;
-            extern int yylex();
-            extern int yyparse();
-            
-            void yyerror(char const *);
-            
-            //Creamos las estructuras 
-            lista tabla_s;
-            tC tc;
-    */
-    /*%union{
+    int yyparse(void);
+    extern FILE * yyin;
+%}
+    /*Declaraciones Yacc/Bison*/
+%union{
     int itype;
-    double dtype;
     float ftype;
     char* stype;
     char ctype;
-}*/
-    /*%token TK_IGUAL_QUE
-%token TK_MAYOR_QUE 
-%token TK_MENOR_QUE 
-%token TK_DISTINTO_QUE
-%token TK_MAYOR_O_IGUAL
-%token TK_MENOR_O_IGUAL*/
-%}
-    /*Declaraciones Yacc/Bison
-    #%token <campo_union> NOMBRE_TOKEN
-    #Los TOKEN SIEMPRE MAYÚSCULAS
-    #por ejemplo:
-    #%token IF
-    #%token <cadena> ID*/
+}/* YYSTYPE */
 
 %token TK_LITERAL_CADENA
 %token TK_LITERAL_CARACTER
-%token TK_LITERAL_ENTERO
+%token TK_LITERAL_ENTERO /*?????????????????*/
 %token TK_LITERAL_REAL
 %token TK_IDENTIFICADOR
 
@@ -115,7 +89,7 @@
 %right TK_INICIO_PARENTESIS /* ASOCIATIVIDAD DERECHA???? */
 %right TK_INICIO_ARRAY
 %left UMINUS
-/* AQUÍ EL MENOS UNARIO */
+ 
 
 
 %%
@@ -264,4 +238,29 @@ parametros_reales:  expresion TK_SEPARADOR parametros_reales
     /* Código C */
 int yyerror(char *s){
     printf("Error: %s\n", s);
+}
+
+/*int main(int argc,char ** argv){
+    yydebug = 2;
+    return 0;
+}*/
+
+int main(int argc, char **argv){  
+    /*++argv, --argc;*/ /* skip over program name */
+    /*if (argc > 0)
+        yyin = fopen( argv[0], "r" );
+    else
+        yyin = stdin;
+
+    yydebug = 1;
+    yyparse();*/
+
+
+    if (argc > 1) {
+        yyin = fopen(argv[1],"r");
+    }
+    yydebug = 1;
+    yyparse();
+
+
 }

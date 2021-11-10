@@ -38,7 +38,7 @@
 # define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -49,71 +49,74 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    TK_entonces = 258,
-    TK_accion = 259,
-    TK_algoritmo = 260,
-    TK_booleano = 261,
-    TK_cadena = 262,
-    TK_caracter = 263,
-    TK_const = 264,
-    TK_continuar = 265,
-    TK_de = 266,
-    TK_dev = 267,
-    TK_ent = 268,
-    TK_entero = 269,
-    TK_entsal = 270,
-    TK_faccion = 271,
-    TK_falgoritmo = 272,
-    TK_fconst = 273,
-    TK_ffuncion = 274,
-    TK_fmientras = 275,
-    TK_fpara = 276,
-    TK_fsi = 277,
-    TK_ftipo = 278,
-    TK_ftupla = 279,
-    TK_funcion = 280,
-    TK_fvar = 281,
-    TK_hacer = 282,
-    TK_mientras = 283,
-    TK_para = 284,
-    TK_hasta = 285,
-    TK_real = 286,
-    TK_ref = 287,
-    TK_sal = 288,
-    TK_si = 289,
-    TK_tabla = 290,
-    TK_tipo = 291,
-    TK_tupla = 292,
-    TK_var = 293,
-    TK_comentario_pre = 294,
-    TK_comentario_post = 295,
-    TK_asignacion = 296,
-    TK_composicion_secuencial = 297,
-    TK_separador = 298,
-    TK_subrango = 299,
-    TK_definicion = 300,
-    TK_si_no_si = 301,
-    TK_inicio_array = 302,
-    TK_fin_array = 303,
-    TK_inicio_parentesis = 304,
-    TK_literal_entero = 305,
-    TK_literal_caracter = 306,
-    TK_literal_cadena = 307,
-    TK_literal_real = 308,
-    TK_literal_booleano = 309,
-    TK_identificador = 310,
-    TK_o = 311,
-    TK_y = 312,
-    TK_comparador = 313,
-    TK_igual = 314,
-    TK_no = 315,
-    TK_op_suma = 316,
-    TK_op_resta = 317,
-    TK_op_division = 318,
-    TK_div = 319,
-    TK_op_multiplicador = 320,
-    TK_mod = 321,
-    TK_fin_parentesis = 322
+    TK_LITERAL_CADENA = 258,
+    TK_LITERAL_CARACTER = 259,
+    TK_LITERAL_ENTERO = 260,
+    TK_LITERAL_REAL = 261,
+    TK_IDENTIFICADOR = 262,
+    TK_ACCION = 263,
+    TK_ALGORITMO = 264,
+    TK_BOOLEANO = 265,
+    TK_CADENA = 266,
+    TK_CARACTER = 267,
+    TK_CONST = 268,
+    TK_CONTINUAR = 269,
+    TK_DE = 270,
+    TK_DEV = 271,
+    TK_ENT = 272,
+    TK_ENTERO = 273,
+    TK_ENT_SAL = 274,
+    TK_FACCION = 275,
+    TK_FALGORITMO = 276,
+    TK_FALSO = 277,
+    TK_FCONST = 278,
+    TK_FFUNCION = 279,
+    TK_FMIENTRAS = 280,
+    TK_FPARA = 281,
+    TK_FSI = 282,
+    TK_FTIPO = 283,
+    TK_FTUPLA = 284,
+    TK_FUNCION = 285,
+    TK_FVAR = 286,
+    TK_HACER = 287,
+    TK_HASTA = 288,
+    TK_MIENTRAS = 289,
+    TK_PARA = 290,
+    TK_REAL = 291,
+    TK_SAL = 292,
+    TK_SI = 293,
+    TK_TABLA = 294,
+    TK_TIPO = 295,
+    TK_TUPLA = 296,
+    TK_VAR = 297,
+    TK_VERDADERO = 298,
+    TK_ASIGNACION = 299,
+    TK_COMPOSICION_SECUENCIAL = 300,
+    TK_SUBRANGO = 301,
+    TK_DEF_TIPO = 302,
+    TK_ENTONCES = 303,
+    TK_SI_NO_SI = 304,
+    TK_CREACION_TIPO = 305,
+    TK_FIN_ARRAY = 306,
+    TK_COMENTARIO = 307,
+    TK_TIPO_VARIABLE = 308,
+    TK_SEPARADOR = 309,
+    TK_FIN_PARENTESIS = 310,
+    TK_NO = 311,
+    TK_REF = 312,
+    TK_O = 313,
+    TK_Y = 314,
+    TK_OPERADOR_RELACIONAL = 315,
+    TK_SUMA = 316,
+    TK_RESTA = 317,
+    TK_PUNTO = 318,
+    TK_DIVISION = 319,
+    TK_MOD = 320,
+    TK_DIV = 321,
+    TK_MULTIPLICACION = 322,
+    TK_INICIO_PARENTESIS = 323,
+    TK_INICIO_ARRAY = 324,
+    UMINUS = 325
   };
 #endif
 
@@ -121,25 +124,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "parser.y"
+#line 17 "parser.y"
 
-    
-    enum enum_tipo tipo;
-    //int tipo;
-    int val_int;
-    double val_double;
-    char val_char;
-    char * val_string;
-    struct {
-        enum enum_tipo type;
-        int place; // ID de la tabla de símbolos
-        struct TRUE_FALSE TRUE;
-        struct TRUE_FALSE FALSE;
-        struct TRUE_FALSE NEXT;
-    } e;
-    enum enum_tipo lista; /* Sin incluir tipos del usuario. */
+    int itype;
+    float ftype;
+    char* stype;
+    char ctype;
 
-#line 143 "parser.tab.h"
+#line 135 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
