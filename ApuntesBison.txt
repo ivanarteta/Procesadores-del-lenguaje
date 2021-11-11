@@ -52,3 +52,10 @@ palabras: palabra
 redirecciones: redireccion
           | redirecciones redireccion
           ;
+
+
+CAMBIOS PROPUESTOS EN DISCORD 11/11:
+
+- cambiamos expresion_t por expresion | TK_LITERAL_CARACter porque expresion ya coge los aritmeticos
+
+- Lista_definiciones_const -> mirar lo de TK_IGUAL y TK_ASIGNACION y tambien poner TK_LITERAL_BOOLEANO o TK_VERDADERO TK_FALSO
