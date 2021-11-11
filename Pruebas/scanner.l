@@ -2,6 +2,7 @@
 %{
  /* Aquí van los includes */
 #include <stdio.h>
+int yydebug=1;
 
 %}
  /* Expresiones regulares básicas */
@@ -67,7 +68,6 @@ DR_separador               ,
 DR_subrango                \.\.
 DR_tipo_variable           :
 DR_entonces                \->
- /* DR CREACION TIPO CON EL = */
 DR_si_no_si                \[\]
 DR_inicio_array            \[
 DR_fin_array               \]
@@ -75,10 +75,10 @@ DR_inicio_parentesis        \(
 DR_fin_parentesis           \)
 
  /* AÑADIDOS NUEVOS */
-DR_suma                 "+" 
-DR_resta                "-"
-DR_multiplicacion       "*"
-DR_division             "/"
+DR_suma                 \+
+DR_resta                \-
+DR_multiplicacion       \*
+DR_division             \/
 
  /* OP_rel_igual "=" */
  /* OP_rel_distinto "<>" */
@@ -86,11 +86,11 @@ DR_division             "/"
  /* OP_rel_mayor_igual ">=" */
  /* OP_rel_menor "<" */
  /* OP_rel_menor_que "<=" */
- /* OP_ref "." */
 
  /* TK_PUNTO */
 DR_referencia \.
-DR_operador_relacional     =|>|<|<>|>=|<=
+DR_igual            =
+DR_operador_relacional     >|<|<>|>=|<=
 
  /* Strings, y números enteros o reales, positivos y negativos */
  /* literal cadena = string */
@@ -177,6 +177,7 @@ DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra
 {DR_fin_parentesis}         {printf("fin parentesis: %s \n", yytext);}
 {DR_inicio_array}           {printf("inicio array: %s \n", yytext);}
 {DR_fin_array}              {printf("fin array: %s \n", yytext);}
+{DR_igual}                  {printf("igual: %s \n", yytext);}
 {DR_operador_relacional}    {printf("operador relacional: %s \n", yytext);}
 
 {DR_literal_cadena}	        {printf("literal cadena: %s \n", yytext);}

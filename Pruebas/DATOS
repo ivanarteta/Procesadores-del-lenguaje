@@ -1,0 +1,77 @@
+DR_precondicion
+DR_postcondicion
+DR_letra
+DR_cifra
+DR_letra_o_cifra
+DR_caracteres_blancos
+
+
+%left UMINUS
+
+
+%left TK_REF                DR_ref
+%left TK_MOD                DR_mod
+%left TK_Y                      DR_y
+%left TK_O                      DR_o
+%left TK_NO                     DR_no
+%token TK_DIV                   DR_div
+%token TK_LITERAL_CADENA        DR_literal_cadena
+%token TK_LITERAL_CARACTER      DR_literal_caracter
+%token TK_LITERAL_ENTERO        DR_literal_entero
+%token TK_LITERAL_REAL          DR_literal_real
+%token TK_IDENTIFICADOR         DR_id
+%token TK_ACCION                DR_accion
+%token TK_ALGORITMO             DR_algoritmo
+%token TK_BOOLEANO              DR_booleano
+%token TK_CADENA                DR_cadena
+%token TK_CARACTER              DR_caracter
+%token TK_CONST                 DR_const
+%token TK_CONTINUAR             DR_continuar
+%token TK_DE                    DR_de
+%token TK_DEV                   DR_dev
+%token TK_ENT                   DR_ent
+%token TK_ENTERO                DR_entero
+%token TK_ENT_SAL               DR_entrada_salida
+%token TK_FACCION               DR_faccion 
+%token TK_FALGORITMO            DR_falgoritmo
+%token TK_FALSO                 DR_falso
+%token TK_FCONST                DR_fconst
+%token TK_FFUNCION              DR_ffuncion
+%token TK_FMIENTRAS             DR_fmientras
+%token TK_FPARA                 DR_fpara
+%token TK_FSI                   DR_fsi
+%token TK_FTIPO                 DR_ftipo
+%token TK_FTUPLA                DR_ftupla
+%token TK_FUNCION               DR_funcion
+%token TK_FVAR                  DR_fvar
+%token TK_HACER                 DR_hacer
+%token TK_HASTA                 DR_hasta
+%token TK_MIENTRAS              DR_mientras
+%token TK_PARA                  DR_para
+%token TK_REAL                  DR_real
+%token TK_SAL                   DR_sal
+%token TK_SI                    DR_si
+%token TK_TABLA                 DR_tabla
+%token TK_TIPO                  DR_tipo
+%token TK_TUPLA                 DR_tupla
+%token TK_VAR                   DR_var
+%token TK_VERDADERO             DR_verdadero
+%token TK_COMENTARIO            DR_comentario
+%token TK_ASIGNACION                DR_asignacion
+%token TK_COMPOSICION_SECUENCIAL    DR_composicion_secuencial
+%token TK_SEPARADOR                 DR_separador
+%token TK_SUBRANGO                  DR_subrango
+%token TK_DEF_TIPO                  DR_tipo_variable
+%token TK_ENTONCES                  DR_entonces
+%token TK_SI_NO_SI                  DR_si_no_si
+%token TK_INICIO_ARRAY              DR_inicio_array
+%token TK_FIN_ARRAY                 DR_fin_array
+%token TK_SUMA                      DR_suma
+%token TK_RESTA                     DR_resta
+%token TK_DIVISION                  DR_division
+%token TK_MULTIPLICACION            DR_multiplicacion
+%token TK_INICIO_PARENTESIS         DR_inicio_parentesis
+%token TK_FIN_PARENTESIS            DR_fin_parentesis
+%token TK_IGUAL                     DR_igual
+%token TK_OPERADOR_RELACIONAL       DR_operador_relacional
+%token TK_REFERENCIA                DR_referencia
