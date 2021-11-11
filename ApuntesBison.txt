@@ -52,3 +52,19 @@ palabras: palabra
 redirecciones: redireccion
           | redirecciones redireccion
           ;
+
+
+CAMBIOS PROPUESTOS EN DISCORD 11/11:
+
+- cambiamos expresion_t por expresion | TK_LITERAL_CARACter porque expresion ya coge los aritmeticos
+
+- Lista_definiciones_const -> mirar lo de TK_IGUAL y TK_ASIGNACION y tambien poner TK_LITERAL_BOOLEANO o TK_VERDADERO TK_FALSO
+
+-¿Declarar tokens independientes para cada operador relacional y ver hasta que punto puede crear conflicto declarar una regla op_relacional: TK_IGUAL | TK_MAYOR |.......|vacio 
+y poder usar el TK_IGUAL independiente en lista_def_const.?
+
+-Cambios en expresion_booleana añadiendo el TK_IGUAL para tener todos los operadores relacionales
+
+-Cambiamos las reglas poniendo TK_IGUAL donde poniamos TK_ASIGNACION
+
+-CAmbio en Lista_definiciones_const añadiendo TK_VERDADERO y TK_FALSO
