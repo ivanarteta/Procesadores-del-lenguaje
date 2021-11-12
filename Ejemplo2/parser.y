@@ -1,7 +1,10 @@
 %{
 /* File: /home/pl/src/precedencia/hoc1/hoc1.y */
-#define YYSTYPE double
 #include <stdio.h>
+#define YYDEBUG 1
+int yyerror(char *s);
+int yylex(void);
+int yyparse(void);
 %}
 %token NUMBER
 %left '+' '-'
@@ -9,25 +12,25 @@
 %%
 list:
         | list '\n'
-        | list expr   { printf("%.8g\n",$2);}
+        | list expr   
         ;
 
-expr:   NUMBER { $$ = $1;}
-        | expr '+' expr {$$ = $1 + $3;}
-        | expr '-' expr {$$ = $1 - $3;}
-        | expr '*' expr {$$ = $1 * $3;}
-        | expr '/' expr {$$ = $1 / $3;}
+expr:   NUMBER 
+        | expr '+' expr 
+        | expr '-' expr 
+        | expr '*' expr 
+        | expr '/' expr 
         ;
 %%
 
 extern FILE * yyin;
 
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
 if (argc > 1) yyin = fopen(argv[1],"r");
     yydebug = 1;
     yyparse();
 }
 
-yyerror(char *s) {
+int yyerror(char *s) {
     printf("%s\n",s);
 }

@@ -1,8 +1,8 @@
 algoritmo pruebaAlgoritmo;
-    ent a, b: entero;
+ent a, b: entero;
     sal a, b: entero;
     {Esto es un comentario}
     continuar
+    a:=6
     {Esto es un comentario}
 falgoritmo
-

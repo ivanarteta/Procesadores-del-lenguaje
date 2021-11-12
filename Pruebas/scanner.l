@@ -2,15 +2,14 @@
 %{
  /* Aquí van los includes */
 #include <stdio.h>
-int yydebug=1;
 
 %}
  /* Expresiones regulares básicas */
 DR_letra               [a-zA-Z]
 DR_cifra               [0-9]
 DR_letra_o_cifra       DR_letra|DR_cifra
-DR_id                  [a-zA-Z][a-zA-Z0-9]*
 DR_caracteres_blancos  [ \t\n]
+DR_id                  [a-zA-Z][a-zA-Z0-9]*
 
  /* Palabras reservadas */
 DR_algoritmo            (?i:algoritmo)
@@ -80,13 +79,6 @@ DR_resta                \-
 DR_multiplicacion       \*
 DR_division             \/
 
- /* OP_rel_igual "=" */
- /* OP_rel_distinto "<>" */
- /* OP_rel_mayor ">" */
- /* OP_rel_mayor_igual ">=" */
- /* OP_rel_menor "<" */
- /* OP_rel_menor_que "<=" */
-
  /* TK_PUNTO */
 DR_referencia \.
 DR_igual            =
@@ -101,9 +93,6 @@ DR_literal_entero	        (\+|\-)?{DR_cifra}+((e|E)(\+|\-)?{DR_cifra}+)
 DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra}+)
 
 %%
-
- /* Reglas para delimitadores */
-{DR_caracteres_blancos}+
  /* Reglas para literales */
 {DR_literal_entero} 	    {printf("literal entero: %s \n", yytext);}
 {DR_literal_real} 	        {printf("literal real: %s \n", yytext);}
@@ -157,6 +146,8 @@ DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra
 {DR_postcondicion}          {printf("postcondicion: %s \n", yytext);}
 {DR_comentario}		        {printf("comentario: %s \n", yytext);}
  
+-?{DR_cifra}+               {printf("numero entero: %s \n", yytext);}
+-?{DR_cifra}+\.{DR_cifra}+  {printf("numero real: %s \n", yytext);}
  /* Identificadores */
 {DR_id}                     {printf("identificador: %s \n", yytext);}
 
@@ -182,5 +173,8 @@ DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra
 
 {DR_literal_cadena}	        {printf("literal cadena: %s \n", yytext);}
 {DR_literal_caracter}	    {printf("literal caracter: %s \n", yytext);}
+
+ /* Reglas para delimitadores */
+{DR_caracteres_blancos}+    
 
 %%

@@ -12,18 +12,11 @@
     int yylex(void);
     int yyparse(void);
     extern FILE * yyin;
-    extern int yydebug;
 
     #define YYDEBUG 1
 
 %}
     /*Declaraciones Yacc/Bison*/
-%union{
-    int itype;
-    float ftype;
-    char* stype;
-    char ctype;
-}/* YYSTYPE */
 
 %token TK_LITERAL_CADENA
 %token TK_LITERAL_CARACTER
@@ -137,7 +130,7 @@ tipo_base:  TK_ENTERO
             | TK_CADENA 
             ;
 
-expresion_tabla:    expresion 
+expresion_tabla:    TK_LITERAL_ENTERO 
                     | TK_LITERAL_CARACTER
                     ;
 lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL lista_campos
@@ -185,7 +178,6 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                         | TK_LITERAL_ENTERO 
                         | TK_LITERAL_REAL 
                         ;
-    /* FALTA POR MIRAR */
 expresion_booleana:     expresion_booleana TK_Y expresion_booleana
                         | expresion_booleana TK_O expresion_booleana
                         | TK_NO expresion_booleana
@@ -269,6 +261,7 @@ int main(int argc, char **argv){
         yyin = fopen(argv[1],"r");
     }
 
+    yydebug = 2;
     yyparse();
 
 
