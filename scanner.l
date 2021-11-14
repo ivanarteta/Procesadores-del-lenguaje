@@ -4,17 +4,11 @@
 #include <stdio.h>
 
 %}
-
- /* Definitions */
- /* DR_letra: [A-Za-z] */
- /* DR_digito: [0-9] */
- /* DR_id: {letra}({letra}|{digito})* */
-
+ /* Expresiones regulares básicas */
 DR_letra               [a-zA-Z]|\_
-DR_letra_o_cifra       DR_letra|DR_cifra
 DR_cifra               [0-9]
 DR_caracteres_blancos  [ \t\n]
-DR_id                  [a-zA-Z][a-zA-Z0-9]*
+DR_id                  [a-zA-Z][a-zA-Z0-9]* 
 
  /* Palabras reservadas */
 DR_algoritmo            (?i:algoritmo)
@@ -61,11 +55,11 @@ DR_verdadero            (?i:verdadero)
 DR_y                    (?i:y)
 
  /* Precondición, postcondición y comentarios */ 
-DR_precondicion         \{(?i:prec)([^\}]|\/\})*\}
-DR_postcondicion        \{(?i:post)([^\}]|\/\})*\}
+ /*DR_precondicion         \{(?i:prec)([^\}]|\/\})*\}
+DR_postcondicion        \{(?i:post)([^\}]|\/\})*\}*/
 DR_comentario           \{([^\}]|\/\})*\}
 
- /* Operadores: No se si son con o sin comillas */
+ /* Expresiones regulares */
 DR_asignacion              :=
 DR_composicion_secuencial  ;
 DR_separador               ,
@@ -73,38 +67,30 @@ DR_subrango                \.\.
 DR_tipo_variable           :
 DR_entonces                \->
 DR_si_no_si                \[\]
- /* DR_creacion_tipo: "=" */
 DR_inicio_array            \[
 DR_fin_array               \]
-
- /* DR_op_suma "+" */
- /* DR_op_resta "-" */
- /* DR_op_mult "*" */
- /* DR_op_div "/" */
- /* DR_op_mod "%" */
 DR_inicio_parentesis        \(
 DR_fin_parentesis           \)
- /* OP_rel_igual "=" */
- /* OP_rel_distinto "<>" */
- /* OP_rel_mayor ">" */
- /* OP_rel_mayor_igual ">=" */
- /* OP_rel_menor "<" */
- /* OP_rel_menor_que "<=" */
- /* OP_ref "." */
-DR_operador_relacional     =|>|<|<>|>=|<=
+
+ /* Operadores */
+DR_suma                     \+
+DR_resta                    \-
+DR_multiplicacion           \*
+DR_division                 \/
+DR_referencia               \.
+DR_igual                    =
+DR_operador_relacional      >|<|<>|>=|<=
 
  /* Strings, y números enteros o reales, positivos y negativos */
- /* literal cadena = string */
-DR_literal_cadena           \"(([^\'])|\/\')*\"
- /* DR_literal_caracter \'{letra}\' */
-DR_literal_caracter         \'(([^\'])|\/\')*\'
-DR_literal_entero	        (\+|\-)?{DR_cifra}+((e|E)(\+|\-)?{DR_cifra}+)
-DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra}+)
+DR_literal_cadena           \'([^\']|\/\')*\'
+DR_literal_caracter         \"{DR_letra}\"
+DR_literal_entero (\-)?{DR_cifra}+((e|E){DR_cifra}{DR_cifra})? 
+DR_literal_real (\-)?{DR_cifra}+(\.{DR_cifra}+)?((e|E){DR_cifra}+)?
 
 %%
- /* Números enteros y reales, positivos y negativos */
-{DR_literal_entero} 	    {printf("literal entero: %s \n", yytext);}
-{DR_literal_real} 	        {printf("literal real: %s \n", yytext);}
+ /* Reglas para literales */
+{DR_literal_cadena}	        {printf("literal cadena: %s \n", yytext);}
+{DR_literal_caracter}	    {printf("literal caracter: %s \n", yytext);}
 
  /* Palabras reservadas */
 {DR_algoritmo}              {printf("algoritmo: %s \n", yytext);}
@@ -151,19 +137,19 @@ DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra
 {DR_y}                      {printf("y: %s \n", yytext);}
 
  /* Precondición, postcondición y comentario */
-{DR_precondicion}           {printf("precondicion: %s \n", yytext);}
-{DR_postcondicion}          {printf("postcondicion: %s \n", yytext);}
+ /*{DR_precondicion}           {printf("precondicion: %s \n", yytext);}
+{DR_postcondicion}          {printf("postcondicion: %s \n", yytext);}*/
 {DR_comentario}		        {printf("comentario: %s \n", yytext);}
-
- /* Números enteros y reales, positivos y negativos */
--?{DR_cifra}+               {printf("numero entero: %s \n", yytext);}
--?{DR_cifra}+\.{DR_cifra}+  {printf("numero real: %s \n", yytext);}
-
- /* Identificadores */
-{DR_id}                     {printf("identificador: %s \n", yytext);}
-
- /* Operadores */
-"+"|"\-"|"*"|"\/"	        {printf("operador: %s \n", yytext);}
+ 
+ /*-?{DR_cifra}+               {printf("numero entero: %s \n", yytext);}
+ -?{DR_cifra}+\.{DR_cifra}+  {printf("numero real: %s \n", yytext);}*/
+ 
+ /* Operadores aritméticos */
+{DR_suma}                   {printf("operador: %s \n", yytext);}
+{DR_resta}                  {printf("operador: %s \n", yytext);}
+{DR_multiplicacion}         {printf("operador: %s \n", yytext);}
+{DR_division}               {printf("operador: %s \n", yytext);}
+{DR_referencia}             {printf("referencia: %s \n", yytext);}
 {DR_asignacion}             {printf("asignacion: %s \n", yytext);}
 {DR_composicion_secuencial} {printf("composicion secuencial: %s \n", yytext);}
 {DR_separador}              {printf("separador: %s \n", yytext);}
@@ -171,17 +157,19 @@ DR_literal_real		        (\+|\-)?{DR_cifra}+\.{DR_cifra}+((e|E)(\+|\-)?{DR_cifra
 {DR_tipo_variable}          {printf("tipo variable: %s \n", yytext);}
 {DR_entonces}               {printf("entonces: %s \n", yytext);}
 {DR_si_no_si}               {printf("si no si: %s \n", yytext);}
-{DR_inicio_array}           {printf("inicio array: %s \n", yytext);}
-{DR_fin_array}              {printf("fin array: %s \n", yytext);}
-{DR_operador_relacional}    {printf("operador relacional: %s \n", yytext);}
 {DR_inicio_parentesis}      {printf("inicio parentesis: %s \n", yytext);}
 {DR_fin_parentesis}         {printf("fin parentesis: %s \n", yytext);}
-{DR_literal_cadena}	        {printf("literal cadena: %s \n", yytext);}
-{DR_literal_caracter}	    {printf("literal caracter: %s \n", yytext);}
+{DR_inicio_array}           {printf("inicio array: %s \n", yytext);}
+{DR_fin_array}              {printf("fin array: %s \n", yytext);}
+{DR_igual}                  {printf("igual: %s \n", yytext);}
+{DR_operador_relacional}    {printf("operador relacional: %s \n", yytext);}
 
- /* Eliminar espacios en blanco y capturar los elementos no tratados */
-{DR_caracteres_blancos}+
-.                           {printf("caracter no reconocido: %s \n", yytext);}
+ /* Identificadores */
+{DR_literal_entero} 	    {printf("literal entero: %s \n", yytext);}
+{DR_literal_real} 	        {printf("literal real: %s \n", yytext);}
+{DR_id}                     {printf("identificador: %s \n", yytext);}
+
+ /* Reglas para delimitadores */
+{DR_caracteres_blancos}+    
 
 %%
-
