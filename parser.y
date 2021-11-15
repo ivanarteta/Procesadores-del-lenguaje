@@ -16,7 +16,7 @@ extern FILE * yyin;
 
 %token TK_ACCION
 %token TK_ALGORITMO
-%token TK_BOOLEANO
+ /*%token TK_BOOLEANO*/
 %token TK_CADENA
 %token TK_CARACTER
 %token TK_CONST
@@ -65,15 +65,37 @@ extern FILE * yyin;
  /* NUEVOSSS */
 %token TK_INICIO_PARENTESIS
 %token TK_FIN_PARENTESIS
-%token TK_IGUAL
-%token TK_OPERADOR_RELACIONAL
+ /*%token TK_IGUAL
+ %token TK_OPERADOR_RELACIONAL*/
+
 
 /* Prioridades */
- //Operadores de referencia
-%left TK_REFERENCIA TK_Y TK_SUMA TK_RESTA
-%left TK_INICIO_ARRAY TK_O TK_MULTIPLICACION TK_DIVISION TK_DIV
-%left TK_REF TK_NO TK_MOD
+
+/* Operadores de referencia */
+%left TK_REFERENCIA
+%left TK_INICIO_ARRAY
+%left TK_REF
+
+/* Operadores lógicos */
+%left TK_O
+%left TK_Y
+%left TK_NO
+
+ /* Operadores comparativos */
+%left TK_OPERADOR_RELACIONAL TK_IGUAL
+
+ /* Operadores aritmeticos */
+%left TK_SUMA TK_RESTA
+%left TK_MOD
+%left TK_DIV
+%left TK_MULTIPLICACION TK_DIVISION
 %left UMINUS
+
+
+ /*%left TK_REFERENCIA TK_Y TK_SUMA TK_RESTA
+ %left TK_INICIO_ARRAY TK_O TK_MULTIPLICACION TK_DIVISION TK_DIV
+ %left TK_REF TK_NO TK_MOD
+ %left UMINUS*/
 
 %%
 axioma: descripcion_algoritmo

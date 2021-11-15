@@ -8,3 +8,6 @@ Hemos separado los comentarios en 3 tipos: postcondición, precondición y comen
 Parte de Bison:
 Hemos decidido ante la ambigüedad intrínseca de las expresiones aritmeticas y las booleanas, utilizar el método 1º GII, 
 que hemos acordado en clase, y que consiste en cargarnos la producción operando en la expresion booleana.
+
+Las prioridades de los operadores las hemos sacado del siguiente enlace:
+https://docs.microsoft.com/es-es/dotnet/visual-basic/language-reference/operators/operator-precedence
