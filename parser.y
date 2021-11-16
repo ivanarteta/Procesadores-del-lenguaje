@@ -17,17 +17,17 @@ extern FILE * yyin;
     float ftype; /* Para los números reales */   
 };
 
-%token TK_LITERAL_CADENA
-%token TK_LITERAL_CARACTER
-%token TK_LITERAL_ENTERO
-%token TK_LITERAL_REAL
-%token TK_IDENTIFICADOR
+%token <ctype> TK_LITERAL_CADENA
+%token <ctype> TK_LITERAL_CARACTER
+%token <itype> TK_LITERAL_ENTERO
+%token <ftype> TK_LITERAL_REAL
+%token <ctype> TK_IDENTIFICADOR
 
 %token TK_ACCION
 %token TK_ALGORITMO
-%token TK_BOOLEANO
-%token TK_CADENA
-%token TK_CARACTER
+%token <itype> TK_BOOLEANO
+%token <ctype> TK_CADENA
+%token <ctype> TK_CARACTER
 %token TK_CONST
 %token TK_CONTINUAR
 %token TK_DE 
