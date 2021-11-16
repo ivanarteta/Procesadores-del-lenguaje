@@ -2,6 +2,7 @@
 %{
  /* Aquí van los includes */
 #include <stdio.h>
+#include "parser.tab.h"
 
 %}
  /* Expresiones regulares básicas */
@@ -84,90 +85,96 @@ DR_operador_relacional      >|<|<>|>=|<=
  /* Strings, y números enteros o reales, positivos y negativos */
 DR_literal_cadena           \'([^\']|\/\')*\'
 DR_literal_caracter         \"{DR_letra}\"
-DR_literal_entero (\-)?{DR_cifra}+((e|E){DR_cifra}{DR_cifra})? 
-DR_literal_real (\-)?{DR_cifra}+(\.{DR_cifra}+)?((e|E){DR_cifra}+)?
+DR_literal_entero {DR_cifra}+((e|E)(\+|\-){DR_cifra}+)? 
+DR_literal_real {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)? 
 
 %%
  /* Reglas para literales */
-{DR_literal_cadena}	        {printf("literal cadena: %s \n", yytext);}
-{DR_literal_caracter}	    {printf("literal caracter: %s \n", yytext);}
+{DR_literal_cadena}	        {
+                            printf("literal cadena: %s \n", yytext);
+                            return TK_LITERAL_CADENA;
+                            }
+{DR_literal_caracter}	    {
+                            printf("literal caracter: %s \n", yytext);
+                            return TK_LITERAL_CARACTER;
+                            }
 
  /* Palabras reservadas */
-{DR_algoritmo}              {printf("algoritmo: %s \n", yytext);}
-{DR_falgoritmo}             {printf("falgoritmo: %s \n", yytext);}
-{DR_accion}                 {printf("accion: %s \n", yytext);}
-{DR_faccion}                {printf("faccion: %s \n", yytext);}
-{DR_booleano}               {printf("booleano: %s \n", yytext);}
-{DR_cadena}                 {printf("cadena: %s \n", yytext);}
-{DR_caracter}               {printf("caracter: %s \n", yytext);}
-{DR_const}                  {printf("const: %s \n", yytext);}
-{DR_fconst}                 {printf("fin constante: %s \n", yytext);}
-{DR_continuar}              {printf("continuar: %s \n", yytext);}
-{DR_de}                     {printf("de: %s \n", yytext);}
-{DR_dev}                    {printf("dev: %s \n", yytext);}
-{DR_div}                    {printf("div: %s \n", yytext);}
-{DR_ent}                    {printf("entrada: %s \n", yytext);}
-{DR_entero}                 {printf("entero: %s \n", yytext);}
-{DR_entrada_salida}         {printf("entrada salida: %s \n", yytext);}
-{DR_falso}                  {printf("falso: %s \n", yytext);}
-{DR_funcion}                {printf("funcion: %s \n", yytext);}
-{DR_ffuncion}               {printf("fin funcion: %s \n", yytext);}
-{DR_mientras}               {printf("mientras: %s \n", yytext);}
-{DR_fmientras}              {printf("fin mientras: %s \n", yytext);}
-{DR_para}                   {printf("para: %s \n", yytext);}
-{DR_fpara}                  {printf("fin para: %s \n", yytext);}
-{DR_si}                     {printf("si: %s \n", yytext);}
-{DR_fsi}                    {printf("fin si: %s \n", yytext);}
-{DR_tipo}                   {printf("tipo: %s \n", yytext);}
-{DR_ftipo}                  {printf("fin tipo: %s \n", yytext);}
-{DR_tupla}                  {printf("tupla: %s \n", yytext);}
-{DR_ftupla}                 {printf("fin tupla: %s \n", yytext);}
-{DR_var}                    {printf("var: %s \n", yytext);}
-{DR_fvar}                   {printf("fvar: %s \n", yytext);}
-{DR_hacer}                  {printf("hacer: %s \n", yytext);}
-{DR_hasta}                  {printf("hasta: %s \n", yytext);}
-{DR_mod}                    {printf("mod: %s \n", yytext);}
-{DR_no}                     {printf("no: %s \n", yytext);}
-{DR_o}                      {printf("o: %s \n", yytext);}
-{DR_real}                   {printf("real: %s \n", yytext);}
-{DR_ref}                    {printf("ref: %s \n", yytext);}
-{DR_sal}                    {printf("salida: %s \n", yytext);}
-{DR_tabla}                  {printf("tabla: %s \n", yytext);}
-{DR_verdadero}              {printf("verdadero: %s \n", yytext);}
-{DR_y}                      {printf("y: %s \n", yytext);}
+{DR_algoritmo}              {printf("algoritmo: %s \n", yytext); return TK_ALGORITMO;}
+{DR_falgoritmo}             {printf("falgoritmo: %s \n", yytext); return TK_FALGORITMO;}
+{DR_accion}                 {printf("accion: %s \n", yytext); return TK_ACCION;}
+{DR_faccion}                {printf("faccion: %s \n", yytext); return TK_FACCION;}
+{DR_booleano}               {printf("booleano: %s \n", yytext); return TK_BOOLEANO;}
+{DR_cadena}                 {printf("cadena: %s \n", yytext); return TK_CADENA;}
+{DR_caracter}               {printf("caracter: %s \n", yytext); return TK_CARACTER;}
+{DR_const}                  {printf("const: %s \n", yytext); return TK_CONST;}
+{DR_fconst}                 {printf("fin constante: %s \n", yytext); return TK_FCONST;}
+{DR_continuar}              {printf("continuar: %s \n", yytext); return TK_CONTINUAR;}
+{DR_de}                     {printf("de: %s \n", yytext); return TK_DE;}
+{DR_dev}                    {printf("dev: %s \n", yytext); return TK_DEV;}
+{DR_div}                    {printf("div: %s \n", yytext); return TK_DIV;}
+{DR_ent}                    {printf("entrada: %s \n", yytext); return TK_ENT;}
+{DR_entero}                 {printf("entero: %s \n", yytext); return TK_ENTERO;}
+{DR_entrada_salida}         {printf("entrada salida: %s \n", yytext); return TK_ENT_SAL;}
+{DR_falso}                  {printf("falso: %s \n", yytext); return TK_FALSO;}
+{DR_funcion}                {printf("funcion: %s \n", yytext); return TK_FUNCION;}
+{DR_ffuncion}               {printf("fin funcion: %s \n", yytext); return TK_FFUNCION;}
+{DR_mientras}               {printf("mientras: %s \n", yytext); return TK_MIENTRAS;}
+{DR_fmientras}              {printf("fin mientras: %s \n", yytext); return TK_FMIENTRAS;}
+{DR_para}                   {printf("para: %s \n", yytext); return TK_PARA;}
+{DR_fpara}                  {printf("fin para: %s \n", yytext); return TK_FPARA;}
+{DR_si}                     {printf("si: %s \n", yytext); return TK_SI;}
+{DR_fsi}                    {printf("fin si: %s \n", yytext); return TK_FSI;}
+{DR_tipo}                   {printf("tipo: %s \n", yytext); return TK_TIPO;}
+{DR_ftipo}                  {printf("fin tipo: %s \n", yytext); return TK_FTIPO;}
+{DR_tupla}                  {printf("tupla: %s \n", yytext); return TK_TUPLA;}
+{DR_ftupla}                 {printf("fin tupla: %s \n", yytext); return TK_FTUPLA;}
+{DR_var}                    {printf("var: %s \n", yytext); return TK_VAR;}
+{DR_fvar}                   {printf("fvar: %s \n", yytext); return TK_FVAR;}
+{DR_hacer}                  {printf("hacer: %s \n", yytext); return TK_HACER;}
+{DR_hasta}                  {printf("hasta: %s \n", yytext); return TK_HASTA;}
+{DR_mod}                    {printf("mod: %s \n", yytext); return TK_MOD;}
+{DR_no}                     {printf("no: %s \n", yytext); return TK_NO;}
+{DR_o}                      {printf("o: %s \n", yytext); return TK_O;}
+{DR_real}                   {printf("real: %s \n", yytext); return TK_REAL;}
+{DR_ref}                    {printf("ref: %s \n", yytext); return TK_REF;}
+{DR_sal}                    {printf("salida: %s \n", yytext); return TK_SAL;}
+{DR_tabla}                  {printf("tabla: %s \n", yytext); return TK_TABLA;}
+{DR_verdadero}              {printf("verdadero: %s \n", yytext); return TK_VERDADERO;}
+{DR_y}                      {printf("y: %s \n", yytext); return TK_Y;}
 
  /* Precondición, postcondición y comentario */
  /*{DR_precondicion}           {printf("precondicion: %s \n", yytext);}
 {DR_postcondicion}          {printf("postcondicion: %s \n", yytext);}*/
-{DR_comentario}		        {printf("comentario: %s \n", yytext);}
+{DR_comentario}		        {printf("comentario: %s \n", yytext); return TK_COMENTARIO;}
  
  /*-?{DR_cifra}+               {printf("numero entero: %s \n", yytext);}
  -?{DR_cifra}+\.{DR_cifra}+  {printf("numero real: %s \n", yytext);}*/
  
  /* Operadores aritméticos */
-{DR_suma}                   {printf("operador: %s \n", yytext);}
-{DR_resta}                  {printf("operador: %s \n", yytext);}
-{DR_multiplicacion}         {printf("operador: %s \n", yytext);}
-{DR_division}               {printf("operador: %s \n", yytext);}
-{DR_referencia}             {printf("referencia: %s \n", yytext);}
-{DR_asignacion}             {printf("asignacion: %s \n", yytext);}
-{DR_composicion_secuencial} {printf("composicion secuencial: %s \n", yytext);}
-{DR_separador}              {printf("separador: %s \n", yytext);}
-{DR_subrango}               {printf("subrango: %s \n", yytext);}
-{DR_tipo_variable}          {printf("tipo variable: %s \n", yytext);}
-{DR_entonces}               {printf("entonces: %s \n", yytext);}
-{DR_si_no_si}               {printf("si no si: %s \n", yytext);}
-{DR_inicio_parentesis}      {printf("inicio parentesis: %s \n", yytext);}
-{DR_fin_parentesis}         {printf("fin parentesis: %s \n", yytext);}
-{DR_inicio_array}           {printf("inicio array: %s \n", yytext);}
-{DR_fin_array}              {printf("fin array: %s \n", yytext);}
-{DR_igual}                  {printf("igual: %s \n", yytext);}
-{DR_operador_relacional}    {printf("operador relacional: %s \n", yytext);}
+{DR_suma}                   {printf("operador: %s \n", yytext); return TK_SUMA;}
+{DR_resta}                  {printf("operador: %s \n", yytext); return TK_RESTA;}
+{DR_multiplicacion}         {printf("operador: %s \n", yytext); return TK_MULTIPLICACION;}
+{DR_division}               {printf("operador: %s \n", yytext); return TK_DIVISION;}
+{DR_referencia}             {printf("referencia: %s \n", yytext); return TK_REFERENCIA;}
+{DR_asignacion}             {printf("asignacion: %s \n", yytext); return TK_ASIGNACION;}
+{DR_composicion_secuencial} {printf("composicion secuencial: %s \n", yytext); return TK_COMPOSICION_SECUENCIAL;}
+{DR_separador}              {printf("separador: %s \n", yytext); return TK_SEPARADOR;}
+{DR_subrango}               {printf("subrango: %s \n", yytext); return TK_SUBRANGO;}
+{DR_tipo_variable}          {printf("tipo variable: %s \n", yytext); return TK_DEF_TIPO;}
+{DR_entonces}               {printf("entonces: %s \n", yytext); return TK_ENTONCES;}
+{DR_si_no_si}               {printf("si no si: %s \n", yytext); return TK_SI_NO_SI;}
+{DR_inicio_parentesis}      {printf("inicio parentesis: %s \n", yytext); return TK_INICIO_PARENTESIS;}
+{DR_fin_parentesis}         {printf("fin parentesis: %s \n", yytext); return TK_FIN_PARENTESIS;}
+{DR_inicio_array}           {printf("inicio array: %s \n", yytext); return TK_INICIO_ARRAY;}
+{DR_fin_array}              {printf("fin array: %s \n", yytext); return TK_FIN_ARRAY;}
+{DR_igual}                  {printf("igual: %s \n", yytext); return TK_IGUAL;}
+{DR_operador_relacional}    {printf("operador relacional: %s \n", yytext); return TK_OPERADOR_RELACIONAL;}
 
  /* Identificadores */
-{DR_literal_entero} 	    {printf("literal entero: %s \n", yytext);}
-{DR_literal_real} 	        {printf("literal real: %s \n", yytext);}
-{DR_id}                     {printf("identificador: %s \n", yytext);}
+{DR_literal_entero} 	    {printf("literal entero: %s \n", yytext); return TK_LITERAL_ENTERO;}
+{DR_literal_real} 	        {printf("literal real: %s \n", yytext); return TK_LITERAL_REAL;}
+{DR_id}                     {printf("identificador: %s \n", yytext); return TK_IDENTIFICADOR;}
 
  /* Reglas para delimitadores */
 {DR_caracteres_blancos}+    

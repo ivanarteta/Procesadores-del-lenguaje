@@ -1,5 +1,3 @@
-tipo
-    MesesVerano= {julio, agosto, septiembre};
-    Vacaciones= tabla [1..2] de MesesVerano;
-    PunteroATipo = ref Tipo;
-ftipo
+-5-2
+5-2
+a-2
