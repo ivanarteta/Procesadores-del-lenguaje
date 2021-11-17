@@ -177,7 +177,7 @@ lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CADENA TK_COMPO
 lista_definiciones_var:     lista_id TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_var
                             | /* vacio */
                             ;
-lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id  { /* Separar los identificadores y añadirlos a la tabla de simbolos */}
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id  { printf(ROJO"lista_id: %s \n"RESET,$1); /* Separar los identificadores y añadirlos a la tabla de simbolos */}
             | TK_IDENTIFICADOR { /* Añadir el identificador a la tabla de simbolos si no está */}
             | /* vacio */
             ;
