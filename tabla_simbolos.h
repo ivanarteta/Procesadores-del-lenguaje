@@ -6,35 +6,35 @@
 /* Es la tabla que construimos en los parsers, más o menos */
 /* Es una lista de celdas o casillas */
 /* Por cada fila tenemos X casillas */
-/*typedef struct dato{
-}TS_dato;*/
 
+/* DE MOMENTO SOLO VARIABLES*/
+enum TS_tipo{
+    variable,
+    accion, 
+    funcion,
+    tipo, 
+    constante
+};
 
 //Empezamos con las variables
 typedef struct ts_celda{
     /* Nombre */
     char *nombre;
-    /* Tipo => VAR. */
-    /* Id */
-    int id;
-    //TS_dato elemento;
+    /* Ámbito de validez */
+    int ambito;
+    /* Tipo */
+    enum TS_tipo elemento;
     /* Puntero al elemento anterior y al siguiente */
     struct ts_celda *siguiente/*,anterior*/;
 }TS_celda;
 
-typedef struct ts_fila{
+typedef struct ts_lista{
     /* Puntero a la primera celda, y a la última celda */
     TS_celda *inicio, *final;
-}TS_fila;
+}TS_lista;
 
 
 /* La estructura de datos que se utiliza es un union sobre un struct de un tipo */
-typedef struct TS_tipo{
-    union{
-
-    };
-};
-
 /* La tabla de simbolos contiene informacion sobre los simbolos que se utilizan en la programacion. 
 Por ejemplo: 
     nombres de variables: nombre, tipo, ámbito de validez
@@ -44,12 +44,7 @@ Por ejemplo:
     nombres de tipos
 */
 
-/* Funciones */
-/*void TS_nueva_fila(TS_fila *);
-void TS_insertar_celda(TS_fila *, TS_dato);
-bool TS_esta_elemento(TS_fila, TS_dato);
-bool TS_es_nula_fila(TS_fila);
-void TS_concatenar_fila (TS_fila *, TS_fila *);
-void TS_imprimir_fila (TS_fila);*/
+void nuevaLista(TS_lista *);
+
 
 #endif

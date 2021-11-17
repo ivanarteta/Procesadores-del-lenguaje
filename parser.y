@@ -1,5 +1,8 @@
 %{
 #include <stdio.h>
+#include "tabla_cuadruplas.h"
+#include "tabla_simbolos.h"
+
 #define YYDEBUG 1
 int yyerror(char *s);
 int yylex(void);
@@ -9,12 +12,22 @@ extern FILE * yyin;
 #define ROJO "\x1b[31m"
 #define RESET "\x1b[0m"
 
+TS_lista simbolos;
+TC_tabla_cuadrupla cuadrupla;
+
+/* Falta algo para las expresiones que tenga un campo para el tipo (real, entero, booleano, ...)
+    y para un apuntador a la tabla de simbolos.*/
 %}
 
 %union{
     char* ctype; /* Para las cadenas de caracteres (id, string, ...) */
     int itype; /* Para los números enteros y los booleanos */
     float ftype; /* Para los números reales */   
+    /* Para las expresiones */
+    struct exp_type{
+        int tipo;
+        int sitio; //Apuntador para la tabla de simbolos
+    }exp_type;
 };
 
 %token <ctype> TK_LITERAL_CADENA
@@ -25,8 +38,8 @@ extern FILE * yyin;
 
 %token TK_ACCION
 %token TK_ALGORITMO
-%token <itype> TK_BOOLEANO
-%token <ctype> TK_CADENA
+%token TK_BOOLEANO
+%token <cype> TK_CADENA
 %token <ctype> TK_CARACTER
 %token TK_CONST
 %token TK_CONTINUAR
@@ -60,7 +73,6 @@ extern FILE * yyin;
 %token TK_VAR 
 %token TK_VERDADERO
 %token TK_REF
-
 %token TK_COMENTARIO
 
 %token TK_ASIGNACION
@@ -95,10 +107,19 @@ extern FILE * yyin;
 %left TK_MULTIPLICACION TK_DIVISION
 %left UMINUS
 
+ /* TYPE */
+/*%type <itype> 
+%type <ctype> 
+%type <ftype> 
+%type <exp_type> */
+
 %%
-descripcion_algoritmo: TK_ALGORITMO TK_IDENTIFICADOR TK_COMPOSICION_SECUENCIAL cabecera_algoritmo bloque_algoritmo TK_FALGORITMO;
-cabecera_algoritmo: definiciones_globales definiciones_acciones_funciones definiciones_variables_interaccion TK_COMENTARIO;
-bloque_algoritmo: bloque TK_COMENTARIO;
+descripcion_algoritmo:  TK_ALGORITMO TK_IDENTIFICADOR TK_COMPOSICION_SECUENCIAL cabecera_algoritmo bloque_algoritmo TK_FALGORITMO
+                        ;
+cabecera_algoritmo: definiciones_globales definiciones_acciones_funciones definiciones_variables_interaccion TK_COMENTARIO
+                    ;
+bloque_algoritmo:   bloque TK_COMENTARIO
+                    ;
 definiciones_globales:  definicion_tipo definiciones_globales
                         | definicion_const definiciones_globales
                         | /* vacio */
@@ -107,27 +128,31 @@ definiciones_acciones_funciones:    definicion_accion definiciones_acciones_func
                                     | definicion_funcion definiciones_acciones_funciones
                                     | /* vacio */
                                     ;
-bloque: declaraciones instrucciones;      
+bloque: declaraciones instrucciones
+        ;      
 declaraciones:  definicion_tipo declaraciones
                 | definicion_const declaraciones 
                 | definicion_var declaraciones
                 | /* vacio */
                 ;                             
 /* DEFINICIONES */
-definicion_tipo: TK_TIPO lista_definiciones_tipo TK_FTIPO;
-definicion_const: TK_CONST lista_definiciones_const TK_FCONST;
-definicion_var: TK_VAR lista_definiciones_var TK_FVAR;
+definicion_tipo:    TK_TIPO lista_definiciones_tipo TK_FTIPO
+                    ;
+definicion_const:   TK_CONST lista_definiciones_const TK_FCONST
+                    ;
+definicion_var: TK_VAR lista_definiciones_var TK_FVAR
+                ;
 /* DEFINICIONES DE TIPOS */
 lista_definiciones_tipo:    TK_IDENTIFICADOR TK_IGUAL def_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_tipo
                             | /* vacio */ 
                             ;
-def_tipo:    TK_TUPLA lista_campos TK_FTUPLA
-                    | TK_TABLA TK_INICIO_ARRAY expresion_tabla TK_SUBRANGO expresion_tabla TK_FIN_ARRAY TK_DE def_tipo
-                    | TK_IDENTIFICADOR
-                    | expresion_tabla TK_SUBRANGO expresion_tabla
-                    | TK_REF def_tipo
-                    | tipo_base
-                    ;
+def_tipo:   TK_TUPLA lista_campos TK_FTUPLA
+            | TK_TABLA TK_INICIO_ARRAY expresion_tabla TK_SUBRANGO expresion_tabla TK_FIN_ARRAY TK_DE def_tipo
+            | TK_IDENTIFICADOR
+            | expresion_tabla TK_SUBRANGO expresion_tabla
+            | TK_REF def_tipo
+            | tipo_base
+            ;
 tipo_base:  TK_ENTERO 
             | TK_BOOLEANO
             | TK_CARACTER 
@@ -140,7 +165,6 @@ expresion_tabla:    TK_LITERAL_ENTERO
 lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL lista_campos
                 | /* vacio */ 
                 ;  
-
 /* DECLARACION DE CONSTANTES Y VARIABLES */
 lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CADENA TK_COMPOSICION_SECUENCIAL lista_definiciones_const
                             | TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CARACTER TK_COMPOSICION_SECUENCIAL lista_definiciones_const
@@ -153,16 +177,18 @@ lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CADENA TK_COMPO
 lista_definiciones_var:     lista_id TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_var
                             | /* vacio */
                             ;
-lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
-            | TK_IDENTIFICADOR
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id  { /* Separar los identificadores y añadirlos a la tabla de simbolos */}
+            | TK_IDENTIFICADOR { /* Añadir el identificador a la tabla de simbolos si no está */}
             | /* vacio */
             ;
 definiciones_variables_interaccion: definicion_entrada
                                     | definicion_entrada definicion_salida
                                     | definicion_salida
                                     ;
-definicion_entrada: TK_ENT lista_definiciones_var;
-definicion_salida:  TK_SAL lista_definiciones_var;    
+definicion_entrada: TK_ENT lista_definiciones_var
+                    ;
+definicion_salida:  TK_SAL lista_definiciones_var
+                    ;    
 
 /* EXPRESIONES */
 expresion:  expresion_aritmetica
@@ -208,22 +234,30 @@ instruccion:    TK_CONTINUAR
                 | iteracion 
                 | llamada_accion
                 ;
-asignacion:     operando TK_ASIGNACION expresion;
-alternativa:    TK_SI expresion TK_ENTONCES instrucciones lista_opciones TK_FSI;
+asignacion:     operando TK_ASIGNACION expresion
+                ;
+alternativa:    TK_SI expresion TK_ENTONCES instrucciones lista_opciones TK_FSI
+                ;
 lista_opciones: TK_SI_NO_SI expresion TK_ENTONCES instrucciones lista_opciones
                 | /* vacio */
                 ;
 iteracion:  it_cota_fija
             | it_cota_variable
             ;               
-it_cota_variable: TK_MIENTRAS expresion TK_HACER instrucciones TK_FMIENTRAS;
-it_cota_fija:   TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA;
+it_cota_variable:   TK_MIENTRAS expresion TK_HACER instrucciones TK_FMIENTRAS
+                    ;
+it_cota_fija:   TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA
+                ;
 
 /* ACCIONES Y FUNCIONES */
-definicion_accion: TK_ACCION cabecera_accion bloque TK_FACCION;
-definicion_funcion: TK_FUNCION cabecera_funcion bloque TK_DEV expresion TK_FFUNCION;
-cabecera_accion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS defParForm TK_FIN_PARENTESIS TK_COMPOSICION_SECUENCIAL;
-cabecera_funcion:   TK_IDENTIFICADOR TK_INICIO_PARENTESIS lista_definiciones_var TK_FIN_PARENTESIS TK_DEV definicion_tipo TK_COMPOSICION_SECUENCIAL;
+definicion_accion:  TK_ACCION cabecera_accion bloque TK_FACCION
+                    ;
+definicion_funcion: TK_FUNCION cabecera_funcion bloque TK_DEV expresion TK_FFUNCION
+                    ;
+cabecera_accion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS defParForm TK_FIN_PARENTESIS TK_COMPOSICION_SECUENCIAL
+                    ;
+cabecera_funcion:   TK_IDENTIFICADOR TK_INICIO_PARENTESIS lista_definiciones_var TK_FIN_PARENTESIS TK_DEV definicion_tipo TK_COMPOSICION_SECUENCIAL
+                    ;
 defParForm:     dParForm TK_COMPOSICION_SECUENCIAL defParForm
                 | /* vacio */
                 ;
@@ -232,8 +266,10 @@ dParForm:       TK_ENT lista_id TK_DEF_TIPO def_tipo
                 | TK_SAL lista_id TK_DEF_TIPO def_tipo
                 | TK_ENT_SAL lista_id TK_DEF_TIPO def_tipo
                 ;
-llamada_funcion: TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS;
-llamada_accion:  TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS;
+llamada_funcion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS
+                    ;
+llamada_accion:     TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS
+                    ;
 parametros_reales:  expresion TK_SEPARADOR parametros_reales
                     | expresion
                     | /*vacio */
