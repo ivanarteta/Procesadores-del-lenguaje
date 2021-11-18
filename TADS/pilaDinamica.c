@@ -1,36 +1,40 @@
 #include "pilaDinamica.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void errorPila(char s[]){
 	printf("Error en el modulo pilas \n");
 }
 
-void nuevaPila(tipoPila *p){
-	*p = NULL;
+void nuevaPila(tipoPila *pila){
+	*pila = NULL;
 }
 
-void apilar(tipoPila *p, tipoElementoPila elemento){
+void apilar(tipoPila *pila, tipoElementoPila *elemento){
 	celdaPila *nuevo;
 	nuevo = (celdaPila*)malloc(sizeof(celdaPila));
 	nuevo->elem = elemento;
-	nuevo->sig = *p;
-	*p = nuevo;
+	nuevo->sig = *pila;
+	*pila = nuevo;
 }
 
-/*ESTA MAL*/ /* REPASAR */
-void desapilar(tipoPila *p){
-	celdaPila *nuevo;
-	//nuevo = (celdaPila*)malloc(sizeof(celdaPila));
-	nuevo = *p;
-	//nuevo = nuevo->sig;
-	//*p = nuevo;
-	*p = (*p)->sig;
-	free(aux);
+void desapilar(tipoPila *pila){
+	if(!esNulaPila(*pila)){
+		celdaPila *aux;
+		aux = *pila;
+		*pila = (*pila)->sig;
+		free(aux);
+	}
 }
 
-tipoElementoPila cima(tipoPila p){
-	return p->elem;
+tipoElementoPila *cima(tipoPila pila){
+	if (!esNulaPila(pila))
+		return (pila->elem);
+	else
+		return NULL;
 }
 
-bool esNulaPila(tipoPila p){
-	return p == NULL;
+bool esNulaPila(tipoPila pila){
+	return pila == NULL;
 }
