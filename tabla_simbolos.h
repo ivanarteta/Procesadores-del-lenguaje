@@ -7,13 +7,9 @@
 /* Es una lista de celdas o casillas */
 /* Por cada fila tenemos X casillas */
 
-/* DE MOMENTO SOLO VARIABLES*/
+/* DE MOMENTO SOLO VARIABLES */
 enum TS_tipo{
-    variable,
-    accion, 
-    funcion,
-    tipo, 
-    constante
+    entero
 };
 
 //Empezamos con las variables
@@ -22,6 +18,8 @@ typedef struct ts_celda{
     char *nombre;
     /* Ámbito de validez */
     int ambito;
+    /* El número */
+    int id;
     /* Tipo */
     enum TS_tipo elemento;
     /* Puntero al elemento anterior y al siguiente */
@@ -34,6 +32,7 @@ typedef struct ts_lista{
 }TS_lista;
 
 
+
 /* La estructura de datos que se utiliza es un union sobre un struct de un tipo */
 /* La tabla de simbolos contiene informacion sobre los simbolos que se utilizan en la programacion. 
 Por ejemplo: 
@@ -44,7 +43,11 @@ Por ejemplo:
     nombres de tipos
 */
 
-void nuevaLista(TS_lista *);
+void TS_nuevaLista(TS_lista *);
+void TS_insertar(TS_lista *, TS_celda *);
+void TS_buscar();
 
+bool TS_esVacio(TS_lista *);
+void TS_imprimir(TS_lista *);
 
 #endif
