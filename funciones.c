@@ -26,6 +26,26 @@ void separar(char * lista){
 
 int main(){
     char s[256];
-    strcpy(s, "a , b,c");
-    separar(s);
+    strcpy(s, "a , b,c : entero");
+    char* token = strtok(s, ":");
+    while(strstr(token, " ")){
+        borraChar(token, ' ');
+    }
+    printf("lista: %s\n", token);
+    char* tipo = strtok(NULL, ":");
+    while(strstr(tipo, " ")){
+        borraChar(tipo, ' ');
+    }
+    printf("tipo: %s\n", tipo);
+    // Aqui ya tenemos tipo
+
+    ///
+
+    char* identificador = strtok(token, ",");
+    while (identificador) {
+        printf("identificador: %s\n", identificador);
+        // Aqui habria que ir metiendo los identificadores
+        identificador = strtok(NULL, ",");
+    }
+
 }
