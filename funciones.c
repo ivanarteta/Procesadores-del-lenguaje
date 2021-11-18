@@ -26,26 +26,56 @@ void separar(char * lista){
 
 int main(){
     char s[256];
-    strcpy(s, "a , b,c : entero");
-    char* token = strtok(s, ":");
+    strcpy(s, "a , b,c : entero;\n f,d: booleano;\n aux: real;\n");
+    //linea
+    char* linea = strtok(s,"\n");
+    char* resto = strtok(NULL,"");
+    while(resto){
+        //Quitar semicolon
+        while(strstr(linea, ";")){
+            borraChar(linea, ';');
+        }
+        //Split por nombres/tipo
+        char* token = strtok(linea, ":");
+        char* tipo = strtok(NULL, ":");
+        //Quitar espacios
+        while(strstr(token, " ")){
+            borraChar(token, ' ');
+        }
+        printf("token: %s\n", token);
+        //lista ids
+        char* identificadores = strtok(token, ",");
+        
+        printf("tipo: %s\n",tipo);
+
+        while(identificadores){
+            printf("id: %s\n", identificadores);
+            identificadores = strtok(NULL, ",");
+        }
+        linea = strtok(resto,"\n");
+        resto = strtok(NULL,"");
+    }
+
+    while(strstr(linea, ";")){
+        borraChar(linea, ';');
+    }
+    //Split por nombres/tipo
+    char* token = strtok(linea, ":");
+    char* tipo = strtok(NULL, ":");
+    //Quitar espacios
     while(strstr(token, " ")){
         borraChar(token, ' ');
     }
-    printf("lista: %s\n", token);
-    char* tipo = strtok(NULL, ":");
-    while(strstr(tipo, " ")){
-        borraChar(tipo, ' ');
+    printf("token: %s\n", token);
+    //lista ids
+    char* identificadores = strtok(token, ",");
+    printf("tipo: %s\n",tipo);
+    while(identificadores){
+        printf("id: %s\n", identificadores);
+        identificadores = strtok(NULL, ",");
     }
-    printf("tipo: %s\n", tipo);
-    // Aqui ya tenemos tipo
 
-    ///
-
-    char* identificador = strtok(token, ",");
-    while (identificador) {
-        printf("identificador: %s\n", identificador);
-        // Aqui habria que ir metiendo los identificadores
-        identificador = strtok(NULL, ",");
-    }
+    return 0;
+    
 
 }
