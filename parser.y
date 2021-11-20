@@ -1,13 +1,17 @@
 %{
+#include "definiciones.h"
 #include <stdio.h>
+#include <string.h>
 #include "tabla_cuadruplas.h"
 #include "tabla_simbolos.h"
+
 
 
 #define YYDEBUG 1
 int yyerror(char *s);
 int yylex(void);
 int yyparse(void);
+int separar_cadena(char *);
 extern FILE * yyin;
 
 #define ROJO "\x1b[31m"
@@ -21,7 +25,6 @@ extern FILE * yyin;
 TS_lista simbolos;
 TC_tabla_cuadrupla cuadrupla;
 
-
 /* Falta algo para las expresiones que tenga un campo para el tipo (real, entero, booleano, ...)
     y para un apuntador a la tabla de simbolos.*/
 %}
@@ -31,6 +34,7 @@ TC_tabla_cuadrupla cuadrupla;
     int itype; /* Para los números enteros y los booleanos */
     float ftype; /* Para los números reales */   
     /* Para las expresiones */
+    enum enum_tipo tipo;
     struct exp_type{
         int tipo;
         int sitio; //Apuntador para la tabla de simbolos
@@ -46,8 +50,8 @@ TC_tabla_cuadrupla cuadrupla;
 %token TK_ACCION
 %token TK_ALGORITMO
 %token TK_BOOLEANO
-%token <cype> TK_CADENA
-%token <ctype> TK_CARACTER
+%token TK_CADENA
+%token TK_CARACTER
 %token TK_CONST
 %token TK_CONTINUAR
 %token TK_DE 
@@ -115,10 +119,12 @@ TC_tabla_cuadrupla cuadrupla;
 %left UMINUS
 
  /* TYPE */
-%type <ctype> lista_definiciones_var
+%type <ctype> lista_id lista_definiciones_var
+%type <itype> def_tipo
+%type <tipo> tipo_base
+
 /*
 %type <itype> 
-
 %type <ftype> 
 %type <exp_type> */
 
@@ -160,13 +166,13 @@ def_tipo:   TK_TUPLA lista_campos TK_FTUPLA
             | TK_IDENTIFICADOR
             | expresion_tabla TK_SUBRANGO expresion_tabla
             | TK_REF def_tipo
-            | tipo_base
+            | tipo_base {printf(ROJO"CADENA: %d \n"RESET, $$);}
             ;
-tipo_base:  TK_ENTERO
-            | TK_BOOLEANO
-            | TK_CARACTER 
-            | TK_REAL 
-            | TK_CADENA 
+tipo_base:  TK_ENTERO {$$ = TIPO_ENTERO;}
+            | TK_BOOLEANO {$$ = TIPO_BOOLEANO;}
+            | TK_CARACTER {$$ = TIPO_CARACTER;}
+            | TK_REAL {$$ = TIPO_REAL;}
+            | TK_CADENA {$$ = TIPO_CADENA;}
             ;
 expresion_tabla:    TK_LITERAL_ENTERO 
                     | TK_LITERAL_CARACTER
@@ -184,10 +190,14 @@ lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CADENA TK_COMPO
                             | /* vacio */ 
                             ;
 lista_definiciones_var:     lista_id TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_var 
+                                {
+                                    printf(CYAN"$$ %d \n"RESET, $3);
+                                    TS_modificar_tipo(&simbolos, $3);
+                                }
                             | /* vacio */
                             ;
-lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id {TS_insertar(&simbolos, $1); printf(MAGENTA"lista_id: %s \n"RESET,$1);}
-            | TK_IDENTIFICADOR {TS_insertar(&simbolos, $1); printf(MAGENTA"lista_id: %s \n"RESET,$1);}
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id {TS_insertar(&simbolos, $1);}
+            | TK_IDENTIFICADOR  {TS_insertar(&simbolos, $1);}
             | /* vacio */
             ;
 definiciones_variables_interaccion: definicion_entrada
@@ -285,13 +295,15 @@ parametros_reales:  expresion TK_SEPARADOR parametros_reales
                     ;
 
 %%
+
 int main(int argc, char **argv){  
     if (argc > 1) {
         yyin = fopen(argv[1],"r");
     }
     TS_nuevaLista(&simbolos);
-    yydebug = 2;
+    yydebug = 1;
     yyparse(); 
+    TS_imprimir(&simbolos);
 }
 	
 int yyerror(char* s){

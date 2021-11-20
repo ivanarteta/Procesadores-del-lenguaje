@@ -1,6 +1,8 @@
 #ifndef TABLA_CUADRUPLAS_H
 #define TABLA_CUADRUPLAS_H
 
+#include "definiciones.h"
+
 /* Podemos crear una lista con defines para todos los posibles operadores de las cuádruplas */
 /* O bien definir un enum con los valores de los posibles operadores */
 

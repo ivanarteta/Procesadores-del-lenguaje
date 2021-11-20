@@ -9,5 +9,13 @@
 #define OP_DIV 6 
 #define OP_OPERADORES_RELACIONALES 7
 
+enum enum_tipo{
+    TIPO_ENTERO,
+    TIPO_REAL,
+    TIPO_BOOLEANO,
+    TIPO_CADENA,
+    TIPO_CARACTER
+};
+
 
 #endif

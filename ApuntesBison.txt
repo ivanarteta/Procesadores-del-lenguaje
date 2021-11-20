@@ -68,3 +68,16 @@ y poder usar el TK_IGUAL independiente en lista_def_const.?
 -Cambiamos las reglas poniendo TK_IGUAL donde poniamos TK_ASIGNACION
 
 -CAmbio en Lista_definiciones_const añadiendo TK_VERDADERO y TK_FALSO
+
+PROBLEMAS A SOLUCIONAR:
+- Tenemos el siguiente ejemplo:
+        ent a,b:entero;
+        Esto se añade en la tabla de símbolos de la siguiente forma: b a y luego a los 2 se les da el mismo tipo
+        si tenemos:
+        var aux:entero; x:booleano; fvar
+        Se añade a la tabla de símbolos aux y despues var. Pero a la hora de leer el tipo, primero se lee
+        booleano y luego entero. Por lo que hay que conseguir de alguna forma que se inserten en la tabla de 
+        simbolos los respectivos tipos correctamente
+
+Esto no se si será mejor hacerlo con una estructura ordenada o no porque se leen en desorden a como estan en 
+la tabla de simbolos. No se si añadiendoles un id o el nombre se añadirian bien

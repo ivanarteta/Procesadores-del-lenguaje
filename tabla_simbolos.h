@@ -2,52 +2,28 @@
 #define TABLA_SIMBOLOS_H
 
 #include <stdbool.h>
+#include "definiciones.h" //Solo si en el struct hacemos referencia al enum_tipo
 
-/* Es la tabla que construimos en los parsers, más o menos */
-/* Es una lista de celdas o casillas */
-/* Por cada fila tenemos X casillas */
-
-/* DE MOMENTO SOLO VARIABLES */
-enum TS_tipo{
-    entero
-};
-
-//Empezamos con las variables
 typedef struct ts_celda{
-    /* Nombre */
-    char *nombre;
-    /* Ámbito de validez */
-    int ambito;
-    /* El número */
-    int id;
-    /* Tipo */
-    enum TS_tipo elemento;
-    /* Puntero al elemento anterior y al siguiente */
-    struct ts_celda *siguiente/*,anterior*/;
+    int id; /* La dirección en la que está */
+    char *nombre; /* Nombre */
+    int ambito; /* Ámbito de validez */
+    int tipo;
+    //enum enum_tipo tipo; /* Tipo */
+    struct ts_celda *siguiente; /* Puntero al elemento anterior y al siguiente */
 }TS_celda;
 
 typedef struct ts_lista{
-    /* Puntero a la primera celda, y a la última celda */
-    TS_celda *inicio, *final;
+    TS_celda *inicio , *final;
 }TS_lista;
 
 
-
-/* La estructura de datos que se utiliza es un union sobre un struct de un tipo */
-/* La tabla de simbolos contiene informacion sobre los simbolos que se utilizan en la programacion. 
-Por ejemplo: 
-    nombres de variables: nombre, tipo, ámbito de validez
-    nombres de constantes: nombre, tipo, valor, ámbito de validez
-    nombres de acciones: nombre, lista de parámetros (tipo, nombre, tipo de paso)
-    nombres de funciones: nombre, lista de parámetros (tipo, nombre, tipo de paso), devolución
-    nombres de tipos
-*/
-
-void TS_nuevaLista(TS_lista *);
-void TS_insertar(TS_lista *, TS_celda *);
-void TS_buscar();
-
-bool TS_esVacio(TS_lista *);
-void TS_imprimir(TS_lista *);
+/* FUNCIONES */
+void TS_nuevaLista(TS_lista *); //Para generar la lista vacía
+void TS_insertar(TS_lista *, char *); //Para añadir un elemento a la lista (solo añade el nombre)
+void TS_modificar_tipo(TS_lista *, int); //Para añadirle el tipo al elemento (no va bien)
+bool TS_buscar(TS_lista *, char *); //Busca si existe un nombre en la tabla o no
+bool TS_esVacio(TS_lista *); //Para comprobar si está vacía la lista
+void TS_imprimir(TS_lista *); //Para mostrar la tabla de símbolos
 
 #endif

@@ -1,6 +1,7 @@
  /* MIRAR LAS MAYUSCULAS EN EL IDENTIFICADOR */
 %{
  /* Aquí van los includes */
+#include "definiciones.h"
 #include <stdio.h>
 #include "parser.tab.h"
 
@@ -160,6 +161,7 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)
                             }
 {DR_entero}                 {
                                 printf("entero: %s \n", yytext); 
+                                yylval.tipo = TIPO_ENTERO;
                                 return TK_ENTERO;
                             }
 {DR_entrada_salida}         {
@@ -371,7 +373,8 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)
                             }
 {DR_id}                     {
                                 printf("identificador: %s \n", yytext); 
-                                yylval.ctype = yytext;
+                                yylval.ctype = (char*)malloc(sizeof(strlen(yytext)));
+						        strcpy(yylval.ctype,yytext);
                                 return TK_IDENTIFICADOR;
                             }
 
