@@ -2,10 +2,9 @@
 #include "definiciones.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "tabla_cuadruplas.h"
 #include "tabla_simbolos.h"
-
-
 
 #define YYDEBUG 1
 int yyerror(char *s);
@@ -119,7 +118,7 @@ TC_tabla_cuadrupla cuadrupla;
 %left UMINUS
 
  /* TYPE */
-%type <ctype> lista_id lista_definiciones_var
+%type <ctype> lista_id
 %type <itype> def_tipo
 %type <tipo> tipo_base
 
@@ -161,12 +160,12 @@ definicion_var: TK_VAR lista_definiciones_var TK_FVAR
 lista_definiciones_tipo:    TK_IDENTIFICADOR TK_IGUAL def_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_tipo
                             | /* vacio */ 
                             ;
-def_tipo:   TK_TUPLA lista_campos TK_FTUPLA
-            | TK_TABLA TK_INICIO_ARRAY expresion_tabla TK_SUBRANGO expresion_tabla TK_FIN_ARRAY TK_DE def_tipo
-            | TK_IDENTIFICADOR
-            | expresion_tabla TK_SUBRANGO expresion_tabla
-            | TK_REF def_tipo
-            | tipo_base {printf(ROJO"CADENA: %d \n"RESET, $$);}
+def_tipo:   TK_TUPLA lista_campos TK_FTUPLA {}
+            | TK_TABLA TK_INICIO_ARRAY expresion_tabla TK_SUBRANGO expresion_tabla TK_FIN_ARRAY TK_DE def_tipo {}
+            | TK_IDENTIFICADOR {}
+            | expresion_tabla TK_SUBRANGO expresion_tabla {}
+            | TK_REF def_tipo {}
+            | tipo_base {}
             ;
 tipo_base:  TK_ENTERO {$$ = TIPO_ENTERO;}
             | TK_BOOLEANO {$$ = TIPO_BOOLEANO;}
@@ -189,16 +188,12 @@ lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CADENA TK_COMPO
                             | TK_IDENTIFICADOR TK_IGUAL TK_FALSO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
                             | /* vacio */ 
                             ;
-lista_definiciones_var:     lista_id TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_var 
-                                {
-                                    printf(CYAN"$$ %d \n"RESET, $3);
-                                    TS_modificar_tipo(&simbolos, $3);
-                                }
+lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definiciones_var
                             | /* vacio */
                             ;
-lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id {TS_insertar(&simbolos, $1);}
-            | TK_IDENTIFICADOR  {TS_insertar(&simbolos, $1);}
-            | /* vacio */
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id {TS_insertar(&simbolos, $1, $3);}
+            | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo {TS_insertar(&simbolos, $1, $3); $$=$3;}
+            /*| vacio */
             ;
 definiciones_variables_interaccion: definicion_entrada
                                     | definicion_entrada definicion_salida

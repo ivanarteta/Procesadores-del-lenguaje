@@ -1,13 +1,53 @@
+# Autores
 Iván Arteta, Íñigo Fernández y Maider Pérez
 
-Para compilar y ejecutar los programas: make all (se ejecutará el scanner para los 3 algoritmos que hemos probado)
-Para eliminar los archivos a.out y lex.yy.c: make clear
+## Compilación
+Para compilar los programas
+```
+make all
+```
+Para eliminar los archivos que se han creado
+```
+make clean
+```
+Para ejecutar el programa con cualquiera de los 3 ficheros (programaX.alg)
+```
+./a.out programaX.alg
+```
 
-Hemos separado los comentarios en 3 tipos: postcondición, precondición y comentario.
+## Decisiones tomadas en Bison con Fitxi
+Ante la ambigüedad intrínseca de las expresiones aritmeticas y booleanas, hemos acordado usar el método **1º GII**. Este método consiste en cargarnos la producción operando en la expresión booleana.
 
-Parte de Bison:
-Hemos decidido ante la ambigüedad intrínseca de las expresiones aritmeticas y las booleanas, utilizar el método 1º GII, 
-que hemos acordado en clase, y que consiste en cargarnos la producción operando en la expresion booleana.
+## Curiosidades
+Como nos hemos basado en una página web para asignar las prioridades a los operadores en la parte de Bison, queremos que quede constancia de donde los hemos sacado. Se puede consultar la web mediante el siguiente enlace: [prioridades operadores](https://docs.microsoft.com/es-es/dotnet/visal-basic/language-reference/operators/operator-precedence)
 
-Las prioridades de los operadores las hemos sacado del siguiente enlace:
-https://docs.microsoft.com/es-es/dotnet/visual-basic/language-reference/operators/operator-precedence
+
+## Decisiones tomadas en grupo
+
+### Introducir los identificadores/variables a la TS
+Partiendo de la siguiente gramática a la hora de añadir los identificadores/variables a la TS, nos hemos encontrado con los siguientes problemas:
+
+```
+lista_definiciones_var: lista_id TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL lista_definiciones_var 
+                        | /* vacio */
+                        ;
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id 
+            | TK_IDENTIFICADOR
+            | /* vacio */
+            ;
+```
+
+1. Si añadimos primero a la TS los nombres de los identificadores/variables (desde lista_id), al llegar a lista_definiciones_var para añadir los tipos, no podemos acceder a todos los TK_IDENTIFICADOR, por ejemplo, con *ent a,b:entero;* en lista_definiciones_var sólo podríamos ver el identificador "a" con $1. Por lo que habría muchos identificadores en la TS que no tuviesen asignado un tipo.
+
+2. Si añadimos desde lista_definiciones_var simultaneamente el nombre del identificador y el tipo, siempre que hubiese una lista de identificadores separados por comas, solamente se añadiría el primero, por lo que la TS estaría incompleta.
+
+**Solución**: Desde la única parte que hemos visto que podemos acceder a todos los identificadores, es desde lista_id, por lo que teníamos claro que desde aquí teníamos que introducir en la TS tanto el nombre como el tipo de cada uno de ellos. Por lo que, teniamos que buscar la manera de poder acceder a def_tipo desde aquí. Por lo que, hemos realizado una modificación en esas dos expresiones de forma que el nuevo codigo queda de la siguiente forma:
+```
+lista_definiciones_var: lista_id TK_COMPOSICION_SECUENCIAL lista_definiciones_var 
+                        | /* vacio */
+                        ;
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id 
+            | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo
+            ;
+```
+(Para poder acceder desde la primera producción de lista_id al tipo, en la segunda producción hemos tenido que poner $$ = $3)

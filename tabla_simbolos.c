@@ -18,12 +18,12 @@ void TS_nuevaLista(TS_lista *elemento){
 }
 
 /* En nuestro caso queremos ir añadiendo siempre al final */
-void TS_insertar(TS_lista *lista, char *nombre){
+void TS_insertar(TS_lista *lista, char *nombre, int tipo){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     /* Le damos los valores a la celda */
     celda->nombre = nombre;
-    celda->tipo = -1;
+    celda->tipo = tipo;
     if(TS_esVacio(lista)){
         celda->siguiente = NULL;
         lista->inicio = celda;
@@ -39,15 +39,13 @@ void TS_insertar(TS_lista *lista, char *nombre){
             lista->final = celda;
         }
     }
-    TS_imprimir(lista);
+    //TS_imprimir(lista);
 }
 
 void TS_modificar_tipo(TS_lista *lista, int tipo){
-    printf("tipo: %d \n", tipo);
     TS_celda *aux;
     aux = lista->inicio; 
     while (aux->siguiente != NULL){
-        printf("%d \n", aux->tipo);
         if(aux->tipo == -1){
            aux->tipo = tipo; 
         }
@@ -76,13 +74,13 @@ bool TS_esVacio(TS_lista *lista){
 
 void TS_imprimir(TS_lista *lista){
 	printf("\n\n______________ Contenido de la tabla de simbolos _____________\n");
-	printf("%5s %10s %25s\n", "ID", "NOMBRE", "TIPO");
+	printf("%10s %25s\n", "NOMBRE", "TIPO");
     /* Recorremos todos los elementos de la tabla */
     TS_celda *aux;
     aux = lista->inicio; 
     while (aux->siguiente != NULL){
-        printf("%s %d \n", aux->nombre, aux->tipo);
+        printf("%10s %25d \n", aux->nombre, aux->tipo);
         aux = aux->siguiente;
     }
-    printf("%s %d \n", aux->nombre, aux->tipo);
+    printf("%10s %25d \n", aux->nombre, aux->tipo);
 }
