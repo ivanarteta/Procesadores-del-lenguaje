@@ -25,6 +25,29 @@ Variable* TS_crear_variable(char *nombre, int tipo){
     return celda;
 }
 
+Constante* TS_crear_constante(char *nombre, int tipo, Constante_valor valor){
+    Constante *celda;
+    celda = (Constante*)malloc(sizeof(Constante));
+    celda->nombre = nombre;
+    celda->tipo = tipo;
+    switch (tipo){
+        case 0:
+        case 4:
+        case 5:
+            celda->valor.entero = valor.entero;
+            break;
+        case 1:
+            celda->valor.real = valor.real;
+            break;
+        case 2:
+        case 3:
+            strcpy(celda->valor.caracteres,valor.caracteres);
+        default:
+            break;
+    }
+    return celda;
+}
+
 void TS_insertar_variable(TS_lista *lista, Variable *variable, int tipo){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
@@ -48,19 +71,17 @@ void TS_insertar_variable(TS_lista *lista, Variable *variable, int tipo){
 
 }
 
-
-/* En nuestro caso queremos ir añadiendo siempre al final */
-void TS_insertar(TS_lista *lista, char *nombre, int tipo){
-    /*TS_celda *celda;
+void TS_insertar_constante(TS_lista *lista, Constante *constante, int tipo){
+    TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     celda->tipo = tipo;
-    
+    celda->constante = constante;
     if(TS_esVacio(lista)){
         celda->siguiente = NULL;
         lista->inicio = celda;
         lista->final = celda;
     }else{
-        if(!TS_buscar(lista, nombre)){
+        if(!TS_buscar(lista, constante->nombre)){
             celda->siguiente = NULL;
             TS_celda *aux = lista->inicio;
             while(aux->siguiente != NULL){
@@ -69,20 +90,6 @@ void TS_insertar(TS_lista *lista, char *nombre, int tipo){
             aux->siguiente = celda;
             lista->final = celda;
         }
-    }*/
-}
-
-void TS_modificar_tipo(TS_lista *lista, int tipo){
-    TS_celda *aux;
-    aux = lista->inicio; 
-    while (aux->siguiente != NULL){
-        if(aux->tipo == -1){
-           aux->tipo = tipo; 
-        }
-        aux = aux->siguiente;
-    }
-    if(aux->tipo == -1){
-        aux->tipo = tipo; 
     }
 }
 
@@ -90,64 +97,59 @@ bool TS_buscar(TS_lista *lista, char * nombre){
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL){
-        comprobarTipo(aux,nombre);
-        /*switch (aux->tipo){
-            case 0:
-                if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
-                    return true;
-                }
-                break;
-            default:
-                break;
-        }*/
-
-        /*if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
+        if(comprobarTipo(aux,nombre)){
             return true;
-        }*/
+        }
         aux = aux->siguiente;  
     }
     comprobarTipo(aux,nombre);
+    return comprobarTipo(aux, nombre);
+}
 
-    /*switch (aux->tipo){
+bool comprobarTipo(TS_celda *celda, char* nombre){
+    switch (celda->tipo){
         case 0:
-            if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
+            if(celda->variable->nombre == nombre || !strcmp(celda->variable->nombre, nombre)){
+                return true;
+            }
+            break;
+        case 1:
+            if(celda->constante->nombre == nombre || !strcmp(celda->constante->nombre, nombre)){
                 return true;
             }
             break;
         default:
             break;
-    }*/
-
+    }
     return false;
-
-    //return (aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)) ? true : false;
-}
-
-void comprobarTipo(TS_celda *celda, char* nombre){
-    switch (celda->tipo){
-            case 0:
-                if(celda->variable->nombre == nombre || !strcmp(celda->variable->nombre, nombre)){
-                    return true;
-                }
-                break;
-            default:
-                break;
-        }
 }
 
 bool TS_esVacio(TS_lista *lista){
     return (lista->inicio == NULL && lista->final == NULL);
 }
 
+void TS_imprimir_comun(TS_celda *celda){
+    switch (celda->tipo){
+        case 0:
+            printf("%10s %25d \t\t\t VAR \n", celda->variable->nombre, celda->variable->tipo);
+            break;
+        case 1:
+            printf("%10s %25d \t\t\t CONST \n", celda->constante->nombre, celda->constante->tipo);
+            break;
+        default:
+            break;
+    }
+}
+
 void TS_imprimir(TS_lista *lista){
 	printf("\n\n______________ Contenido de la tabla de simbolos _____________\n");
-	printf("%10s %25s\n", "NOMBRE", "TIPO");
+	printf("%10s %25s %25s \n", "NOMBRE", "TIPO", "OTRO TIPO");
     /* Recorremos todos los elementos de la tabla */
     TS_celda *aux;
     aux = lista->inicio; 
     while (aux->siguiente != NULL){
-        printf("%10s %25d \n", aux->variable->nombre, aux->variable->tipo);
+        TS_imprimir_comun(aux);
         aux = aux->siguiente;
     }
-    printf("%10s %25d \n", aux->variable->nombre, aux->variable->tipo);
+    TS_imprimir_comun(aux);
 }

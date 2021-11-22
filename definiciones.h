@@ -8,6 +8,13 @@
 #define OP_MOD 5
 #define OP_DIV 6 
 #define OP_OPERADORES_RELACIONALES 7*/
+typedef struct constante_valor{
+    union{
+        int entero; //Para enteros y booleanos
+        float real;
+        char* caracteres; //Para char y cadenas
+    };
+}Constante_valor;
 
 enum enum_operador{
     OP_SUMA,

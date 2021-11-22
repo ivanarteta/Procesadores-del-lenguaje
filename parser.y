@@ -40,6 +40,10 @@ TC_tabla_cuadrupla cuadrupla;
         int tipo;
         int sitio; //Apuntador para la tabla de simbolos
     }exp_type;
+    struct literales_type{
+        int tipo;
+        Constante_valor valor;
+    }literales_type;
 };
 
 %token <ctype> TK_LITERAL_CADENA
@@ -62,7 +66,7 @@ TC_tabla_cuadrupla cuadrupla;
 %token TK_ENT_SAL
 %token TK_FACCION
 %token TK_FALGORITMO
-%token TK_FALSO
+%token <itype>TK_FALSO
 %token TK_FCONST
 %token TK_FFUNCION
 %token TK_FMIENTRAS
@@ -83,7 +87,7 @@ TC_tabla_cuadrupla cuadrupla;
 %token TK_TIPO 
 %token TK_TUPLA 
 %token TK_VAR 
-%token TK_VERDADERO
+%token <itype>TK_VERDADERO
 %token TK_REF
 %token TK_COMENTARIO
 
@@ -123,6 +127,7 @@ TC_tabla_cuadrupla cuadrupla;
 %type <ctype> lista_id
 %type <itype> def_tipo
 %type <tipo> tipo_base
+%type <literales_type> tipo_literal
 
 /*
 %type <itype> 
@@ -182,15 +187,18 @@ lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL 
                 | /* vacio */ 
                 ;  
 /* DECLARACION DE CONSTANTES Y VARIABLES */
-lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL tipo_literal TK_COMPOSICION_SECUENCIAL lista_definiciones_const {}
+lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL tipo_literal TK_COMPOSICION_SECUENCIAL lista_definiciones_const 
+                            {
+                                TS_insertar_constante(&simbolos, TS_crear_constante($1,$3.tipo,$3.valor), TS_CONSTANTE);
+                            }
                             | /* vacio */ 
                             ;
-tipo_literal:   TK_LITERAL_CADENA 
-                | TK_LITERAL_CARACTER
-                | TK_LITERAL_ENTERO
-                | TK_LITERAL_REAL
-                | TK_VERDADERO
-                | TK_FALSO
+tipo_literal:   TK_LITERAL_CADENA {$$.tipo = LITERAL_CADENA; $$.valor.caracteres = $1;}
+                | TK_LITERAL_CARACTER {$$.tipo = LITERAL_CARACTER; $$.valor.caracteres = $1;}
+                | TK_LITERAL_ENTERO {$$.tipo = LITERAL_ENTERO; $$.valor.entero = $1;}
+                | TK_LITERAL_REAL {$$.tipo = LITERAL_REAL; $$.valor.real = $1;}
+                | TK_VERDADERO {$$.tipo = LITERAL_VERDADERO; $$.valor.entero = $1;}
+                | TK_FALSO {$$.tipo = LITERAL_FALSO; $$.valor.entero = $1;}
                 ;
 
 lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definiciones_var
@@ -198,8 +206,6 @@ lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definicione
                             ;
 lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id 
             {
-                /*Variable* variable = TS_crear_variable($1, $3);
-                printf("%s \n",variable->nombre);*/
                 TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);
             }
             | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo {TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);/*TS_insertar(&simbolos, $1, $3);*/ $$=$3;}

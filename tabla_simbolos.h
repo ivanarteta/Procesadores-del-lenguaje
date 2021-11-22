@@ -13,14 +13,9 @@ typedef struct variable{
 typedef struct constante{
     int tipo; //Tipo será enum_tipo_literal
     char* nombre;
-    union{
-        int entero; //Para enteros y booleanos
-        float real;
-        char* caracteres; //Para char y cadenas
-    };
+    Constante_valor valor;
     //int ambito;
 }Constante;
-
 
 typedef struct ts_celda{
     //int id; /* La dirección en la que está */
@@ -42,13 +37,15 @@ typedef struct ts_lista{
 
 /* FUNCIONES */
 void TS_nuevaLista(TS_lista *); //Para generar la lista vacía
-void TS_insertar(TS_lista *, char *, int); //Para añadir un elemento a la lista (solo añade el nombre)
-void TS_modificar_tipo(TS_lista *, int); //Para añadirle el tipo al elemento (no va bien)
+void TS_insertar_variable(TS_lista *, Variable *, int);
+void TS_insertar_constante(TS_lista *, Constante *, int);
+Variable* TS_crear_variable(char *, int);
+Constante* TS_crear_constante(char *, int, Constante_valor);
+
 bool TS_buscar(TS_lista *, char *); //Busca si existe un nombre en la tabla o no
+bool comprobarTipo(TS_celda *, char *);
 bool TS_esVacio(TS_lista *); //Para comprobar si está vacía la lista
 void TS_imprimir(TS_lista *); //Para mostrar la tabla de símbolos
-
-Variable* TS_crear_variable(char *, int);
-void comprobarTipo(TS_celda *, char *);
+void TS_imprimir_comun(TS_celda *);
 
 #endif

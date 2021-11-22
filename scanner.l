@@ -170,7 +170,7 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)
                             }
 {DR_falso}                  {
                                 printf("falso: %s \n", yytext); 
-                                yylval.itype = 0;
+                                yylval.itype =0;
                                 return TK_FALSO;
                             }
 {DR_funcion}                {
