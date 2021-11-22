@@ -34,6 +34,8 @@ TC_tabla_cuadrupla cuadrupla;
     float ftype; /* Para los números reales */   
     /* Para las expresiones */
     enum enum_tipo tipo;
+    enum enum_tipo_celda celda;
+    enum enum_literales literales;
     struct exp_type{
         int tipo;
         int sitio; //Apuntador para la tabla de simbolos
@@ -180,19 +182,27 @@ lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL 
                 | /* vacio */ 
                 ;  
 /* DECLARACION DE CONSTANTES Y VARIABLES */
-lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CADENA TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                            | TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CARACTER TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                            | TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_ENTERO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                            | TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_REAL TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                            | TK_IDENTIFICADOR TK_IGUAL TK_VERDADERO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
-                            | TK_IDENTIFICADOR TK_IGUAL TK_FALSO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
+lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL tipo_literal TK_COMPOSICION_SECUENCIAL lista_definiciones_const {}
                             | /* vacio */ 
                             ;
+tipo_literal:   TK_LITERAL_CADENA 
+                | TK_LITERAL_CARACTER
+                | TK_LITERAL_ENTERO
+                | TK_LITERAL_REAL
+                | TK_VERDADERO
+                | TK_FALSO
+                ;
+
 lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definiciones_var
                             | /* vacio */
                             ;
-lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id {TS_insertar(&simbolos, $1, $3);}
-            | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo {TS_insertar(&simbolos, $1, $3); $$=$3;}
+lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id 
+            {
+                /*Variable* variable = TS_crear_variable($1, $3);
+                printf("%s \n",variable->nombre);*/
+                TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);
+            }
+            | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo {TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);/*TS_insertar(&simbolos, $1, $3);*/ $$=$3;}
             /*| vacio */
             ;
 definiciones_variables_interaccion: definicion_entrada

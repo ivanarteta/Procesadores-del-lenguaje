@@ -51,3 +51,7 @@ lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
             ;
 ```
 (Para poder acceder desde la primera producción de lista_id al tipo, en la segunda producción hemos tenido que poner $$ = $3)
+
+
+
+COMENTAR EL NUEVO CAMBIO QUE HEMOS HECHO EN lista_definiciones_const

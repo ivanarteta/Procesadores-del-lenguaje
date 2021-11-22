@@ -6,4 +6,16 @@ La tabla de simbolos contiene informacion sobre los simbolos que se utilizan en 
         nombres de constantes: nombre, tipo, valor, ámbito de validez
         nombres de acciones: nombre, lista de parámetros (tipo, nombre, tipo de paso)
         nombres de funciones: nombre, lista de parámetros (tipo, nombre, tipo de paso), devolución
-        nombres de tipos
+        nombres de tipos: 
+
+La direccion de memoria se sabe con &
+
+
+Todos tienen algo en común:
+    -nombre
+    -tipo
+    -¿id?
+
+valor constante:
+    tiene que ser un union con los diferentes campos
+
