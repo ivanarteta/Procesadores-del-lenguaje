@@ -90,7 +90,8 @@ bool TS_buscar(TS_lista *lista, char * nombre){
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL){
-        switch (aux->tipo){
+        comprobarTipo(aux,nombre);
+        /*switch (aux->tipo){
             case 0:
                 if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
                     return true;
@@ -98,14 +99,16 @@ bool TS_buscar(TS_lista *lista, char * nombre){
                 break;
             default:
                 break;
-        }
+        }*/
 
         /*if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
             return true;
         }*/
         aux = aux->siguiente;  
     }
-    switch (aux->tipo){
+    comprobarTipo(aux,nombre);
+
+    /*switch (aux->tipo){
         case 0:
             if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
                 return true;
@@ -113,11 +116,23 @@ bool TS_buscar(TS_lista *lista, char * nombre){
             break;
         default:
             break;
-    }
+    }*/
 
     return false;
 
     //return (aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)) ? true : false;
+}
+
+void comprobarTipo(TS_celda *celda, char* nombre){
+    switch (celda->tipo){
+            case 0:
+                if(celda->variable->nombre == nombre || !strcmp(celda->variable->nombre, nombre)){
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
 }
 
 bool TS_esVacio(TS_lista *lista){

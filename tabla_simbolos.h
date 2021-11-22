@@ -49,5 +49,6 @@ bool TS_esVacio(TS_lista *); //Para comprobar si está vacía la lista
 void TS_imprimir(TS_lista *); //Para mostrar la tabla de símbolos
 
 Variable* TS_crear_variable(char *, int);
+void comprobarTipo(TS_celda *, char *);
 
 #endif
