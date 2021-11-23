@@ -153,3 +153,18 @@ void TS_imprimir(TS_lista *lista){
     }
     TS_imprimir_comun(aux);
 }
+
+int TS_consulta_tipo(TS_lista *lista, char *nombre){
+    TS_celda *aux;
+    aux = lista->inicio;
+    while(aux->siguiente != NULL){
+        if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
+            return aux->variable->tipo;
+        }
+        aux = aux->siguiente;  
+    }
+    if(aux->variable->nombre == nombre || !strcmp(aux->variable->nombre, nombre)){
+        return aux->variable->tipo;
+    }
+    return -1;
+}

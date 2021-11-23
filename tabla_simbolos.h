@@ -34,7 +34,6 @@ typedef struct ts_lista{
     TS_celda *inicio , *final;
 }TS_lista;
 
-
 /* FUNCIONES */
 void TS_nuevaLista(TS_lista *); //Para generar la lista vacía
 void TS_insertar_variable(TS_lista *, Variable *, int);
@@ -47,5 +46,8 @@ bool comprobarTipo(TS_celda *, char *);
 bool TS_esVacio(TS_lista *); //Para comprobar si está vacía la lista
 void TS_imprimir(TS_lista *); //Para mostrar la tabla de símbolos
 void TS_imprimir_comun(TS_celda *);
+
+int TS_consulta_tipo(TS_lista *, char *);
+
 
 #endif

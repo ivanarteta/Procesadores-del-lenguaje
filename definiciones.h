@@ -23,7 +23,8 @@ enum enum_operador{
     OP_DIVISION,
     OP_MOD,
     OP_DIV,
-    OP_OPERADORES_RELACIONALES
+    OP_OPERADORES_RELACIONALES, 
+    OP_ASIGNACION
 };
 
 enum enum_tipo{

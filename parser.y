@@ -38,7 +38,7 @@ TC_tabla_cuadrupla cuadrupla;
     enum enum_literales literales;
     struct exp_type{
         int tipo;
-        int sitio; //Apuntador para la tabla de simbolos
+        char* sitio; //Apuntador para la tabla de simbolos
     }exp_type;
     struct literales_type{
         int tipo;
@@ -124,11 +124,11 @@ TC_tabla_cuadrupla cuadrupla;
 %left UMINUS
 
  /* TYPE */
-%type <ctype> lista_id
+%type <ctype> lista_id 
 %type <itype> def_tipo
 %type <tipo> tipo_base
 %type <literales_type> tipo_literal
-
+%type <exp_type> asignacion operando expresion expresion_aritmetica
 /*
 %type <itype> 
 %type <ftype> 
@@ -188,9 +188,9 @@ lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL 
                 ;  
 /* DECLARACION DE CONSTANTES Y VARIABLES */
 lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL tipo_literal TK_COMPOSICION_SECUENCIAL lista_definiciones_const 
-                            {
-                                TS_insertar_constante(&simbolos, TS_crear_constante($1,$3.tipo,$3.valor), TS_CONSTANTE);
-                            }
+                                {
+                                    TS_insertar_constante(&simbolos, TS_crear_constante($1,$3.tipo,$3.valor), TS_CONSTANTE);
+                                }
                             | /* vacio */ 
                             ;
 tipo_literal:   TK_LITERAL_CADENA {$$.tipo = LITERAL_CADENA; $$.valor.caracteres = $1;}
@@ -205,10 +205,14 @@ lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definicione
                             | /* vacio */
                             ;
 lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id 
-            {
-                TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);
-            }
-            | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo {TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);/*TS_insertar(&simbolos, $1, $3);*/ $$=$3;}
+                {
+                    TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);
+                }
+            | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo 
+                {
+                    TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR); 
+                    $$=$3;
+                }
             /*| vacio */
             ;
 definiciones_variables_interaccion: definicion_entrada
@@ -221,22 +225,22 @@ definicion_salida:  TK_SAL lista_definiciones_var
                     ;    
 
 /* EXPRESIONES */
-expresion:  expresion_aritmetica
-            | expresion_booleana
-            | llamada_funcion
+expresion:  expresion_aritmetica {$$.sitio = $1.sitio;}
+            | expresion_booleana {}
+            | llamada_funcion {}
             ;
 
-expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
-                        | expresion_aritmetica TK_RESTA expresion_aritmetica
-                        | expresion_aritmetica TK_DIVISION expresion_aritmetica
-                        | expresion_aritmetica TK_DIV expresion_aritmetica
-                        | expresion_aritmetica TK_MOD expresion_aritmetica
-                        | expresion_aritmetica TK_MULTIPLICACION expresion_aritmetica
-                        | TK_INICIO_PARENTESIS expresion_aritmetica TK_FIN_PARENTESIS
-                        | operando
-                        | TK_RESTA expresion_aritmetica %prec UMINUS
-                        | TK_LITERAL_ENTERO 
-                        | TK_LITERAL_REAL 
+expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica {}
+                        | expresion_aritmetica TK_RESTA expresion_aritmetica {}
+                        | expresion_aritmetica TK_DIVISION expresion_aritmetica {}
+                        | expresion_aritmetica TK_DIV expresion_aritmetica {}
+                        | expresion_aritmetica TK_MOD expresion_aritmetica {}
+                        | expresion_aritmetica TK_MULTIPLICACION expresion_aritmetica {}
+                        | TK_INICIO_PARENTESIS expresion_aritmetica TK_FIN_PARENTESIS {}
+                        | operando {$$.sitio = $1.sitio;}
+                        | TK_RESTA expresion_aritmetica %prec UMINUS {}
+                        | TK_LITERAL_ENTERO {}
+                        | TK_LITERAL_REAL {}
                         ;
 
 expresion_booleana:     expresion_booleana TK_Y expresion_booleana
@@ -248,10 +252,10 @@ expresion_booleana:     expresion_booleana TK_Y expresion_booleana
                         | expresion_aritmetica TK_IGUAL expresion_aritmetica
                         | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS
                         ;
-operando:   TK_IDENTIFICADOR
-            | operando TK_REFERENCIA operando
-            | operando TK_INICIO_ARRAY expresion TK_FIN_ARRAY
-            | operando TK_REF
+operando:   TK_IDENTIFICADOR {$$.sitio = $1;}
+            | operando TK_REFERENCIA operando {}
+            | operando TK_INICIO_ARRAY expresion TK_FIN_ARRAY {}
+            | operando TK_REF {}
             ;                      
 
 /* INSTRUCCIONES */
@@ -264,7 +268,28 @@ instruccion:    TK_CONTINUAR
                 | iteracion 
                 | llamada_accion
                 ;
-asignacion:     operando TK_ASIGNACION expresion
+asignacion:     operando TK_ASIGNACION expresion 
+                    {
+                        printf(ROJO"$1 %s \n"RESET, $1.sitio);
+                        printf(ROJO"$3 %s \n"RESET, $3.sitio);
+
+                        int tipo = TS_consulta_tipo(&simbolos, $1.sitio);
+                        printf(ROJO"tipo %d \n"RESET, tipo);            
+
+                        if(TS_consulta_tipo(&simbolos, $1.sitio) == TS_consulta_tipo(&simbolos,$3.sitio)){
+                            printf("Entro 1\n");
+                            //gen();
+                        }else if((TS_consulta_tipo(&simbolos,$1.sitio) == TIPO_REAL) && (TS_consulta_tipo(&simbolos,$3.sitio) == TIPO_ENTERO)){
+                            //GEN()
+                            printf("Entro 2\n");
+                        }else if((TS_consulta_tipo(&simbolos,$1.sitio) == TIPO_ENTERO) && (TS_consulta_tipo(&simbolos,$3.sitio) == TIPO_REAL)){
+                            printf("Entro 3\n");
+                            //error;
+                        }
+                        
+                        /* $1.sitio para el id del primer operando */
+                        /* $3.sitio para el id del segundo operando */
+                    }
                 ;
 alternativa:    TK_SI expresion TK_ENTONCES instrucciones lista_opciones TK_FSI
                 ;

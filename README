@@ -53,5 +53,27 @@ lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
 (Para poder acceder desde la primera producción de lista_id al tipo, en la segunda producción hemos tenido que poner $$ = $3)
 
 
-
-COMENTAR EL NUEVO CAMBIO QUE HEMOS HECHO EN lista_definiciones_const
+### Introducir las constantes a la TS
+Hemos partido de la siguiente gramática a la hora de ir a introducir las constantes en la TS:
+```
+lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_ENTERO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
+                            | TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_REAL TK_COMPOSICION_SECUENCIAL lista_definiciones_const 
+                            | TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CADENA TK_COMPOSICION_SECUENCIAL lista_definiciones_const 
+                            | TK_IDENTIFICADOR TK_IGUAL TK_LITERAL_CARACTER TK_COMPOSICION_SECUENCIAL lista_definiciones_const 
+                            | TK_IDENTIFICADOR TK_IGUAL TK_VERDADERO TK_COMPOSICION_SECUENCIAL lista_definiciones_const
+                            | TK_IDENTIFICADOR TK_IGUAL TK_FALSO TK_COMPOSICION_SECUENCIAL lista_definiciones_const  
+                            | /* vacio */ 
+```
+Hemos visto que en cada una de ellas teníamos que llamar a la función TS_insertar_constante, por lo que hemos buscado una alternativa para no tener que escribirlo tantas veces, y que posteriormente nos puede venir bien. Por lo que hemos creado una nueva regla que sea para los literales, de la misma forma que tenemos definido tipo_base. Por lo que la nueva gramática queda tal que así:
+```
+lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL tipo_literal TK_COMPOSICION_SECUENCIAL lista_definiciones_const 
+                            | /* vacio */ 
+                            ;
+tipo_literal:   TK_LITERAL_CADENA 
+                | TK_LITERAL_CARACTER 
+                | TK_LITERAL_ENTERO 
+                | TK_LITERAL_REAL 
+                | TK_VERDADERO 
+                | TK_FALSO 
+                ;
+```
