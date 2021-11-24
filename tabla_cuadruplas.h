@@ -20,9 +20,8 @@ typedef struct TC_cuadrupla{
 
 /* Definición de la tabla cuadrupla */
 typedef struct TC_tabla_cuadrupla{
-    struct TC_cuadrupla *cuadrupla;
-    struct TC_tabla_cuadrupla *siguiente;
-    int contador;
+    int siguiente;
+    struct TC_cuadrupla cuadruplas[256];
 }TC_tabla_cuadrupla;
 
 void TC_nuevaLista(TC_tabla_cuadrupla *);
@@ -30,7 +29,9 @@ void TC_nuevaLista(TC_tabla_cuadrupla *);
 void TC_insertar(TC_tabla_cuadrupla *, TC_cuadrupla *); //Es la función gen
 TC_cuadrupla* TC_crear_cuadrupla(int, int *, int *, int *);
 
+void TC_imprimir(TC_tabla_cuadrupla *);
 
+void TC_imprimir_C3D(TC_tabla_cuadrupla *);
 
 //void backpatch();
 

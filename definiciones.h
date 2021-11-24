@@ -23,8 +23,7 @@ enum enum_operador{
     OP_DIVISION,
     OP_MOD,
     OP_DIV,
-    OP_OPERADORES_RELACIONALES, 
-    OP_ASIGNACION
+    OP_OPERADORES_RELACIONALES
 };
 
 enum enum_tipo{
@@ -51,5 +50,23 @@ enum enum_tipo_celda{
     TS_FUNCION,
     TS_TIPO
 };
+
+enum enum_operadores{
+
+    /* Input y output */
+    OP_INPUT,
+    OP_OUTPUT,
+
+    /* Asignación */
+    OP_ASIGNACION,
+    /*OP_ASIGNACION_ENTERO,
+    OP_ASIGNACION_REAL,
+    OP_ASIGNACION_BOOLEANO_TRUE,
+    OP_ASIGNACION_BOOLEANO_FALSE,
+    OP_ASIGNACION_CARACTER,
+    OP_ASIGNACION_CADENA*/
+
+};
+
 
 #endif

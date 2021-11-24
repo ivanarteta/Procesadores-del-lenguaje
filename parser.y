@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "tabla_cuadruplas.h"
 #include "tabla_simbolos.h"
+#include "cola.h"
 
 #define YYDEBUG 1
 int yyerror(char *s);
@@ -23,6 +24,7 @@ extern FILE * yyin;
 
 TS_lista simbolos;
 TC_tabla_cuadrupla cuadrupla;
+Cola cola;
 
 /* Falta algo para las expresiones que tenga un campo para el tipo (real, entero, booleano, ...)
     y para un apuntador a la tabla de simbolos.*/
@@ -206,10 +208,12 @@ lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definicione
                             ;
 lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id 
                 {
+                    pideTurnoCola(&cola, $1);
                     TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);
                 }
             | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo 
                 {
+                    pideTurnoCola(&cola, $1);
                     TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR); 
                     $$=$3;
                 }
@@ -219,9 +223,21 @@ definiciones_variables_interaccion: definicion_entrada
                                     | definicion_entrada definicion_salida
                                     | definicion_salida
                                     ;
-definicion_entrada: TK_ENT lista_definiciones_var
+definicion_entrada: TK_ENT lista_definiciones_var 
+                        {
+                            while(!esNulaCola(cola)){
+                                TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_INPUT, primeroCola(cola), NULL, NULL));
+                                 avanceCola(&cola);
+                            }
+                        }
                     ;
-definicion_salida:  TK_SAL lista_definiciones_var
+definicion_salida:  TK_SAL lista_definiciones_var 
+                        {
+                            while(!esNulaCola(cola)){
+                                TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_OUTPUT, primeroCola(cola), NULL, NULL));
+                                 avanceCola(&cola);
+                            }
+                        }
                     ;    
 
 /* EXPRESIONES */
@@ -268,7 +284,7 @@ instruccion:    TK_CONTINUAR
                 | iteracion 
                 | llamada_accion
                 ;
-asignacion:     operando TK_ASIGNACION expresion 
+asignacion:     operando TK_ASIGNACION expresion
                     {
                         printf(ROJO"$1 %s \n"RESET, $1.sitio);
                         printf(ROJO"$3 %s \n"RESET, $3.sitio);
@@ -276,19 +292,18 @@ asignacion:     operando TK_ASIGNACION expresion
                         int tipo = TS_consulta_tipo(&simbolos, $1.sitio);
                         printf(ROJO"tipo %d \n"RESET, tipo);            
 
-                        if(TS_consulta_tipo(&simbolos, $1.sitio) == TS_consulta_tipo(&simbolos,$3.sitio)){
-                            printf("Entro 1\n");
-                            //gen();
+                        /* HAY QUE TENER EN CUENTA QUE A LA HORA DE LA ASIGNACION A UNA VARIABLE P.E. BOOLEANA
+                        NO SE LE PUEDE ASIGNAR UN ENTERO */
+
+                        if(TS_consulta_tipo(&simbolos, $1.sitio) == TS_consulta_tipo(&simbolos,$3.sitio)){   
+                            TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
                         }else if((TS_consulta_tipo(&simbolos,$1.sitio) == TIPO_REAL) && (TS_consulta_tipo(&simbolos,$3.sitio) == TIPO_ENTERO)){
-                            //GEN()
+                            TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
                             printf("Entro 2\n");
                         }else if((TS_consulta_tipo(&simbolos,$1.sitio) == TIPO_ENTERO) && (TS_consulta_tipo(&simbolos,$3.sitio) == TIPO_REAL)){
                             printf("Entro 3\n");
                             //error;
                         }
-                        
-                        /* $1.sitio para el id del primer operando */
-                        /* $3.sitio para el id del segundo operando */
                     }
                 ;
 alternativa:    TK_SI expresion TK_ENTONCES instrucciones lista_opciones TK_FSI
@@ -336,10 +351,14 @@ int main(int argc, char **argv){
     if (argc > 1) {
         yyin = fopen(argv[1],"r");
     }
+    nuevaCola(&cola);
     TS_nuevaLista(&simbolos);
+    TC_nuevaLista(&cuadrupla);
     yydebug = 1;
     yyparse(); 
     TS_imprimir(&simbolos);
+    TC_imprimir(&cuadrupla);
+    TC_imprimir_C3D(&cuadrupla);
 }
 	
 int yyerror(char* s){
