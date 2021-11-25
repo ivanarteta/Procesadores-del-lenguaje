@@ -210,6 +210,7 @@ lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
                 {
                     pideTurnoCola(&cola, $1);
                     TS_insertar_variable(&simbolos, TS_crear_variable($1, $3), TS_VAR);
+                    $$=$3;
                 }
             | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo 
                 {
