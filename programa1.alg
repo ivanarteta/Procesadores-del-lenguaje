@@ -5,9 +5,11 @@ algoritmo intercambio;
     var
         aux: entero;
         x: booleano;
+        d: real;
     fvar
     aux:= a;
-    a:= b;
+    a:= 1;
+    d:= 5.6;
     b:= aux
 {Post: b=A AND a = B}
 falgoritmo

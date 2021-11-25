@@ -13,6 +13,7 @@
 #define RESET "\x1b[0m"
 
 void TS_nuevaLista(TS_lista *elemento){
+    elemento->contador = 1;
     elemento->inicio = NULL;
 	elemento->final = NULL;
 }
@@ -20,7 +21,7 @@ void TS_nuevaLista(TS_lista *elemento){
 Variable* TS_crear_variable(char *nombre, int tipo){
     Variable *celda;
     celda = (Variable*)malloc(sizeof(Variable));
-    celda->nombre = nombre;
+    celda->nombre = strdup(nombre);
     celda->tipo = tipo;
     return celda;
 }
@@ -126,6 +127,12 @@ bool comprobarTipo(TS_celda *celda, char* nombre){
 
 bool TS_esVacio(TS_lista *lista){
     return (lista->inicio == NULL && lista->final == NULL);
+}
+
+int TS_get_contador(TS_lista *lista){
+    int contador = lista->contador;
+    lista->contador = lista->contador + 1;
+    return contador;
 }
 
 void TS_imprimir_comun(TS_celda *celda){

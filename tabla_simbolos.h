@@ -1,6 +1,7 @@
 #ifndef TABLA_SIMBOLOS_H
 #define TABLA_SIMBOLOS_H
 
+#include <stdlib.h>
 #include <stdbool.h>
 #include "definiciones.h" //Solo si en el struct hacemos referencia al enum_tipo
 
@@ -31,6 +32,7 @@ typedef struct ts_celda{
 }TS_celda;
 
 typedef struct ts_lista{
+    int contador;
     TS_celda *inicio , *final;
 }TS_lista;
 
@@ -46,6 +48,7 @@ bool comprobarTipo(TS_celda *, char *);
 bool TS_esVacio(TS_lista *); //Para comprobar si está vacía la lista
 void TS_imprimir(TS_lista *); //Para mostrar la tabla de símbolos
 void TS_imprimir_comun(TS_celda *);
+int TS_get_contador(TS_lista *lista);
 
 int TS_consulta_tipo(TS_lista *, char *);
 

@@ -48,7 +48,7 @@ enum enum_tipo_celda{
     TS_CONSTANTE,
     TS_ACCION,
     TS_FUNCION,
-    TS_TIPO
+    TS_TIPO,
 };
 
 enum enum_operadores{

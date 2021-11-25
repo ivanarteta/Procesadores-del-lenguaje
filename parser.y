@@ -255,8 +255,22 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica {}
                         | TK_INICIO_PARENTESIS expresion_aritmetica TK_FIN_PARENTESIS {}
                         | operando {$$.sitio = $1.sitio;}
                         | TK_RESTA expresion_aritmetica %prec UMINUS {}
-                        | TK_LITERAL_ENTERO {}
-                        | TK_LITERAL_REAL {}
+                        | TK_LITERAL_ENTERO {$$.tipo = TIPO_ENTERO;
+                                            char cont[5];
+                                            sprintf(cont, "%d", TS_get_contador(&simbolos));
+                                            char nombre[6];
+                                            strcpy(nombre, "t");
+                                            strcat(nombre, cont);
+                                            $$.sitio = strdup(nombre);
+                                            TS_insertar_variable(&simbolos, TS_crear_variable(nombre, TIPO_ENTERO), TS_VAR);}
+                        | TK_LITERAL_REAL {$$.tipo = TIPO_REAL;
+                                            char cont[5];
+                                            sprintf(cont, "%d", TS_get_contador(&simbolos));
+                                            char nombre[6];
+                                            strcpy(nombre, "t");
+                                            strcat(nombre, cont);
+                                            $$.sitio = strdup(nombre);
+                                            TS_insertar_variable(&simbolos, TS_crear_variable(nombre, TIPO_REAL), TS_VAR);}
                         ;
 
 expresion_booleana:     expresion_booleana TK_Y expresion_booleana
@@ -294,9 +308,9 @@ asignacion:     operando TK_ASIGNACION expresion
 
                         /* HAY QUE TENER EN CUENTA QUE A LA HORA DE LA ASIGNACION A UNA VARIABLE P.E. BOOLEANA
                         NO SE LE PUEDE ASIGNAR UN ENTERO */
-
                         if(TS_consulta_tipo(&simbolos, $1.sitio) == TS_consulta_tipo(&simbolos,$3.sitio)){   
                             TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
+                            printf(GREEN"SITIO %s \n"RESET, $3.sitio); 
                         }else if((TS_consulta_tipo(&simbolos,$1.sitio) == TIPO_REAL) && (TS_consulta_tipo(&simbolos,$3.sitio) == TIPO_ENTERO)){
                             TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
                             printf("Entro 2\n");
@@ -355,7 +369,7 @@ int main(int argc, char **argv){
     TS_nuevaLista(&simbolos);
     TC_nuevaLista(&cuadrupla);
     yydebug = 1;
-    yyparse(); 
+    yyparse();
     TS_imprimir(&simbolos);
     TC_imprimir(&cuadrupla);
     TC_imprimir_C3D(&cuadrupla);
