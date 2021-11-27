@@ -15,8 +15,8 @@ algoritmo megaEjemplo;
         x:= a;
         y:= b;
         mientras x <> y hacer
-            si x > y → x := x-y
-            [] x < y → y := y-x
+            si x > y -> x := x-y
+            [] x < y -> y := y-x
             fsi
         fmientras;
         mcd:= x;
@@ -30,8 +30,8 @@ algoritmo megaEjemplo;
         mcd:= a;
         y:= b;
         mientras x <> y hacer
-            si mcd > y → mcd := mcd-y
-            [] mcd < y → y := y-mcd
+            si mcd > y -> mcd := mcd-y
+            [] mcd < y -> y := y-mcd
             fsi
         fmientras;
         dev mcd;
