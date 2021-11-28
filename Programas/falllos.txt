@@ -1,0 +1,28 @@
+factorial.alg
+    Lo hace bien.
+
+suma_de_coeficientes_binomiales.alg 
+    Falla por algo raro.
+
+seno.alg
+    Lo hace bien.
+
+factorial_inferior.alg
+    Lo hace bien.
+
+fibonacci_Inferior.alg
+    Lo hace bien.
+
+raiz_aproximada.alg
+    Lo hace bien.
+
+rango.alg
+    Falla porque no tenemos tablas.
+
+hasta_donde_puedo_llegar.alg
+    Lo hace bien.
+
+otra_suma_mas_de_factoriales.alg
+    Hace bien la primera parte del algoritmo, porque al tener 2 precondiciones y
+    2 postcondiciones, al leer la segunda recibe syntax error. Igual habría que considerar
+    meter la parte de precondición y postcondición en el bucle en vez de en el algoritmo.
