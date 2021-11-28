@@ -48,9 +48,6 @@ void TS_modificar_tipo(TS_lista *lista, char* nombre, int tipo, int tipoSimbolo)
     }
     /* Puede ser porque o bien es el último elemento o bien porque es el correcto */
     if(aux->nombre == nombre){
-        printf("Entro aqui %s \n", nombre);
-        printf("Entro aqui %d \n", tipo);
-        printf("Entro aqui %d \n", tipoSimbolo);
         aux->tipo = tipo;
         aux->tipo_simbolo = tipoSimbolo;
     }

@@ -71,10 +71,11 @@ enum enum_operadores{
 
     /* Asignación */
     OP_ASIGNACION,
+    OP_ASIGNACION_TRUE,
+    OP_ASIGNACION_FALSE,
     /*OP_ASIGNACION_ENTERO,
     OP_ASIGNACION_REAL,
-    OP_ASIGNACION_BOOLEANO_TRUE,
-    OP_ASIGNACION_BOOLEANO_FALSE,
+
     OP_ASIGNACION_CARACTER,
     OP_ASIGNACION_CADENA*/
     OP_SUMA,
@@ -83,6 +84,7 @@ enum enum_operadores{
     OP_DIVISION,
     OP_MOD,
     OP_DIV,
+    OP_IGUAL,
     OP_OPERADORES_RELACIONALES,
 
     /* Para conversiones */
@@ -90,7 +92,10 @@ enum enum_operadores{
 
     /* Resta unaria */
     OP_RESTA_UNARIA_ENTERO,
-    OP_RESTA_UNARIA_REAL
+    OP_RESTA_UNARIA_REAL,
+
+    /* Para los GOTO */
+    OP_GOTO
 };
 
 

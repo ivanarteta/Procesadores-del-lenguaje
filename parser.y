@@ -49,7 +49,7 @@ tipoPila pila;
                    // a lo que se haga si es cierto.
                     //FALSE: Lista de posiciones de cuadruplas con gotos incompletos que tienen que ir
                    // a lo que se haga si es falso.
-                Cola TRUE, FALSE;
+                Cola *TRUE, *FALSE;
             };
         };
     }exp_type;
@@ -262,8 +262,16 @@ expresion:  expresion_aritmetica
                 {
                     $$.sitio = $1.sitio; 
                     $$.tipo = TS_consulta_tipo(&simbolos, $1.sitio);
+                    $$.TRUE = $1.TRUE;
+                    $$.FALSE = $1.FALSE;
                 }
-            | expresion_booleana {}
+            | expresion_booleana 
+                {
+                    $$.sitio = $1.sitio; 
+                    $$.TRUE = $1.TRUE;
+                    $$.FALSE = $1.FALSE;
+                    $$.tipo = TIPO_BOOLEANO;
+                }
             | llamada_funcion {}
             ;
 
@@ -432,30 +440,32 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
 expresion_booleana:     expresion_booleana TK_Y M expresion_booleana 
                             {
                                 /*Hay que añadirle antes de la segunda expresión booleana una M */
-                                printf(MAGENTA"Expresion booleana -> 1\n"RESET);
+                                /*printf(MAGENTA"Expresion booleana -> 1\n"RESET);
                                 $$.tipo = TIPO_BOOLEANO;
-                                backpatch(&cuadrupla, $$.TRUE, $3);
-                                //backpatch(&cuadrupla, $1.TRUE, $3);
+                                backpatch(&cuadrupla, $1.TRUE, $3);
                                 $$.FALSE = merge($1.FALSE, $4.FALSE);
-                                $$.TRUE = $4.TRUE;
+                                $$.TRUE = $4.TRUE;*/
                             }
                         | expresion_booleana TK_O M expresion_booleana
                             {
                                 /*Hay que añadirle antes de la segunda expresión booleana una M */
                                 printf(MAGENTA"Expresion booleana -> 2\n"RESET);
                                 $$.tipo = TIPO_BOOLEANO;
-                                backpatch(&cuadrupla, $$.FALSE, $3);
-                                //backpatch(&cuadrupla, $1.FALSE, $3);
-                                $$.TRUE = merge($1.TRUE, $4.TRUE);
-                                $$.FALSE = $4.FALSE;  
+                                char numero[10];
+                                sprintf(numero, "%d", $3);
+                                printf("%s \n", numero);
+                                //backpatch(&cuadrupla, $1.FALSE, numero);
+                                //$$.TRUE = merge($1.TRUE, $4.TRUE);
+                                //$$.FALSE = $4.FALSE;  
+                                //Printear el true y el false
                             }
                         | TK_NO expresion_booleana
                             {
-                                printf(MAGENTA"Expresion booleana -> 3\n"RESET);
+                                /*printf(MAGENTA"Expresion booleana -> 3\n"RESET);
                                 $$.tipo = TIPO_BOOLEANO;
                                 $$.TRUE = $2.FALSE;
-                                $$.FALSE = $$.TRUE;
-                                //$$.FALSE = $2.TRUE;
+                                //$$.FALSE = $$.TRUE;
+                                $$.FALSE = $2.TRUE;*/
                             }
                         | TK_VERDADERO 
                             {
@@ -467,21 +477,18 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                             }
                         | expresion_aritmetica TK_OPERADOR_RELACIONAL expresion_aritmetica 
                             {
-                                printf(MAGENTA"Expresion booleana -> 6\n"RESET);
-                                $$.tipo = TIPO_BOOLEANO;
+                                /*printf(MAGENTA"Expresion booleana -> 6\n"RESET);
+                                $$.tipo = TIPO_BOOLEANO;*/
                             }
                         | expresion_aritmetica TK_IGUAL expresion_aritmetica 
                             {
                                 printf(MAGENTA"Expresion booleana -> 7\n"RESET);
-                                //printf(YELLOW"$1.tipo %d $3.tipo %d \n"RESET, $1.tipo, $3.tipo);
-                                //printf(YELLOW"$1.sitio %d $3.sitio %d \n"RESET, $1.sitio, $3.sitio);
                                 $$.tipo = TIPO_BOOLEANO;
                                 int nextquad = TC_elemento_siguiente(&cuadrupla);
                                 $$.TRUE = TC_crear_lista(nextquad);
                                 $$.FALSE =TC_crear_lista(nextquad+1);
-                                /* Como no hay que hacer ninguna suma ni comparacion con valores y asi realmente
-                                puede que nos de igual si tienen tipos distintos los datos */
-  
+                                TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_IGUAL, $1.sitio, $3.sitio, NULL));
+                                TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, NULL, NULL, NULL));
                             }
                         | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS 
                             {
@@ -494,10 +501,6 @@ operando:   TK_IDENTIFICADOR
                 {
                     $$.sitio = $1; 
                     $$.tipo = TS_consulta_tipo(&simbolos, $1);
-                    //printf(CYAN"TIPO: %d \n"RESET, $$.tipo);
-                    //int nextquad = TC_elemento_siguiente(&cuadrupla);
-                    //$$.TRUE = TC_crear_lista(nextquad);
-                    //$$.FALSE =TC_crear_lista(nextquad+1);
                 }
             | operando TK_REFERENCIA operando {}
             | operando TK_INICIO_ARRAY expresion TK_FIN_ARRAY {}
@@ -518,21 +521,33 @@ instruccion:    TK_CONTINUAR
                 ;
 asignacion:     operando TK_ASIGNACION expresion
                     {
+                        
                         /* Solo se puede modificar el tipo de las variables */
                         if(TS_consulta_tipo_simbolo(&simbolos, $1.sitio) == TS_VAR){
                             /* Se puede modificar*/
-                            if((TS_consulta_tipo(&simbolos, $1.sitio) == TIPO_BOOLEANO) && (TS_consulta_tipo(&simbolos, $3.sitio) == TIPO_BOOLEANO)){
-                                //backpatch(&cuadrupla, $3.TRUE, nextquad);
-                                //backpatch(&cuadrupla, $3.FALSE, nextquad+1);
-                                
-                                //TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
-                                //TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
-                            }
-                            if(TS_consulta_tipo(&simbolos, $1.sitio) == TS_consulta_tipo(&simbolos,$3.sitio)){   
+                            if($1.tipo == $3.tipo){  
+                                if($1.tipo == TIPO_BOOLEANO){
+                                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    printf(MAGENTA"HOLA %d \n"RESET, nextquad);
+                                    //backpatch(&cuadrupla, $3.TRUE, nextquad);
+                                    printf(MAGENTA"ENTRO \n"RESET);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE, NULL, NULL, $1.sitio));
+                                    /* DA PROBLEMAS POR EL +2*/
+                                    char numero[10];
+                                    sprintf(numero, "%d", nextquad+2);
+                                    printf("%s \n", numero);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, NULL, NULL, numero));
+                                    TC_imprimir(&cuadrupla);
+                                    sprintf(numero, "%d", nextquad+1);
+                                    printf("%s \n", numero);
+                                    //backpatch(&cuadrupla, $3.FALSE, numero);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_FALSE, NULL, NULL, $1.sitio));
+                                }else{
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
+                                }
+                            }else if(($1.tipo == TIPO_REAL) && ($3.tipo == TIPO_ENTERO)){
                                 TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
-                            }else if((TS_consulta_tipo(&simbolos,$1.sitio) == TIPO_REAL) && (TS_consulta_tipo(&simbolos,$3.sitio) == TIPO_ENTERO)){
-                                TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
-                            }else if((TS_consulta_tipo(&simbolos,$1.sitio) == TIPO_ENTERO) && (TS_consulta_tipo(&simbolos,$3.sitio) == TIPO_REAL)){
+                            }else if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_REAL)){
                                 //error;
                             }
                         }
