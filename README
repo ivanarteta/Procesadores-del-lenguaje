@@ -52,6 +52,18 @@ lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
 ```
 (Para poder acceder desde la primera producción de lista_id al tipo, en la segunda producción hemos tenido que poner $$ = $3)
 
+### Introducir las expresiones booleanas a la TC
+Para introducir las expresiones booleanas, hemos tenido que redefinir algunas funciones tal y como aparecían en los apuntes. Es decir, en algunos puntos concretos hemos tenido que introducir una nueva variable M.
+Por lo que partiendo de nuestra gramática original:
+```
+//CODIGO ORIGINAL
+```
+hemos modificado la gramática añadiendole la variable M, de forma que la nueva gramática sea la siguiente:
+```
+//NUEVA GRAMÁTICA
+```
+
+
 
 ### Introducir las constantes a la TS
 Hemos partido de la siguiente gramática a la hora de ir a introducir las constantes en la TS:

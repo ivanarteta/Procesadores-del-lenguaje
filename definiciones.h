@@ -1,13 +1,20 @@
 #ifndef DEFINICIONES
 #define DEFINICIONES
 
-/*#define OP_SUMA 1
-#define OP_RESTA 2
-#define OP_MULTIPLICACION 3
-#define OP_DIVISION 4
-#define OP_MOD 5
-#define OP_DIV 6 
-#define OP_OPERADORES_RELACIONALES 7*/
+/* Esto para la cola de $$.true y $$.false */
+typedef int tElem;
+
+typedef struct nodoDeCola{
+	tElem e;
+	struct nodoDeCola *s;
+}NodoDeCola;
+
+typedef struct cola{
+	NodoDeCola *i;
+	NodoDeCola *f;
+}Cola;
+
+
 typedef struct constante_valor{
     union{
         int entero; //Para enteros y booleanos
@@ -16,7 +23,7 @@ typedef struct constante_valor{
     };
 }Constante_valor;
 
-enum enum_operador{
+/*enum enum_operador{
     OP_SUMA,
     OP_RESTA,
     OP_MULTIPLICACION,
@@ -24,15 +31,15 @@ enum enum_operador{
     OP_MOD,
     OP_DIV,
     OP_OPERADORES_RELACIONALES
-};
+};*/
 
-enum enum_tipo{
-    TIPO_ENTERO,
-    TIPO_REAL,
-    TIPO_BOOLEANO,
-    TIPO_CADENA,
-    TIPO_CARACTER
-};
+/*enum enum_tipo{
+    TIPO_ENTERO, //O LITERAL_ENTERO
+    TIPO_REAL, //O LITERAL_REAL
+    TIPO_BOOLEANO, //O LITERAL_BOOLEANO
+    TIPO_CADENA, //O LITERAL_CADENA
+    TIPO_CARACTER //O LITERAL_CARACTER
+};*/
 
 enum enum_literales{
     LITERAL_ENTERO, 
@@ -48,7 +55,12 @@ enum enum_tipo_celda{
     TS_CONSTANTE,
     TS_ACCION,
     TS_FUNCION,
-    TS_TIPO
+    TS_TIPO, 
+    TIPO_ENTERO, //O LITERAL_ENTERO
+    TIPO_REAL, //O LITERAL_REAL
+    TIPO_BOOLEANO, //O LITERAL_BOOLEANO
+    TIPO_CADENA, //O LITERAL_CADENA
+    TIPO_CARACTER //O LITERAL_CARACTER
 };
 
 enum enum_operadores{
@@ -65,7 +77,20 @@ enum enum_operadores{
     OP_ASIGNACION_BOOLEANO_FALSE,
     OP_ASIGNACION_CARACTER,
     OP_ASIGNACION_CADENA*/
+    OP_SUMA,
+    OP_RESTA,
+    OP_MULTIPLICACION,
+    OP_DIVISION,
+    OP_MOD,
+    OP_DIV,
+    OP_OPERADORES_RELACIONALES,
 
+    /* Para conversiones */
+    OP_INT_TO_REAL,
+
+    /* Resta unaria */
+    OP_RESTA_UNARIA_ENTERO,
+    OP_RESTA_UNARIA_REAL
 };
 
 

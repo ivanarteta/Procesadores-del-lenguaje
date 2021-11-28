@@ -9,10 +9,10 @@ typedef celdaPila* tipoPila;
 
 void nuevaPila(tipoPila *);
 
-void apilar(tipoPila *, tipoElementoPila *);
+void apilar(tipoPila *, tipoElementoPila);
 
 void desapilar(tipoPila *);
 
-tipoElementoPila* cima(tipoPila);
+tipoElementoPila cima(tipoPila);
 
 bool esNulaPila(tipoPila);

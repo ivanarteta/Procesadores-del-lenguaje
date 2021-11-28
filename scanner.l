@@ -161,7 +161,7 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)
                             }
 {DR_entero}                 {
                                 printf("entero: %s \n", yytext); 
-                                yylval.tipo = TIPO_ENTERO;
+                                yylval.celda = TIPO_ENTERO;
                                 return TK_ENTERO;
                             }
 {DR_entrada_salida}         {
