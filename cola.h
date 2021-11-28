@@ -20,4 +20,6 @@ void pideTurnoCola(Cola *, tElem);
 void avanceCola(Cola *);
 tElem primeroCola(Cola);
 bool esNulaCola(Cola);
+
+
 #endif

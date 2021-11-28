@@ -63,6 +63,9 @@ hemos modificado la gramática añadiendole la variable M, de forma que la nueva
 //NUEVA GRAMÁTICA
 ```
 
+### Campos de la TC
+En un principio teniamos los 4 campos (operador, operando1, operando2 y resultado) como enteros ya que se supone que nos indican que elemento de la TS tiene el valor en tiempo de ejecución. 
+En nuestro caso, hemos decidido que los dos operandos y el resultado, como son variables, hemos cambiado el tipo de int a char* para almacenar su identificador.
 
 
 ### Introducir las constantes a la TS

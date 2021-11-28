@@ -2,6 +2,7 @@
 #define TABLA_CUADRUPLAS_H
 
 #include "definiciones.h"
+#include "cola.h"
 
 /* Podemos crear una lista con defines para todos los posibles operadores de las cuádruplas */
 /* O bien definir un enum con los valores de los posibles operadores */
@@ -11,11 +12,11 @@ typedef struct TC_cuadrupla{
     /* Operador */
     int operador; //ASIGNACION POR EJEMPLO
     /* Argumento 1 o primer operando */
-    int* operando1;
+    char* operando1;
     /* Argumento 2 o segundo operando */
-    int* operando2;
+    char* operando2;
     /* Resultado */
-    int* resultado;
+    char* resultado;
 }TC_cuadrupla;
 
 /* Definición de la tabla cuadrupla */
@@ -27,18 +28,17 @@ typedef struct TC_tabla_cuadrupla{
 
 void TC_nuevaLista(TC_tabla_cuadrupla *);
 void TC_insertar(TC_tabla_cuadrupla *, TC_cuadrupla *); //Es la función gen
-TC_cuadrupla* TC_crear_cuadrupla(int, int *, int *, int *);
+TC_cuadrupla* TC_crear_cuadrupla(int, char *, char *, char *);
 void TC_imprimir(TC_tabla_cuadrupla *);
 void TC_imprimir_C3D(TC_tabla_cuadrupla *);
-
 int TC_elemento_siguiente(TC_tabla_cuadrupla *); //NEXTQUAD
 
-
-
 /* Funciones para los booleanos */
-void backpatch(TC_tabla_cuadrupla *, Cola *, int quad);
-Cola merge(Cola *, Cola *);
+void TC_insertar_otra_lista(Cola *, Cola );
+void backpatch(TC_tabla_cuadrupla *, Cola , int quad);
+Cola merge(Cola , Cola );
 
+Cola TC_crear_lista(int);
 
 
 #endif

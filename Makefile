@@ -9,5 +9,4 @@ all:
 	gcc parser.tab.c lex.yy.o tabla_simbolos.o tabla_cuadruplas.o cola.o pila.o -lfl -lm
 	
 clean:
-	rm lex.yy.c a.out lex.yy.o parser.output parser.tab.c parser.tab.h tabla_simbolos.h.gch tabla_simbolos.o cola.h.gch cola.o tabla_cuadruplas.h.gch tabla_cuadruplas.o 
-	pila.o pila.h.gch
+	rm lex.yy.c a.out lex.yy.o parser.output parser.tab.c parser.tab.h tabla_simbolos.h.gch tabla_simbolos.o cola.h.gch cola.o tabla_cuadruplas.h.gch tabla_cuadruplas.o pila.o pila.h.gch 

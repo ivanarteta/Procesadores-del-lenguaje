@@ -1,5 +1,6 @@
 #include "tabla_cuadruplas.h"
 #include "definiciones.h"
+#include "cola.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,7 +8,7 @@ void TC_nuevaLista(TC_tabla_cuadrupla *elemento){
     elemento->siguiente = 0;
 }
 
-TC_cuadrupla* TC_crear_cuadrupla(int operador, int *op1, int *op2, int *resultado){
+TC_cuadrupla* TC_crear_cuadrupla(int operador, char *op1, char *op2, char *resultado){
     TC_cuadrupla *cuadrupla;
     cuadrupla = (TC_cuadrupla*)malloc(sizeof(TC_cuadrupla));
     cuadrupla->operador = operador;
@@ -89,4 +90,31 @@ void TC_imprimir_C3D(TC_tabla_cuadrupla *tabla){
 
 int TC_elemento_siguiente(TC_tabla_cuadrupla *tabla){
     return tabla->siguiente;
+}
+
+void backpatch(TC_tabla_cuadrupla *tabla, Cola cola, int quad){
+    while(!esNulaCola(cola)){
+        tabla->cuadruplas[primeroCola(cola)].resultado = quad;
+        avanceCola(&cola);
+    }
+}
+
+Cola TC_crear_lista(int quad){
+    Cola cola;
+    nuevaCola(&cola);
+    return cola;
+}
+
+Cola merge(Cola cola1, Cola cola2){
+    Cola aux;
+    TC_insertar_otra_lista(&aux, cola1);
+    TC_insertar_otra_lista(&aux, cola2);
+    return aux;
+}
+
+void TC_insertar_otra_lista(Cola *final, Cola cola){
+    while(!esNulaCola(cola)){
+        pideTurnoCola(final, primeroCola(cola));
+        avanceCola(&cola);
+    }
 }

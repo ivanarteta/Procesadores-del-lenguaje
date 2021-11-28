@@ -8,6 +8,6 @@ algoritmo bols;
 	fvar
 	b2 := (i1 = i2) o (r1 = r2);
 	b1 := (i1 > i2) y no(r1 > r2)
-{Post: ...}
+{Post: ... }
 falgoritmo
 
