@@ -595,8 +595,25 @@ asignacion:     operando TK_ASIGNACION expresion
                         }
                     }
                 ;
-alternativa:    TK_SI expresion_booleana TK_ENTONCES M instrucciones lista_opciones TK_FSI
+alternativa:    TK_SI expresion_booleana TK_ENTONCES M instrucciones N lista_opciones TK_FSI
                 {
+                    //Esta seria la expresion 2 de los apuntes de sentencias estructuradas
+                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                    char numero[10];
+                    sprintf(numero, "%d", nextquad);
+                    backpatch(&cuadrupla,&$2.true, numero);
+                    //backpatch(&cuadrupla,&$2.false, numero);
+                    if(!empty($7.next)){
+                        $5.next = merge(/*$6.next,*/ &$2.next,$7.next);
+                    }else{
+                        $5.next = merge(/*$6.next,*/ &$2.false,TC_crear_lista(nextquad));
+                        TC_insertar(OP_GOTO,NULL,NULL,NULL);
+                    }
+                }   
+                ;
+lista_opciones: TK_SI_NO_SI expresion_booleana TK_ENTONCES M instrucciones lista_opciones
+                {
+                    //Esta seria la expresion 1 de los apuntes de sentencias estructuradas
                     int nextquad = TC_elemento_siguiente(&cuadrupla);
                     char numero[10];
                     sprintf(numero, "%d", nextquad);
@@ -607,10 +624,10 @@ alternativa:    TK_SI expresion_booleana TK_ENTONCES M instrucciones lista_opcio
                         $5.next = merge(&$2.false,TC_crear_lista(nextquad));
                         TC_insertar(OP_GOTO,NULL,NULL,NULL);
                     }
-                }   
-                ;
-lista_opciones: TK_SI_NO_SI expresion TK_ENTONCES instrucciones lista_opciones
-                | /* vacio */
+                    //Habria que guardar los datos de M y de S para mandarlos a la otra sentencia??
+
+                }
+                | /* vacio */ {}
                 ;
 iteracion:  it_cota_fija
             | it_cota_variable
