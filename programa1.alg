@@ -9,6 +9,5 @@ algoritmo intercambio;
     aux:= a;
     a:= b;
     b:= aux;
-    aux := a / b
 {Post: b=A AND a = B}
 falgoritmo

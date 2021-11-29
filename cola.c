@@ -48,6 +48,7 @@ tElem primeroCola(Cola c){
 }
 
 void imprimirCola(Cola *cola){
+	printf("Printeamos la cola \n");
 	if (!esNulaCola(*cola)){
 		NodoDeCola *aux;
 		aux = cola->i;

@@ -5,10 +5,10 @@ algoritmo sumacomb;
     var
     i, comb: entero;
     fvar
-    i:= 1; 
+    i:= 25; 
     suma:= 0;
     comb:= m;
-    mientras i <n hacer
+    mientras i < n hacer
         suma := suma + comb;
         comb := comb * (m - i -1) div (i + 2);
         i := i+1

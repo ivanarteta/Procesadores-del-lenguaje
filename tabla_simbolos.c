@@ -48,7 +48,6 @@ int TS_insertar(TS_lista *lista, char* nombre){
     return celda->id;
 }
 
-
 int TS_buscar_id(TS_lista *lista, char * nombre){ 
     TS_celda *aux;
     aux = lista->inicio;
@@ -60,8 +59,6 @@ int TS_buscar_id(TS_lista *lista, char * nombre){
     }
     return aux->id;
 }
-
-
 
 //Lista, nombre, tipo, tipo_simbolo
 //Aquí en vez del nombre se le pasa la posicion
@@ -224,4 +221,19 @@ int TS_consulta_tipo(TS_lista *lista, int id){
         return aux->tipo;
     }
     return -1;
+}
+
+char* TS_buscar_nombre(TS_lista *lista, int id){
+    TS_celda *aux;
+    aux = lista->inicio;
+    while(aux->siguiente != NULL){
+        if(aux->id == id){
+            return aux->nombre;
+        }
+        aux = aux->siguiente;  
+    }
+    if(aux->id == id){
+        return aux->nombre;
+    }
+    return NULL;
 }

@@ -47,15 +47,27 @@ enum enum_operadores{
     OP_IGUAL,
     OP_OPERADORES_RELACIONALES,
 
+    /* Operadores logicos */
+    OP_NO,
+    OP_Y,
+    OP_O,
+
     /* Para conversiones */
     OP_INT_TO_REAL,
+    OP_REAL_TO_INT,
 
     /* Resta unaria */
     OP_RESTA_UNARIA_ENTERO,
     OP_RESTA_UNARIA_REAL,
 
     /* Para los GOTO */
-    OP_GOTO
+    OP_GOTO,
+    OP_GOTO_IGUAL,
+    OP_GOTO_DISTINTO,
+    OP_GOTO_MENOR,
+    OP_GOTO_MAYOR,
+    OP_GOTO_MENOR_O_IGUAL,
+    OP_GOTO_MAYOR_O_IGUAL
 };
 
 

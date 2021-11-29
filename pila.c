@@ -32,7 +32,7 @@ tipoElementoPila cima(tipoPila pila){
 	if (!esNulaPila(pila))
 		return (pila->elem);
 	else
-		return NULL;
+		return -1;
 }
 
 bool esNulaPila(tipoPila pila){

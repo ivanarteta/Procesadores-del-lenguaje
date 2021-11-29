@@ -43,5 +43,6 @@ bool TS_buscar(TS_lista *, char *); //Busca si existe un nombre en la tabla o no
 bool comprobarTipo(TS_celda *, char *);
 bool TS_esVacio(TS_lista *); //Para comprobar si está vacía la lista
 void TS_imprimir(TS_lista *); //Para mostrar la tabla de símbolos
+char* TS_buscar_nombre(TS_lista *, int);
 
 #endif
