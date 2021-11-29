@@ -48,8 +48,8 @@ tipoPila pila;
     enum enum_literales literales;
     struct exp_type{
         int tipo;
+        char* sitio; //Apuntador para la tabla de simbolos. Para expresiones aritmeticas (debería ser un int)
         union{
-            char* sitio; //Apuntador para la tabla de simbolos. Para expresiones aritmeticas (debería ser un int)
             struct{
                     //TRUE: Lista de posiciones de cuadruplas con gotos incompletos que tienen que ir
                    // a lo que se haga si es cierto.
@@ -270,6 +270,8 @@ expresion:  expresion_aritmetica
                     $$.tipo = TS_consulta_tipo(&simbolos, $1.sitio);
                     $$.TRUE = $1.TRUE;
                     $$.FALSE = $1.FALSE;
+                    //printf(GREEN"sitio2: %s\n"RESET, $$.sitio);
+                    //printf(GREEN"sitio: %s"RESET, $$.sitio);
                 }
             | expresion_booleana 
                 {
@@ -277,6 +279,7 @@ expresion:  expresion_aritmetica
                     $$.TRUE = $1.TRUE;
                     $$.FALSE = $1.FALSE;
                     $$.tipo = TIPO_BOOLEANO;
+                    //printf(GREEN"sitio3: %s\n"RESET, $$.sitio);
                 }
             | llamada_funcion {}
             ;
@@ -446,11 +449,11 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
 expresion_booleana:     expresion_booleana TK_Y M expresion_booleana 
                             {
                                 /*Hay que añadirle antes de la segunda expresión booleana una M */
-                                /*printf(MAGENTA"Expresion booleana -> 1\n"RESET);
+                                printf(MAGENTA"Expresion booleana -> 1\n"RESET);
                                 $$.tipo = TIPO_BOOLEANO;
-                                backpatch(&cuadrupla, $1.TRUE, $3);
-                                $$.FALSE = merge($1.FALSE, $4.FALSE);
-                                $$.TRUE = $4.TRUE;*/
+                                backpatch(&cuadrupla, &$1.TRUE, $3);
+                                $$.FALSE = merge(&$1.FALSE, &$4.FALSE);
+                                $$.TRUE = $4.TRUE;
                             }
                         | expresion_booleana TK_O M expresion_booleana
                             {
@@ -460,18 +463,18 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 char numero[10];
                                 sprintf(numero, "%d", $3);
                                 printf("%s \n", numero);
-                                //backpatch(&cuadrupla, $1.FALSE, numero);
-                                //$$.TRUE = merge($1.TRUE, $4.TRUE);
-                                //$$.FALSE = $4.FALSE;  
+                                backpatch(&cuadrupla, &$1.FALSE, numero);
+                                $$.TRUE = merge(&$1.TRUE, &$4.TRUE);
+                                $$.FALSE = $4.FALSE;  
                                 //Printear el true y el false
                             }
                         | TK_NO expresion_booleana
                             {
-                                /*printf(MAGENTA"Expresion booleana -> 3\n"RESET);
+                                printf(MAGENTA"Expresion booleana -> 3\n"RESET);
                                 $$.tipo = TIPO_BOOLEANO;
                                 $$.TRUE = $2.FALSE;
                                 //$$.FALSE = $$.TRUE;
-                                $$.FALSE = $2.TRUE;*/
+                                $$.FALSE = $2.TRUE;
                             }
                         | TK_VERDADERO 
                             {
@@ -483,8 +486,8 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                             }
                         | expresion_aritmetica TK_OPERADOR_RELACIONAL expresion_aritmetica 
                             {
-                                /*printf(MAGENTA"Expresion booleana -> 6\n"RESET);
-                                $$.tipo = TIPO_BOOLEANO;*/
+                                printf(MAGENTA"Expresion booleana -> 6\n"RESET);
+                                $$.tipo = TIPO_BOOLEANO;
                             }
                         | expresion_aritmetica TK_IGUAL expresion_aritmetica 
                             {
@@ -518,6 +521,7 @@ operando:   TK_IDENTIFICADOR
                     $$.tipo = TS_consulta_tipo(&simbolos, $1);
                     nuevaCola(&$$.TRUE);
                     nuevaCola(&$$.FALSE);
+                    //printf(GREEN"sitio1: %s\n"RESET, $$.sitio);
                 }
             | operando TK_REFERENCIA operando {}
             | operando TK_INICIO_ARRAY expresion TK_FIN_ARRAY {}

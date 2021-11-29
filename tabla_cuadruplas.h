@@ -37,7 +37,7 @@ int TC_elemento_siguiente(TC_tabla_cuadrupla *); //NEXTQUAD
 /* Funciones para los booleanos */
 void TC_insertar_otra_lista(Cola *, Cola );
 void backpatch(TC_tabla_cuadrupla *, Cola *, char* );
-Cola* merge(Cola *, Cola *);
+Cola merge(Cola *, Cola *);
 
 Cola* TC_crear_lista(int);
 

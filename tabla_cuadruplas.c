@@ -106,7 +106,7 @@ void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, char* quad){
     printf("Entro en backpatch \n");
     //TC_imprimir(tabla);
     //printf("BACKPACH %d \n", primeroCola(*cola));
-      
+    imprimirCola(cola);
     while(!esNulaCola(*cola)){
         printf("BACKPACH %d \n", primeroCola(*cola));
         if(primeroCola(*cola) <= tabla->siguiente){
@@ -123,16 +123,16 @@ Cola* TC_crear_lista(int quad){
     return cola;*/
 }
 
-Cola* merge(Cola *cola1, Cola *cola2){
-    /*Cola *aux;
-    TC_insertar_otra_lista(aux, *cola1);
-    TC_insertar_otra_lista(aux, *cola2);
-    return aux;*/
+Cola merge(Cola *cola1, Cola *cola2){
+    Cola aux;
+    TC_insertar_otra_lista(&aux, *cola1);
+    TC_insertar_otra_lista(&aux, *cola2);
+    return aux;
 }
 
 void TC_insertar_otra_lista(Cola *final, Cola cola){
-    /*while(!esNulaCola(cola)){
+    while(!esNulaCola(cola)){
         pideTurnoCola(final, primeroCola(cola));
         avanceCola(&cola);
-    }*/
+    }
 }
