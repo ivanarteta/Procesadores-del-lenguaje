@@ -460,7 +460,9 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 imprimirCola(&$4.FALSE);
 
                                 $$.tipo = TIPO_BOOLEANO;
-                                backpatch(&cuadrupla, &$1.TRUE, $3);
+                                char numero[10];
+                                sprintf(numero, "%d", $3);
+                                backpatch(&cuadrupla, &$1.TRUE, numero);
                                 $$.FALSE = merge($1.FALSE, $4.FALSE);
                                 $$.TRUE = $4.TRUE;
                                 printf(ROJO"Cola true \n"RESET);
@@ -493,6 +495,7 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 printf(ROJO"Cola false\n"RESET);
                                 imprimirCola(&$$.FALSE);
                                 //Printear el true y el false
+                                TC_imprimir(&cuadrupla);
                             }
                         | TK_NO expresion_booleana
                             {
@@ -517,6 +520,7 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                         | expresion_aritmetica TK_OPERADOR_RELACIONAL expresion_aritmetica 
                             {
                                 printf(MAGENTA"Expresion booleana -> 6\n"RESET);
+                                //TC_imprimir(&cuadrupla);
                                 $$.tipo = TIPO_BOOLEANO;
                             }
                         | expresion_aritmetica TK_IGUAL expresion_aritmetica 
@@ -535,11 +539,13 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 imprimirCola(&$$.TRUE);
                                 printf(ROJO"Cola false \n"RESET);
                                 imprimirCola(&$$.FALSE);
+                                TC_imprimir(&cuadrupla);
                             }
                         | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS 
                             {
                                 printf(MAGENTA"Expresion booleana -> 8\n"RESET);
                                 $$ = $2;
+                                TC_imprimir(&cuadrupla);
                             }
                         ;
 
@@ -577,20 +583,16 @@ asignacion:     operando TK_ASIGNACION expresion
                             if($1.tipo == $3.tipo){  
                                 if($1.tipo == TIPO_BOOLEANO){
                                     int nextquad = TC_elemento_siguiente(&cuadrupla);
-                                    printf(MAGENTA"HOLA %d \n"RESET, nextquad);
-                                    printf("%d \n",primeroCola($3.TRUE));
-                                    backpatch(&cuadrupla, &$3.TRUE, nextquad);
-                                    printf(MAGENTA"ENTRO \n"RESET);
-                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE, NULL, NULL, $1.sitio));
-                                    /* DA PROBLEMAS POR EL +2*/
                                     char numero[10];
+                                    sprintf(numero, "%d", nextquad);
+                                    backpatch(&cuadrupla, &$3.TRUE, numero);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE, NULL, NULL, $1.sitio));
                                     sprintf(numero, "%d", nextquad+2);
-                                    printf("%s \n", numero);
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, NULL, NULL, numero));
                                     sprintf(numero, "%d", nextquad+1);
-                                    printf("%s \n", numero);
-                                    //backpatch(&cuadrupla, $3.FALSE, numero);
+                                    backpatch(&cuadrupla, &$3.FALSE, numero);
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_FALSE, NULL, NULL, $1.sitio));
+                                    TC_imprimir(&cuadrupla);
                                 }else{
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, NULL, $3.sitio));
                                 }

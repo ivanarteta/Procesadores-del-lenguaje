@@ -104,13 +104,17 @@ int TC_elemento_siguiente(TC_tabla_cuadrupla *tabla){
 
 void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, char* quad){
     printf("Entro en backpatch \n");
+    printf("QUAD: %s \n", quad);
     //TC_imprimir(tabla);
     //printf("BACKPACH %d \n", primeroCola(*cola));
     imprimirCola(cola);
     while(!esNulaCola(*cola)){
         printf("BACKPACH %d \n", primeroCola(*cola));
         if(primeroCola(*cola) <= tabla->siguiente){
-            tabla->cuadruplas[primeroCola(*cola)].resultado = quad;  
+            tabla->cuadruplas[primeroCola(*cola)].resultado = quad;
+            //sprintf(tabla->cuadruplas[primeroCola(*cola)].resultado, "%s", quad);
+            //tabla->cuadruplas[primeroCola(*cola)].resultado = quad;  
+            //printf("%s \n ", tabla->cuadruplas[primeroCola(*cola)].resultado);
         }
         avanceCola(cola);
     }
