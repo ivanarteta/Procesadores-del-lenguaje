@@ -450,22 +450,48 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                             {
                                 /*Hay que añadirle antes de la segunda expresión booleana una M */
                                 printf(MAGENTA"Expresion booleana -> 1\n"RESET);
+                                printf(ROJO"Cola true $1 \n"RESET);
+                                imprimirCola(&$1.TRUE);
+                                printf(ROJO"Cola false $1\n"RESET);
+                                imprimirCola(&$1.FALSE);
+                                printf(ROJO"Cola true $4 \n"RESET);
+                                imprimirCola(&$4.TRUE);
+                                printf(ROJO"Cola false $4\n"RESET);
+                                imprimirCola(&$4.FALSE);
+
                                 $$.tipo = TIPO_BOOLEANO;
                                 backpatch(&cuadrupla, &$1.TRUE, $3);
-                                $$.FALSE = merge(&$1.FALSE, &$4.FALSE);
+                                $$.FALSE = merge($1.FALSE, $4.FALSE);
                                 $$.TRUE = $4.TRUE;
+                                printf(ROJO"Cola true \n"RESET);
+                                imprimirCola(&$$.TRUE);
+                                printf(ROJO"Cola false\n"RESET);
+                                imprimirCola(&$$.FALSE);
                             }
                         | expresion_booleana TK_O M expresion_booleana
                             {
                                 /*Hay que añadirle antes de la segunda expresión booleana una M */
                                 printf(MAGENTA"Expresion booleana -> 2\n"RESET);
+                                printf(ROJO"Cola true $1 \n"RESET);
+                                imprimirCola(&$1.TRUE);
+                                printf(ROJO"Cola false $1\n"RESET);
+                                imprimirCola(&$1.FALSE);
+                                printf(ROJO"Cola true $4 \n"RESET);
+                                imprimirCola(&$4.TRUE);
+                                printf(ROJO"Cola false $4\n"RESET);
+                                imprimirCola(&$4.FALSE);
+
                                 $$.tipo = TIPO_BOOLEANO;
                                 char numero[10];
                                 sprintf(numero, "%d", $3);
-                                printf("%s \n", numero);
+                                //printf("%s \n", numero);
                                 backpatch(&cuadrupla, &$1.FALSE, numero);
-                                $$.TRUE = merge(&$1.TRUE, &$4.TRUE);
+                                $$.TRUE = merge($1.TRUE, $4.TRUE);
                                 $$.FALSE = $4.FALSE;  
+                                printf(ROJO"Cola true \n"RESET);
+                                imprimirCola(&$$.TRUE);
+                                printf(ROJO"Cola false\n"RESET);
+                                imprimirCola(&$$.FALSE);
                                 //Printear el true y el false
                             }
                         | TK_NO expresion_booleana
@@ -475,6 +501,10 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 $$.TRUE = $2.FALSE;
                                 //$$.FALSE = $$.TRUE;
                                 $$.FALSE = $2.TRUE;
+                                printf(ROJO"Cola true \n"RESET);
+                                imprimirCola(&$$.TRUE);
+                                printf(ROJO"Cola false\n"RESET);
+                                imprimirCola(&$$.FALSE);
                             }
                         | TK_VERDADERO 
                             {
@@ -494,9 +524,9 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 printf(MAGENTA"Expresion booleana -> 7\n"RESET);
                                 printf("$1.tipo %d $1.sitio %s $3.tipo %d $3.sitio %s \n", $1.tipo, $1.sitio, $3.tipo, $3.sitio);
                                 /* AQUI NO COGE BIEN EL SITIO, NO SE PORQUE */
-
                                 $$.tipo = TIPO_BOOLEANO;
                                 int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                /* Para cuando llegan aqui estan vacias todo el rato */
                                 pideTurnoCola(&$$.TRUE, nextquad);
                                 pideTurnoCola(&$$.FALSE, nextquad+1);
                                 TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_IGUAL, $1.sitio, $3.sitio, NULL));
@@ -505,8 +535,6 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 imprimirCola(&$$.TRUE);
                                 printf(ROJO"Cola false \n"RESET);
                                 imprimirCola(&$$.FALSE);
-
-
                             }
                         | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS 
                             {

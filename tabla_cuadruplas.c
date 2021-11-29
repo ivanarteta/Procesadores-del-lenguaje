@@ -123,16 +123,22 @@ Cola* TC_crear_lista(int quad){
     return cola;*/
 }
 
-Cola merge(Cola *cola1, Cola *cola2){
+Cola merge(Cola cola1, Cola cola2){
     Cola aux;
-    TC_insertar_otra_lista(&aux, *cola1);
-    TC_insertar_otra_lista(&aux, *cola2);
+    /*TC_insertar_otra_lista(aux, *cola1);
+    imprimirCola(&aux);
+    TC_insertar_otra_lista(aux, *cola2);
+    imprimirCola(&aux);*/
+    cola1.f->s = cola2.i;
+    aux = cola1;
     return aux;
 }
 
-void TC_insertar_otra_lista(Cola *final, Cola cola){
-    while(!esNulaCola(cola)){
-        pideTurnoCola(final, primeroCola(cola));
+void TC_insertar_otra_lista(Cola final, Cola cola){
+    /*while(!esNulaCola(cola)){
+        printf("%d \n",  primeroCola(cola));
+        pideTurnoCola(&final, primeroCola(cola));
         avanceCola(&cola);
-    }
+        printf("%d \n",  primeroCola(final));
+    }*/
 }

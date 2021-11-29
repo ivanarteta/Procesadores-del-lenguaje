@@ -48,10 +48,13 @@ tElem primeroCola(Cola c){
 }
 
 void imprimirCola(Cola *cola){
-	NodoDeCola *aux;
-	aux = cola->i;
-	while(aux->s != NULL){
+	if (!esNulaCola(*cola)){
+		NodoDeCola *aux;
+		aux = cola->i;
+		while(aux->s != NULL){
+			printf("%d \n", aux->e);
+			aux = aux->s;
+		}
 		printf("%d \n", aux->e);
 	}
-	printf("%d \n", aux->e);
 }
