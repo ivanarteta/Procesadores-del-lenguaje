@@ -10,13 +10,15 @@ void TC_nuevaLista(TC_tabla_cuadrupla *elemento){
     elemento->siguiente = 0;
 }
 
-TC_cuadrupla* TC_crear_cuadrupla(int operador, char *op1, char *op2, char *resultado){
+TC_cuadrupla* TC_crear_cuadrupla(int operador, int op1, int op2, int resultado){
+    printf("%d %d %d %d \n",operador, op1, op2, resultado );
     TC_cuadrupla *cuadrupla;
     cuadrupla = (TC_cuadrupla*)malloc(sizeof(TC_cuadrupla));
-    cuadrupla->operador = operador;
-    cuadrupla->operando1 = op1;
-    cuadrupla->operando2 = op2;
-    cuadrupla->resultado = (resultado == NULL) ? resultado : strdup(resultado);
+    cuadrupla->operador = (operador == NULL) ? -1 : operador;
+    cuadrupla->operando1 = (op1 == NULL) ? -1 : op1;
+    cuadrupla->operando2 = (op2 == NULL) ? -1 : op2;
+    cuadrupla->resultado = (resultado == NULL) ? -1 : resultado;
+    printf("%d %d %d %d \n",cuadrupla->operador, cuadrupla->operando1, cuadrupla->operando2, cuadrupla->resultado );
     return cuadrupla;
 }
 
@@ -66,14 +68,26 @@ char* mostrar_operador(int operador){
     }
 }
 
+char *parse(int elemento){
+    char aux[10];
+    if(elemento == -1){
+        strcpy(aux, "(null)");
+    }else{
+        sprintf(aux, "%d", elemento);
+    }
+    return strdup(aux);
+}
+
 void TC_imprimir(TC_tabla_cuadrupla *tabla){
     printf("\n\n______________ Contenido de la tabla de cuadruplas _____________\n");
 	printf("%5s %25s %25s %25s %25s \n", "ID", "OPERADOR", "OPERANDO1", "OPERANDO2", "RESULTADO");
     /* Recorremos todos los elementos de la tabla */
     for(int i=0; i < tabla->siguiente; i++){
-        printf("%5d %25s %25s %25s %25s \n", i, mostrar_operador(tabla->cuadruplas[i].operador), tabla->cuadruplas[i].operando1, tabla->cuadruplas[i].operando2, tabla->cuadruplas[i].resultado);
+        //printf("%5d %25s %25d %25d %25d \n", i, mostrar_operador(tabla->cuadruplas[i].operador), tabla->cuadruplas[i].operando1, tabla->cuadruplas[i].operando2, tabla->cuadruplas[i].resultado);
+        printf("%5d %25s %25s %25s %25s \n", i, mostrar_operador(tabla->cuadruplas[i].operador), parse(tabla->cuadruplas[i].operando1), parse(tabla->cuadruplas[i].operando2), parse(tabla->cuadruplas[i].resultado));
     }
 }
+
 
 void TC_imprimir_C3D(TC_tabla_cuadrupla *tabla){
     printf("\n\n______________ Codigo en tres direcciones _____________\n");
@@ -102,19 +116,11 @@ int TC_elemento_siguiente(TC_tabla_cuadrupla *tabla){
     return tabla->siguiente;
 }
 
-void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, char* quad){
-    printf("Entro en backpatch \n");
-    printf("QUAD: %s \n", quad);
-    //TC_imprimir(tabla);
-    //printf("BACKPACH %d \n", primeroCola(*cola));
+void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, int quad){
     imprimirCola(cola);
     while(!esNulaCola(*cola)){
-        printf("BACKPACH %d \n", primeroCola(*cola));
         if(primeroCola(*cola) <= tabla->siguiente){
             tabla->cuadruplas[primeroCola(*cola)].resultado = quad;
-            //sprintf(tabla->cuadruplas[primeroCola(*cola)].resultado, "%s", quad);
-            //tabla->cuadruplas[primeroCola(*cola)].resultado = quad;  
-            //printf("%s \n ", tabla->cuadruplas[primeroCola(*cola)].resultado);
         }
         avanceCola(cola);
     }

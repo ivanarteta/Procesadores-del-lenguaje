@@ -1,7 +1,4 @@
 algoritmo intercambio;
-    const
-        f = 3;
-    fconst
     ent a, b: entero;
     sal a, b: entero;
 {Prec: a= A AND b = B}
@@ -12,6 +9,6 @@ algoritmo intercambio;
     aux:= a;
     a:= b;
     b:= aux;
-    aux := a + b
+    aux := a / b
 {Post: b=A AND a = B}
 falgoritmo

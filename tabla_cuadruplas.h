@@ -13,11 +13,11 @@ typedef struct TC_cuadrupla{
     /* Operador */
     int operador; //ASIGNACION POR EJEMPLO
     /* Argumento 1 o primer operando */
-    char* operando1;
+    int operando1;
     /* Argumento 2 o segundo operando */
-    char* operando2;
+    int operando2;
     /* Resultado */
-    char* resultado;
+    int resultado;
 }TC_cuadrupla;
 
 /* Definición de la tabla cuadrupla */
@@ -29,13 +29,13 @@ typedef struct TC_tabla_cuadrupla{
 
 void TC_nuevaLista(TC_tabla_cuadrupla *);
 void TC_insertar(TC_tabla_cuadrupla *, TC_cuadrupla *); //Es la función gen
-TC_cuadrupla* TC_crear_cuadrupla(int, char *, char *, char *);
+TC_cuadrupla* TC_crear_cuadrupla(int, int, int, int);
 void TC_imprimir(TC_tabla_cuadrupla *);
 void TC_imprimir_C3D(TC_tabla_cuadrupla *);
 int TC_elemento_siguiente(TC_tabla_cuadrupla *); //NEXTQUAD
 
 /* Funciones para los booleanos */
-void backpatch(TC_tabla_cuadrupla *, Cola *, char* );
+void backpatch(TC_tabla_cuadrupla *, Cola *, int );
 Cola merge(Cola , Cola );
 
 Cola* TC_crear_lista(int);

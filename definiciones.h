@@ -2,7 +2,7 @@
 #define DEFINICIONES
 
 enum enum_literales{
-    LITERAL_ENTERO, 
+    LITERAL_ENTERO = 1, 
     LITERAL_REAL,
     LITERAL_CARACTER,
     LITERAL_CADENA,
@@ -11,7 +11,7 @@ enum enum_literales{
 };
 
 enum enum_tipo_celda{
-    TS_VAR, 
+    TS_VAR = 1, 
     TS_CONSTANTE,
     TS_ACCION,
     TS_FUNCION,
@@ -26,7 +26,7 @@ enum enum_tipo_celda{
 enum enum_operadores{
 
     /* Input y output */
-    OP_INPUT,
+    OP_INPUT = 1,
     OP_OUTPUT,
 
     /* Asignación */

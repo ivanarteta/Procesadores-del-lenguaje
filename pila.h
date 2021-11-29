@@ -1,6 +1,6 @@
 #include <stdbool.h>
 
-typedef char* tipoElementoPila;
+typedef int tipoElementoPila;
 typedef struct celdaP{
 	tipoElementoPila elem;
 	struct celdaP *sig;
