@@ -12,13 +12,15 @@
 #define CYAN    "\x1b[36m"
 #define RESET "\x1b[0m"
 
+int contadorTemp = 1;
+
 void TS_nuevaLista(TS_lista *elemento){
     elemento->inicio = NULL;
 	elemento->final = NULL;
     elemento->contador = 1;
 }
 
-void TS_insertar(TS_lista *lista, char* nombre){
+int TS_insertar(TS_lista *lista, char* nombre){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     celda->nombre = nombre;
@@ -26,34 +28,72 @@ void TS_insertar(TS_lista *lista, char* nombre){
         celda->siguiente = NULL;
         lista->inicio = celda;
         lista->final = celda;
+        celda->id = lista->contador;
+        lista->contador++;
     }else{
         if(!TS_buscar(lista, nombre)){
             celda->siguiente = NULL;
+            celda->id = lista->contador;
+            lista->contador++;
             TS_celda *aux = lista->inicio;
             while(aux->siguiente != NULL){
                 aux = aux->siguiente;
             }
             aux->siguiente = celda;
-            lista->final = celda;
+            lista->final = celda;       
+        }else{
+            return TS_buscar_id(lista, nombre);
         }
     }
+    return celda->id;
 }
 
-//Lista, nombre, tipo, tipo_simbolo
-void TS_modificar_tipo(TS_lista *lista, char* nombre, int tipo, int tipoSimbolo){
+
+int TS_buscar_id(TS_lista *lista, char * nombre){ 
     TS_celda *aux;
     aux = lista->inicio;
-    while(aux->siguiente != NULL && aux->nombre != nombre){
+    while(aux->siguiente != NULL){
+        if((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)){
+            return aux->id;
+        }
+        aux = aux->siguiente;  
+    }
+    return aux->id;
+}
+
+
+
+//Lista, nombre, tipo, tipo_simbolo
+//Aquí en vez del nombre se le pasa la posicion
+void TS_modificar_tipo(TS_lista *lista, int id, int tipo, int tipoSimbolo){
+    TS_celda *aux;
+    aux = lista->inicio;
+    while(aux->siguiente != NULL && aux->id != id){
         aux = aux->siguiente;  
     }
     /* Puede ser porque o bien es el último elemento o bien porque es el correcto */
-    if(aux->nombre == nombre){
+    if(aux->id == id){
         aux->tipo = tipo;
         aux->tipo_simbolo = tipoSimbolo;
     }
 }
 
-void TS_modificar_valor_cte(TS_lista *lista, char *nombre, Constante_valor valor){
+
+/*void TS_modificar_tipo(TS_lista *lista, char* nombre, int tipo, int tipoSimbolo){
+    TS_celda *aux;
+    aux = lista->inicio;
+    while(aux->siguiente != NULL && aux->nombre != nombre){
+        aux = aux->siguiente;  
+    }
+    if(aux->nombre == nombre){
+        aux->tipo = tipo;
+        aux->tipo_simbolo = tipoSimbolo;
+    }
+}*/
+
+
+
+/*void TS_modificar_valor_cte(TS_lista *lista, char *nombre, Constante_valor valor){
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL && (aux->nombre != nombre)){
@@ -71,15 +111,15 @@ void TS_modificar_valor_cte(TS_lista *lista, char *nombre, Constante_valor valor
                 break;
         }
     }
-}
+}*/
 
-char* TS_newtempt(TS_lista *lista){
+int TS_newtempt(TS_lista *lista){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     char nombre[10];
-    sprintf(nombre, "t%d", lista->contador);
+    sprintf(nombre, "t%d", contadorTemp);
     celda->nombre =strdup(nombre);
-    lista->contador++;
+    contadorTemp++;
     if(TS_esVacio(lista)){
         celda->siguiente = NULL;
         lista->inicio = celda;
@@ -87,6 +127,8 @@ char* TS_newtempt(TS_lista *lista){
     }else{
         if(!TS_buscar(lista, celda->nombre)){
             celda->siguiente = NULL;
+            celda->id = lista->contador;
+            lista->contador++;
             TS_celda *aux = lista->inicio;
             while(aux->siguiente != NULL){
                 aux = aux->siguiente;
@@ -95,7 +137,7 @@ char* TS_newtempt(TS_lista *lista){
             lista->final = celda;
         }
     }
-    return celda->nombre;
+    return celda->id;
 }
 
 bool TS_buscar(TS_lista *lista, char * nombre){ 
@@ -143,42 +185,42 @@ char* mostrar_tipo(int tipo){
 
 void TS_imprimir(TS_lista *lista){
 	printf("\n\n______________ Contenido de la tabla de simbolos _____________\n");
-	printf("%10s %25s %25s \n", "NOMBRE", "TIPO", "TIPO SIMBOLO");
+	printf("%5s %10s %25s %25s \n", "ID",  "NOMBRE", "TIPO", "TIPO SIMBOLO");
     /* Recorremos todos los elementos de la tabla */
     TS_celda *aux;
     aux = lista->inicio; 
     while (aux->siguiente != NULL){
-        printf("%10s %25s %25s \n", aux->nombre, mostrar_tipo(aux->tipo), mostrar_tipo(aux->tipo_simbolo));
+        printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), mostrar_tipo(aux->tipo_simbolo));
         aux = aux->siguiente;
     }
-    printf("%10s %25s %25s \n", aux->nombre, mostrar_tipo(aux->tipo), mostrar_tipo(aux->tipo_simbolo));
+    printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), mostrar_tipo(aux->tipo_simbolo));
 }
 
-int TS_consulta_tipo_simbolo(TS_lista *lista, char *nombre){
+int TS_consulta_tipo_simbolo(TS_lista *lista, int id){
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL){
-        if(aux->nombre == nombre || !strcmp(aux->nombre, nombre)){
+        if(aux->id == id){
             return aux->tipo_simbolo;
         }
         aux = aux->siguiente;  
     }
-    if(aux->nombre == nombre || !strcmp(aux->nombre, nombre)){
+    if(aux->id == id){
         return aux->tipo_simbolo;
     }
     return -1;
 }
 
-int TS_consulta_tipo(TS_lista *lista, char *nombre){
+int TS_consulta_tipo(TS_lista *lista, int id){
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL){
-        if(aux->nombre == nombre || !strcmp(aux->nombre, nombre)){
+        if(aux->id == id){
             return aux->tipo;
         }
         aux = aux->siguiente;  
     }
-    if(aux->nombre == nombre || !strcmp(aux->nombre, nombre)){
+    if(aux->id == id){
         return aux->tipo;
     }
     return -1;
