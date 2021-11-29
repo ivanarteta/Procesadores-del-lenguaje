@@ -1,7 +1,7 @@
 %{
-#include "cola.h"
+
 #include "pila.h"
-#include "definiciones.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,6 +32,12 @@ tipoPila pila;
     y para un apuntador a la tabla de simbolos.*/
 %}
 
+%code requires{
+    #include "cola.h"
+    #include "definiciones.h"
+    #include "tabla_simbolos.h"
+}
+
 %union{
     char* ctype; /* Para las cadenas de caracteres (id, string, ...) */
     int itype; /* Para los números enteros y los booleanos */
@@ -49,7 +55,7 @@ tipoPila pila;
                    // a lo que se haga si es cierto.
                     //FALSE: Lista de posiciones de cuadruplas con gotos incompletos que tienen que ir
                    // a lo que se haga si es falso.
-                Cola *TRUE, *FALSE;
+                Cola TRUE, FALSE;
             };
         };
     }exp_type;
@@ -483,12 +489,21 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                         | expresion_aritmetica TK_IGUAL expresion_aritmetica 
                             {
                                 printf(MAGENTA"Expresion booleana -> 7\n"RESET);
+                                printf("$1.tipo %d $1.sitio %s $3.tipo %d $3.sitio %s \n", $1.tipo, $1.sitio, $3.tipo, $3.sitio);
+                                /* AQUI NO COGE BIEN EL SITIO, NO SE PORQUE */
+
                                 $$.tipo = TIPO_BOOLEANO;
                                 int nextquad = TC_elemento_siguiente(&cuadrupla);
-                                $$.TRUE = TC_crear_lista(nextquad);
-                                $$.FALSE =TC_crear_lista(nextquad+1);
+                                pideTurnoCola(&$$.TRUE, nextquad);
+                                pideTurnoCola(&$$.FALSE, nextquad+1);
                                 TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_IGUAL, $1.sitio, $3.sitio, NULL));
                                 TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, NULL, NULL, NULL));
+                                printf(ROJO"Cola true \n"RESET);
+                                imprimirCola(&$$.TRUE);
+                                printf(ROJO"Cola false \n"RESET);
+                                imprimirCola(&$$.FALSE);
+
+
                             }
                         | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS 
                             {
@@ -501,6 +516,8 @@ operando:   TK_IDENTIFICADOR
                 {
                     $$.sitio = $1; 
                     $$.tipo = TS_consulta_tipo(&simbolos, $1);
+                    nuevaCola(&$$.TRUE);
+                    nuevaCola(&$$.FALSE);
                 }
             | operando TK_REFERENCIA operando {}
             | operando TK_INICIO_ARRAY expresion TK_FIN_ARRAY {}
@@ -529,7 +546,8 @@ asignacion:     operando TK_ASIGNACION expresion
                                 if($1.tipo == TIPO_BOOLEANO){
                                     int nextquad = TC_elemento_siguiente(&cuadrupla);
                                     printf(MAGENTA"HOLA %d \n"RESET, nextquad);
-                                    //backpatch(&cuadrupla, $3.TRUE, nextquad);
+                                    printf("%d \n",primeroCola($3.TRUE));
+                                    backpatch(&cuadrupla, &$3.TRUE, nextquad);
                                     printf(MAGENTA"ENTRO \n"RESET);
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE, NULL, NULL, $1.sitio));
                                     /* DA PROBLEMAS POR EL +2*/
@@ -537,7 +555,6 @@ asignacion:     operando TK_ASIGNACION expresion
                                     sprintf(numero, "%d", nextquad+2);
                                     printf("%s \n", numero);
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, NULL, NULL, numero));
-                                    TC_imprimir(&cuadrupla);
                                     sprintf(numero, "%d", nextquad+1);
                                     printf("%s \n", numero);
                                     //backpatch(&cuadrupla, $3.FALSE, numero);

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 void TC_nuevaLista(TC_tabla_cuadrupla *elemento){
     elemento->siguiente = 0;
@@ -102,9 +103,15 @@ int TC_elemento_siguiente(TC_tabla_cuadrupla *tabla){
 }
 
 void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, char* quad){
+    printf("Entro en backpatch \n");
+    //TC_imprimir(tabla);
+    //printf("BACKPACH %d \n", primeroCola(*cola));
+      
     while(!esNulaCola(*cola)){
         printf("BACKPACH %d \n", primeroCola(*cola));
-        tabla->cuadruplas[primeroCola(*cola)].resultado = quad;
+        if(primeroCola(*cola) <= tabla->siguiente){
+            tabla->cuadruplas[primeroCola(*cola)].resultado = quad;  
+        }
         avanceCola(cola);
     }
 }

@@ -1,46 +1,6 @@
 #ifndef DEFINICIONES
 #define DEFINICIONES
 
-/* Esto para la cola de $$.true y $$.false */
-typedef int tElem;
-
-typedef struct nodoDeCola{
-	tElem e;
-	struct nodoDeCola *s;
-}NodoDeCola;
-
-typedef struct cola{
-	NodoDeCola *i;
-	NodoDeCola *f;
-}Cola;
-
-
-typedef struct constante_valor{
-    union{
-        int entero; //Para enteros y booleanos
-        float real;
-        char* caracteres; //Para char y cadenas
-    };
-}Constante_valor;
-
-/*enum enum_operador{
-    OP_SUMA,
-    OP_RESTA,
-    OP_MULTIPLICACION,
-    OP_DIVISION,
-    OP_MOD,
-    OP_DIV,
-    OP_OPERADORES_RELACIONALES
-};*/
-
-/*enum enum_tipo{
-    TIPO_ENTERO, //O LITERAL_ENTERO
-    TIPO_REAL, //O LITERAL_REAL
-    TIPO_BOOLEANO, //O LITERAL_BOOLEANO
-    TIPO_CADENA, //O LITERAL_CADENA
-    TIPO_CARACTER //O LITERAL_CARACTER
-};*/
-
 enum enum_literales{
     LITERAL_ENTERO, 
     LITERAL_REAL,

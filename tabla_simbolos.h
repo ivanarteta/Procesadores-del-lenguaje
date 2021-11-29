@@ -4,6 +4,14 @@
 #include <stdbool.h>
 #include "definiciones.h" //Solo si en el struct hacemos referencia al enum_tipo
 
+typedef struct constante_valor{
+    union{
+        int entero; //Para enteros y booleanos
+        float real;
+        char* caracteres; //Para char y cadenas
+    };
+}Constante_valor;
+
 typedef struct constante{
     Constante_valor valor;
 }Constante;

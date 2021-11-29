@@ -46,3 +46,12 @@ tElem primeroCola(Cola c){
 		errorCola("primero en cola nula");
 	return c.i->e;
 }
+
+void imprimirCola(Cola *cola){
+	NodoDeCola *aux;
+	aux = cola->i;
+	while(aux->s != NULL){
+		printf("%d \n", aux->e);
+	}
+	printf("%d \n", aux->e);
+}

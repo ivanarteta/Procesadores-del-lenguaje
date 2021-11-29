@@ -3,6 +3,7 @@
 
 #include "definiciones.h"
 #include "cola.h"
+#include <stdbool.h>
 
 /* Podemos crear una lista con defines para todos los posibles operadores de las cuádruplas */
 /* O bien definir un enum con los valores de los posibles operadores */
