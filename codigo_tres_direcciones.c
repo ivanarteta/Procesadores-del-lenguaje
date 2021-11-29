@@ -12,11 +12,14 @@ void CTD_imprimir(TC_tabla_cuadrupla *cuadrupla, TS_lista *simbolos){
                 printf("%d output %s \n", i+1, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1));
                 break;
             case OP_ASIGNACION:
-                printf("%d %s := %s \n", i+1, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].resultado));
+                printf("%d %s := %s \n", i+1, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].resultado));            
                 break;
             case OP_ASIGNACION_TRUE:
                 break;
             case OP_ASIGNACION_FALSE:
+                break;
+            case OP_ASIGNACION_ENTERO:
+                printf("%d %s := %d \n", i+1, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), cuadrupla->cuadruplas[i].resultado);
                 break;
             case OP_SUMA:
                 break;
@@ -58,6 +61,7 @@ void CTD_imprimir(TC_tabla_cuadrupla *cuadrupla, TS_lista *simbolos){
             case OP_GOTO_DISTINTO:
                 break;
             case OP_GOTO_MENOR:
+                printf("%d if %s < %s goto %d \n", i+1, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado);
                 break;
             case OP_GOTO_MAYOR:
                 break;
@@ -65,7 +69,6 @@ void CTD_imprimir(TC_tabla_cuadrupla *cuadrupla, TS_lista *simbolos){
                 break;
             case OP_GOTO_MAYOR_O_IGUAL:
                 break;
-            
             default:
                 break;
         }

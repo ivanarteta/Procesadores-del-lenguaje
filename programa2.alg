@@ -3,7 +3,7 @@ algoritmo sumacomb;
     sal suma: entero;
 {Prec: n= N AND m = M AND M >= N >0}
     var
-    i, comb: entero;
+        i, comb: entero;
     fvar
     i:= 25; 
     suma:= 0;

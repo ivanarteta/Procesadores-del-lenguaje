@@ -6,6 +6,14 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define ROJO "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RESET "\x1b[0m"
+
 void TC_nuevaLista(TC_tabla_cuadrupla *elemento){
     elemento->siguiente = 0;
 }
@@ -13,15 +21,15 @@ void TC_nuevaLista(TC_tabla_cuadrupla *elemento){
 TC_cuadrupla* TC_crear_cuadrupla(int operador, int op1, int op2, int resultado){
     TC_cuadrupla *cuadrupla;
     cuadrupla = (TC_cuadrupla*)malloc(sizeof(TC_cuadrupla));
-    cuadrupla->operador = (operador == NULL) ? -1 : operador;
-    cuadrupla->operando1 = (op1 == NULL) ? -1 : op1;
-    cuadrupla->operando2 = (op2 == NULL) ? -1 : op2;
-    cuadrupla->resultado = (resultado == NULL) ? -1 : resultado;
+    cuadrupla->operador = operador;
+    cuadrupla->operando1 =  op1;
+    cuadrupla->operando2 =  op2;
+    cuadrupla->resultado = resultado;
+    printf(ROJO"%d %d %d %d \n"RESET, cuadrupla->operador, cuadrupla->operando1, cuadrupla->operando2, cuadrupla->resultado);
     return cuadrupla;
 }
 
 void TC_insertar(TC_tabla_cuadrupla *tabla, TC_cuadrupla *cuadrupla){
-
     tabla->cuadruplas[tabla->siguiente] = *cuadrupla;
     tabla->siguiente++;
 
@@ -66,6 +74,8 @@ char* mostrar_operador(int operador){
             return "Output";
         case OP_ASIGNACION:
             return ":=";
+        case OP_ASIGNACION_ENTERO:
+            return ":=";
         case OP_SUMA:
             return "+";
         case OP_RESTA:
@@ -95,7 +105,7 @@ char* mostrar_operador(int operador){
         case OP_GOTO:
             return "goto";
         default:
-            break;
+            return NULL;
     }
 }
 
