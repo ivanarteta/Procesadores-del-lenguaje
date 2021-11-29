@@ -568,10 +568,10 @@ M:  /* Vacío */ {$$ = TC_elemento_siguiente(&cuadrupla);};
 instrucciones:  instruccion TK_COMPOSICION_SECUENCIAL instrucciones
                 | instruccion
                 ;
-instruccion:    TK_CONTINUAR
-                | asignacion 
+instruccion:    TK_CONTINUAR{}
+                | asignacion
                 | alternativa
-                | iteracion 
+                | iteracion
                 | llamada_accion
                 ;
 asignacion:     operando TK_ASIGNACION expresion
@@ -604,7 +604,19 @@ asignacion:     operando TK_ASIGNACION expresion
                         }
                     }
                 ;
-alternativa:    TK_SI expresion TK_ENTONCES instrucciones lista_opciones TK_FSI
+alternativa:    TK_SI expresion_booleana TK_ENTONCES M instrucciones lista_opciones TK_FSI
+                {
+                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                    char numero[10];
+                    sprintf(numero, "%d", nextquad);
+                    backpatch(&cuadrupla,&$2.true, numero);
+                    if(!empty($5.next)){
+                        $5.next = merge(&$2.false,$5.next);
+                    }else{
+                        $5.next = merge(&$2.false,TC_crear_lista(nextquad));
+                        TC_insertar(OP_GOTO,NULL,NULL,NULL);
+                    }
+                }   
                 ;
 lista_opciones: TK_SI_NO_SI expresion TK_ENTONCES instrucciones lista_opciones
                 | /* vacio */
