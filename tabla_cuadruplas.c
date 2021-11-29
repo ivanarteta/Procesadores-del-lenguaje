@@ -68,20 +68,26 @@ char* mostrar_operador(int operador){
     }
 }
 
+char *parse(int elemento){
+    char aux[10];
+    if(elemento == -1){
+        strcpy(aux, "(null)");
+    }else{
+        sprintf(aux, "%d", elemento);
+    }
+    return strdup(aux);
+}
+
 void TC_imprimir(TC_tabla_cuadrupla *tabla){
     printf("\n\n______________ Contenido de la tabla de cuadruplas _____________\n");
 	printf("%5s %25s %25s %25s %25s \n", "ID", "OPERADOR", "OPERANDO1", "OPERANDO2", "RESULTADO");
     /* Recorremos todos los elementos de la tabla */
-    char aux[10];
     for(int i=0; i < tabla->siguiente; i++){
-        if(tabla->cuadruplas[i].resultado == -1){
-            strcpy(aux, "-");
-        }else{
-            sprintf(aux, "%d",tabla->cuadruplas[i].resultado);
-        }
-        printf("%5d %25s %25d %25d %25s \n", i, mostrar_operador(tabla->cuadruplas[i].operador), tabla->cuadruplas[i].operando1, tabla->cuadruplas[i].operando2, aux);
+        //printf("%5d %25s %25d %25d %25d \n", i, mostrar_operador(tabla->cuadruplas[i].operador), tabla->cuadruplas[i].operando1, tabla->cuadruplas[i].operando2, tabla->cuadruplas[i].resultado);
+        printf("%5d %25s %25s %25s %25s \n", i, mostrar_operador(tabla->cuadruplas[i].operador), parse(tabla->cuadruplas[i].operando1), parse(tabla->cuadruplas[i].operando2), parse(tabla->cuadruplas[i].resultado));
     }
 }
+
 
 void TC_imprimir_C3D(TC_tabla_cuadrupla *tabla){
     printf("\n\n______________ Codigo en tres direcciones _____________\n");
