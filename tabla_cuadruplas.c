@@ -25,7 +25,7 @@ TC_cuadrupla* TC_crear_cuadrupla(int operador, int op1, int op2, int resultado){
     cuadrupla->operando1 =  op1;
     cuadrupla->operando2 =  op2;
     cuadrupla->resultado = resultado;
-    printf(ROJO"%d %d %d %d \n"RESET, cuadrupla->operador, cuadrupla->operando1, cuadrupla->operando2, cuadrupla->resultado);
+    //printf(ROJO"%d %d %d %d \n"RESET, cuadrupla->operador, cuadrupla->operando1, cuadrupla->operando2, cuadrupla->resultado);
     return cuadrupla;
 }
 
@@ -50,10 +50,12 @@ int TC_elemento_siguiente(TC_tabla_cuadrupla *tabla){
 }
 
 void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, int quad){
+    
     while(!esNulaCola(*cola)){
-        if(primeroCola(*cola) <= tabla->siguiente){
+        printf(CYAN"Modificar registro %d asignandole %d \n"RESET, primeroCola(*cola), quad);
+        //if(primeroCola(*cola) <= tabla->siguiente){
             tabla->cuadruplas[primeroCola(*cola)].resultado = quad;
-        }
+        //}
         avanceCola(cola);
     }
 }
@@ -74,8 +76,12 @@ char* mostrar_operador(int operador){
             return "Output";
         case OP_ASIGNACION:
             return ":=";
+        case OP_ASIGNACION_FALSE:
+            return ":= false";
+        case OP_ASIGNACION_TRUE:
+            return ":= true";
         case OP_ASIGNACION_ENTERO:
-            return ":=";
+            return ":= (entero)";
         case OP_SUMA:
             return "+";
         case OP_RESTA:
@@ -90,20 +96,32 @@ char* mostrar_operador(int operador){
             return "div";
         case OP_IGUAL:
             return "=";
-        case OP_OPERADORES_RELACIONALES:
-            return "Oprel";
+        case OP_NO:
+            return "no";
+        case OP_Y:
+            return "y";
+        case OP_O:
+            return "o";
         case OP_INT_TO_REAL:
             return "IntToReal";
         case OP_RESTA_UNARIA_ENTERO:
             return "-ent";
         case OP_RESTA_UNARIA_REAL:
             return "-real";
-        case OP_ASIGNACION_FALSE:
-            return ":= false";
-        case OP_ASIGNACION_TRUE:
-            return ":= true";
         case OP_GOTO:
             return "goto";
+        case OP_GOTO_IGUAL:
+            return "=";
+        case OP_GOTO_DISTINTO:
+            return "<>";
+        case OP_GOTO_MENOR:
+            return "<";
+        case OP_GOTO_MAYOR:
+            return ">";
+        case OP_GOTO_MENOR_O_IGUAL:
+            return "<=";
+        case OP_GOTO_MAYOR_O_IGUAL:
+            return ">=";
         default:
             return NULL;
     }

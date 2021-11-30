@@ -175,6 +175,8 @@ char* mostrar_tipo(int tipo){
             return "Cadena";
         case TIPO_CARACTER:
             return "Caracter";
+        case TIPO_LITERAL_ENTERO:
+            return "Literal entero";
         default:
             return "-";
     }

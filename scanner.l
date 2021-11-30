@@ -357,6 +357,7 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)
                             }
 {DR_operador_relacional}    {
                                 printf("operador relacional: %s \n", yytext); 
+                                yylval.ctype = strdup(yytext);
                                 return TK_OPERADOR_RELACIONAL;
                             }
 

@@ -5,7 +5,7 @@ algoritmo sumacomb;
     var
         i, comb: entero;
     fvar
-    i:= 25; 
+    i:= 0; 
     suma:= 0;
     comb:= m;
     mientras i < n hacer

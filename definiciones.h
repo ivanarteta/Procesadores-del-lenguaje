@@ -19,6 +19,7 @@ enum enum_tipo_celda{
     TIPO_ENTERO,
     TIPO_LITERAL_ENTERO,
     TIPO_REAL, //O LITERAL_REAL
+    TIPO_LITERAL_REAL,
     TIPO_BOOLEANO, //O LITERAL_BOOLEANO
     TIPO_CADENA, //O LITERAL_CADENA
     TIPO_CARACTER //O LITERAL_CARACTER
@@ -47,7 +48,6 @@ enum enum_operadores{
     OP_MOD,
     OP_DIV,
     OP_IGUAL,
-    OP_OPERADORES_RELACIONALES,
 
     /* Operadores logicos */
     OP_NO,
