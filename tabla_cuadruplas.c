@@ -132,6 +132,9 @@ void TC_imprimir(TC_tabla_cuadrupla *tabla){
 	printf("%5s %25s %25s %25s %25s \n", "ID", "OPERADOR", "OPERANDO1", "OPERANDO2", "RESULTADO");
     /* Recorremos todos los elementos de la tabla */
     for(int i=0; i < tabla->siguiente; i++){
+        /*if((strcmp(mostrar_operador(tabla->cuadruplas[i].operador),"goto")==0) && (tabla->cuadruplas[i].resultado == -1)){
+            tabla->cuadruplas[i].resultado = TC_elemento_siguiente(tabla);
+        }*/
         //printf("%5d %25s %25d %25d %25d \n", i, mostrar_operador(tabla->cuadruplas[i].operador), tabla->cuadruplas[i].operando1, tabla->cuadruplas[i].operando2, tabla->cuadruplas[i].resultado);
         printf("%5d %25s %25s %25s %25s \n", i, mostrar_operador(tabla->cuadruplas[i].operador), parse(tabla->cuadruplas[i].operando1), parse(tabla->cuadruplas[i].operando2), parse(tabla->cuadruplas[i].resultado));
     }

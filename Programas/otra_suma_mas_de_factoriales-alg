@@ -9,9 +9,7 @@ algoritmo otraSumaMasDeFactoriales;
     mientras (f * (n+1)) <= x hacer
         f:= f * (n+1);
         n:= n + 1
-    fmientras
-{Post1: n! <= x < (n+1)! AND x = X}
-{Prec2: n! <= x < (n+1)! AND x = X AND X >= 1}
+    fmientras;
     j:= n;
     s:= f;
     mientras j <> 0 hacer

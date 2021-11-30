@@ -4,7 +4,7 @@ algoritmo orden3;
 {Prec: a = A AND b = B AND c = C}
     si A >= b y a >= c ->
         max := a;
-        si b >= c ->mEd := b; MIn := c
+        si b >= c ->med := b; min := c
         [] b <c ->med := c; min := b
         fsi
     [] b >= a y b >= c ->
@@ -13,7 +13,7 @@ algoritmo orden3;
         [] a <c ->med := c; min := a
         fsi
     [] c >= b y c >= a o c = 45e+34->
-        MAX := c;
+        max := c;
         si b >= a ->med := b; min := a
         [] b <a ->med := a; min := b
         fsi
