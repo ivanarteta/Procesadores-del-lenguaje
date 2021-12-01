@@ -87,7 +87,7 @@ DR_operador_relacional      >|<|<>|>=|<=
 DR_literal_cadena           \'([^\']|\/\')*\'
 DR_literal_caracter         \"{DR_letra}\"
 DR_literal_entero           {DR_cifra}+((e|E){DR_cifra}+)? 
-DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)? 
+DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+)? 
 
 %%
  /* Reglas para literales */
@@ -385,10 +385,10 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)
                                     char *exp = strtok(NULL, "e");
                                     char signo = exp[0];
                                     float s;
-                                    if(signo == '+'){
-                                        s = 10.0;
-                                    }else{
+                                    if(signo == '-'){
                                         s = 0.1;
+                                    }else{
+                                        s = 10;
                                     }
                                     char tmp[10];
                                     int h = strlen(exp);
