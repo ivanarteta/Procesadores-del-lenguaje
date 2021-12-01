@@ -86,8 +86,8 @@ DR_operador_relacional      >|<|<>|>=|<=
  /* Strings, y números enteros o reales, positivos y negativos */
 DR_literal_cadena           \'([^\']|\/\')*\'
 DR_literal_caracter         \"{DR_letra}\"
-DR_literal_entero           {DR_cifra}+((e|E)(\+|\-){DR_cifra}+)? 
-DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)? 
+DR_literal_entero           {DR_cifra}+((e|E){DR_cifra}+)? 
+DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+)? 
 
 %%
  /* Reglas para literales */
@@ -363,13 +363,51 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)
 
  /* Identificadores */
 {DR_literal_entero} 	    {
-                                //printf("literal entero: %s \n", yytext); 
-                                yylval.itype = atoi(yytext);
+                                //printf("literal entero: %s \n", yytext);
+                                if(strstr(yytext, "e")){
+                                    char *num = strtok(yytext,"e");
+                                    char *exp = strtok(NULL, "e");
+                                    int n = atoi(num);
+                                    int e = atoi(exp);
+                                    for(int i=0; i<e; i++){
+                                        n = n * 10;
+                                    }
+                                    yylval.itype = n;
+                                }else{
+                                    yylval.itype = atoi(yytext);
+                                }
                                 return TK_LITERAL_ENTERO;
                             }
 {DR_literal_real} 	        {
-                                //printf("literal real: %s \n", yytext); 
-                                yylval.ftype = atof(yytext);
+                                //printf("literal real: %s \n", yytext);
+                                if(strstr(yytext, "e")){
+                                    char *num = strtok(yytext,"e");
+                                    char *exp = strtok(NULL, "e");
+                                    char signo = exp[0];
+                                    float s;
+                                    if(signo == '-'){
+                                        s = 0.1;
+                                    }else{
+                                        s = 10;
+                                    }
+                                    char tmp[10];
+                                    int h = strlen(exp);
+                                    int j = 0;
+                                    for(int i = 0; i < h; i++){
+                                        if(exp[i] != '+' && exp[i] != '-'){
+                                            tmp[j] = exp[i];
+                                            j++;
+                                        }
+                                    }
+                                    float n = atof(num);
+                                    int e = atoi(tmp);
+                                    for(int i=0; i<e; i++){
+                                        n = n * s;
+                                    }
+                                    yylval.ftype = n;
+                                }else{
+                                    yylval.ftype = atof(yytext);
+                                }
                                 return TK_LITERAL_REAL;
                             }
 {DR_id}                     {
