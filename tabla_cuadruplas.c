@@ -53,8 +53,17 @@ void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, int quad){
     
     while(!esNulaCola(*cola)){
         printf(CYAN"Modificar registro %d asignandole %d \n"RESET, primeroCola(*cola), quad);
-        //if(primeroCola(*cola) <= tabla->siguiente){
+        if(tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO
+            || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MAYOR_O_IGUAL 
+            || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MENOR
+            || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MENOR_O_IGUAL
+            || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MAYOR
+            || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_DISTINTO
+            || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_IGUAL){
             tabla->cuadruplas[primeroCola(*cola)].resultado = quad;
+        }
+        //if(primeroCola(*cola) <= tabla->siguiente){
+            
         //}
         avanceCola(cola);
     }

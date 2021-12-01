@@ -317,6 +317,16 @@ expresion:  expresion_aritmetica
                     $$.FALSE = $1.FALSE;
                     $$.tipo = TIPO_BOOLEANO;
 
+                    TC_imprimir(&cuadrupla);
+                    //int nextquad = TC_elemento_siguiente(&cuadrupla);
+                    /*if(!esNulaCola($1.TRUE)){
+                        backpatch(&cuadrupla, &$1.TRUE, nextquad);
+                    }*/
+                    /*f(!esNulaCola($1.FALSE)){
+                        backpatch(&cuadrupla, &$1.FALSE, nextquad+1);
+                    }*/
+                    //TC_imprimir(&cuadrupla);
+
                     printf(MAGENTA_F"Expresion -> booleana salida, no produce ninguna"RESET" \n");
                 }
             | llamada_funcion {}
@@ -804,15 +814,22 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                 pideTurnoCola(&$$.TRUE, nextquad);
                                 pideTurnoCola(&$$.FALSE, nextquad+1);
                                 if(strcmp($2, "<") == 0){
+                                    printf("<\n");
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR, $1.sitio, $3.sitio, nextquad));
                                 }else if(strcmp($2, "<=") == 0){
+                                    printf("<=\n");
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, $1.sitio, $3.sitio, nextquad));
                                 }else if(strcmp($2, ">") == 0){
+                                    printf(">\n");
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MAYOR, $1.sitio, $3.sitio, nextquad));
-                                }else if(strcmp($2, "=>") == 0){
+                                }else if(strcmp($2, ">=") == 0){
+                                    printf("=>\n");
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MAYOR_O_IGUAL, $1.sitio, $3.sitio, nextquad));
                                 }else if(strcmp($2, "<>") == 0){
+                                    printf("<>\n");
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_DISTINTO, $1.sitio, $3.sitio, nextquad));
+                                }else{
+                                    printf("ENTROOO \n");
                                 }
                                 /* Aquí tiene que ir el resultado al output (2) */
                                 //TC_imprimir(&cuadrupla);
@@ -1009,7 +1026,7 @@ asignacion:     operando TK_ASIGNACION expresion
                     }
                 ;
 
-alternativa:    TK_SI expresion_booleana TK_ENTONCES M instrucciones N lista_opciones TK_FSI
+alternativa:    TK_SI expresion TK_ENTONCES M instrucciones N lista_opciones TK_FSI
                 {
                     printf(GREEN"Alternativa entrada\n"RESET);
                     printf("Datos de expresión booleana: \n");
@@ -1026,6 +1043,8 @@ alternativa:    TK_SI expresion_booleana TK_ENTONCES M instrucciones N lista_opc
                     printf("Datos de lista opciones: \n");
                     printf("Cola siguiente: \n");
                     imprimirCola(&$7.siguiente);
+
+                    TC_imprimir(&cuadrupla);
 
                     //if E then M S N else M S
                     //printf(CYAN"Entro en alternativa \n"RESET);
@@ -1053,16 +1072,18 @@ alternativa:    TK_SI expresion_booleana TK_ENTONCES M instrucciones N lista_opc
                         }else{
                             $5.siguiente = merge(aux, aux2);
                         }            
-                        TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
+                        //TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
 
                         $$.siguiente = $5.siguiente; //Esto añadido, no se si está bien o me lo he inventado
                     }
                     printf(GREEN"Alternativa salida \n"RESET);
                     printf("Cola siguiente: \n");
                     imprimirCola(&$$.siguiente);
+
+                    TC_imprimir(&cuadrupla);
                 }   
                 ;
-lista_opciones: TK_SI_NO_SI expresion_booleana TK_ENTONCES M instrucciones N lista_opciones
+lista_opciones: TK_SI_NO_SI expresion TK_ENTONCES M instrucciones N lista_opciones
                 {
                     printf(CYAN"Lista opciones entrada\n"RESET);
                     printf("Datos de expresión booleana: \n");
@@ -1076,8 +1097,10 @@ lista_opciones: TK_SI_NO_SI expresion_booleana TK_ENTONCES M instrucciones N lis
                     printf("Cola siguiente: \n");
                     imprimirCola(&$5.siguiente);
                     printf("Datos de N: %d \n", $6);
+                    TS_imprimir(&simbolos);
+                    TC_imprimir(&cuadrupla);
 
-                    backpatch(&cuadrupla, &$2.TRUE, $6);
+                    backpatch(&cuadrupla, &$2.TRUE, $4);
                     if(!esNulaCola($5.siguiente)){
                         $5.siguiente = merge($2.FALSE, $5.siguiente);
                     }else{
@@ -1085,13 +1108,19 @@ lista_opciones: TK_SI_NO_SI expresion_booleana TK_ENTONCES M instrucciones N lis
                         nuevaCola(&aux);
                         pideTurnoCola(&aux, $4);
                         $5.siguiente = merge($2.FALSE, aux);
-                        TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
+                        backpatch(&cuadrupla, &$5.siguiente, $6);
+                        //TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
                     }
+                    
+                    //int nextquad = TC_elemento_siguiente(&cuadrupla);
+                    //backpatch(&cuadrupla, &$5.siguiente, nextquad);
                     $$.siguiente = $5.siguiente;
 
                     printf(CYAN"Lista opciones salida \n"RESET);
                     printf("Cola siguiente: \n");
                     imprimirCola(&$$.siguiente);
+                    TS_imprimir(&simbolos);
+                    TC_imprimir(&cuadrupla);
                 }
                 | /* vacio */ {nuevaCola(&$$.siguiente);}
                 ;

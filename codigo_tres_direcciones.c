@@ -5,6 +5,7 @@ void CTD_imprimir(TC_tabla_cuadrupla *cuadrupla, TS_lista *simbolos){
 	int pos = -1;
 	int nOut = 0;
 	int cont = 0;
+    int numOutputs = 0;
     printf("\n\n______________ Codigo en tres direcciones _____________\n");
     for(int i=0; i < cuadrupla->siguiente; i++){
         switch (cuadrupla->cuadruplas[i].operador){
@@ -17,6 +18,7 @@ void CTD_imprimir(TC_tabla_cuadrupla *cuadrupla, TS_lista *simbolos){
 				}
 				nOut = nOut + 1;
 				cont = cont - 1;
+                numOutputs++;
                 //printf("%d output %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1));
                 break;
             case OP_ASIGNACION:
@@ -78,25 +80,25 @@ void CTD_imprimir(TC_tabla_cuadrupla *cuadrupla, TS_lista *simbolos){
                 printf("Entro en OP_RESTA_UNARIA_REAL\n");
                 break;
             case OP_GOTO:
-                printf("%d goto %d \n", cont, cuadrupla->cuadruplas[i].resultado);
+                printf("%d goto %d \n", cont, cuadrupla->cuadruplas[i].resultado - numOutputs);
                 break;
             case OP_GOTO_IGUAL:
-                printf("%d if %s = %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado);
+                printf("%d if %s = %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado - numOutputs);
                 break;
             case OP_GOTO_DISTINTO:
-                printf("%d if %s <> %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado);
+                printf("%d if %s <> %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado - numOutputs);
                 break;
             case OP_GOTO_MENOR:
-                printf("%d if %s < %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado);
+                printf("%d if %s < %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado - numOutputs);
                 break;
             case OP_GOTO_MAYOR:
-                printf("%d if %s > %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado);
+                printf("%d if %s > %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado - numOutputs);
                 break;
             case OP_GOTO_MENOR_O_IGUAL:
-                printf("%d if %s <= %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado);
+                printf("%d if %s <= %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado - numOutputs);
                 break;
             case OP_GOTO_MAYOR_O_IGUAL:
-                printf("%d if %s >= %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado);
+                printf("%d if %s >= %s goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla->cuadruplas[i].operando2), cuadrupla->cuadruplas[i].resultado - numOutputs);
                 break;
             default:
                 printf("Entro en default\n");
