@@ -1,0 +1,9 @@
+En TODAS las expresiones booleanas:
+    - Tenemos que tener en cuenta que podemos comparar los tipos base con los literales y en caso de hacer esto, 
+    que hay que añadir variables temporales.
+
+
+
+
+HACE MAL IF CUANDO....
+    - Tiene que compararse con un numero
