@@ -86,8 +86,8 @@ DR_operador_relacional      >|<|<>|>=|<=
  /* Strings, y números enteros o reales, positivos y negativos */
 DR_literal_cadena           \'([^\']|\/\')*\'
 DR_literal_caracter         \"{DR_letra}\"
-DR_literal_entero           (\-)?{DR_cifra}+((e|E){DR_cifra}+)? 
-DR_literal_real             (\-)?{DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)? 
+DR_literal_entero           {DR_cifra}+((e|E){DR_cifra}+)? 
+DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-){DR_cifra}+)? 
 
 %%
  /* Reglas para literales */
