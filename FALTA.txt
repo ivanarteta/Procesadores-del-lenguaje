@@ -7,3 +7,14 @@ En TODAS las expresiones booleanas:
 
 HACE MAL IF CUANDO....
     - Tiene que compararse con un numero
+
+
+Expresiones aritmeticas:
+    - Literal entero con entero:
+    - Literal entero con real:
+    - Literal entero con literal entero:
+    - Literal entero con literal real:
+    - Literal real con entero:
+    - Literal real con real:
+    - Literal real con literal entero:
+    - Literal real con literal real:

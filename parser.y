@@ -1,5 +1,4 @@
 %{
-
 #include "pila.h"
 #include <stdio.h>
 #include <string.h>
@@ -7,7 +6,6 @@
 #include "tabla_cuadruplas.h"
 #include "tabla_simbolos.h"
 #include "codigo_tres_direcciones.h"
-
 
 #define YYDEBUG 1
 void yyerror(char *s);
@@ -169,10 +167,6 @@ tipoPila pila;
 %type <literales_type> tipo_literal
 %type <exp_type> operando expresion expresion_aritmetica expresion_booleana
 %type <inst_type> it_cota_fija it_cota_variable instrucciones alternativa iteracion instruccion asignacion lista_opciones
-/*
-%type <itype> 
-%type <ftype> 
-%type <exp_type> */
 
 %%
 descripcion_algoritmo:  TK_ALGORITMO TK_IDENTIFICADOR TK_COMPOSICION_SECUENCIAL cabecera_algoritmo bloque_algoritmo TK_FALGORITMO
@@ -312,10 +306,10 @@ expresion:  expresion_aritmetica
                     printf("Cola false:\n");
                     imprimirCola(&$1.FALSE);
 
-                    if(!esNulaCola($1.TRUE)){
+                    /*if(!esNulaCola($1.TRUE)){
                         int nextquad = TC_elemento_siguiente(&cuadrupla);
                         backpatch(&cuadrupla, &$1.TRUE, nextquad);
-                    }
+                    }*/
 
                     //Desde aqui no se puede hacer backpatch para añadir los resultados de los goto,
                     //porque no tenemos los datos.
@@ -368,13 +362,6 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_SUMA, $1.sitio, $3.sitio, nueva));
                                     $$.tipo = TIPO_REAL;
-                                }else if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
-                                    int nueva2 = TS_newtempt(&simbolos);
-                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_ENTERO, TS_VAR);
-                                    TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
-                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION_ENTERO, nueva2, -1, $3.sitio));
-                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_SUMA, $1.sitio, nueva2 , nueva));
-                                    $$.tipo = TIPO_ENTERO;
                                 }
                                 $$.sitio = nueva;
 
@@ -420,13 +407,6 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA, $1.sitio, $3.sitio, nueva));
                                     $$.tipo = TIPO_REAL;
-                                }else if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
-                                    int nueva2 = TS_newtempt(&simbolos);
-                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_ENTERO, TS_VAR);
-                                    TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
-                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION_ENTERO, nueva2, -1, $3.sitio));
-                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA, $1.sitio, nueva2 , nueva));
-                                    $$.tipo = TIPO_ENTERO;
                                 }
                                 $$.sitio = nueva;
 
@@ -670,9 +650,15 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 imprimirCola(&$1.TRUE);
                                 printf("Cola false:\n");
                                 imprimirCola(&$1.FALSE);*/
-                                
-                                $$.tipo = TIPO_LITERAL_ENTERO;
-                                $$.sitio = $1;
+
+                                //Cuando leemos un literal directamente lo metemos en la TS y en la TC */
+                                int nueva = TS_newtempt(&simbolos);
+                                TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_ENTERO, TS_VAR);
+                                TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION_ENTERO, nueva, -1, $1));
+
+                                /* Así los datos que tiene al final son */
+                                $$.tipo = TIPO_ENTERO;
+                                $$.sitio = nueva;
 
                                 /*printf(CYAN_F"Expresion aritmetica 10 salida"RESET" \n");
                                 printf("Tipo: %d Sitio: %d \n", $$.tipo, $$.sitio);
@@ -1106,7 +1092,10 @@ alternativa:    TK_SI expresion TK_ENTONCES M instrucciones N lista_opciones TK_
 
                         $$.siguiente = $5.siguiente; //Esto añadido, no se si está bien o me lo he inventado
                     }*/
+
+
                     $$.siguiente = $5.siguiente;
+                    backpatch(&cuadrupla, &$2.TRUE, $4);
                     backpatch(&cuadrupla, &$2.FALSE, $6);
 
                     /*printf(GREEN"Alternativa salida \n"RESET);
@@ -1132,7 +1121,7 @@ lista_opciones: TK_SI_NO_SI expresion TK_ENTONCES M instrucciones N lista_opcion
                     printf("Datos de N: %d \n", $6);
                     TS_imprimir(&simbolos);
                     TC_imprimir(&cuadrupla);*/
-
+                    backpatch(&cuadrupla, &$2.TRUE, $4);
                     backpatch(&cuadrupla, &$2.FALSE, $6);
                     $$.siguiente = $5.siguiente;
 
