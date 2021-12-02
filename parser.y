@@ -85,7 +85,7 @@ tipoPila pila;
 
 %token TK_ACCION
 %token TK_ALGORITMO
-%token TK_BOOLEANO
+%token <itype> TK_BOOLEANO
 %token TK_CADENA
 %token TK_CARACTER
 %token TK_CONST
@@ -323,7 +323,7 @@ expresion:  expresion_aritmetica
 /* FALTAN POR COMPROBAR CASOS */
 expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica 
                             {
-                                /*printf(CYAN_F"Expresion aritmetica 1 entrada"RESET" \n");
+                                printf(CYAN_F"Expresion aritmetica 1 entrada"RESET" \n");
                                 printf("Datos de la primera expresión aritmética: \n");
                                 printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
                                 printf("Cola true:\n");
@@ -335,7 +335,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 printf("Cola true:\n");
                                 imprimirCola(&$3.TRUE);
                                 printf("Cola false:\n");
-                                imprimirCola(&$3.FALSE);*/
+                                imprimirCola(&$3.FALSE);
     
                                 int nueva = TS_newtempt(&simbolos);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
@@ -370,7 +370,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_RESTA expresion_aritmetica 
                             {
-                                /*printf(CYAN_F"Expresion aritmetica 2 entrada "RESET" \n");
+                                printf(CYAN_F"Expresion aritmetica 2 entrada "RESET" \n");
                                 printf("Datos de la primera expresión aritmética: \n");
                                 printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
                                 printf("Cola true:\n");
@@ -382,7 +382,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 printf("Cola true:\n");
                                 imprimirCola(&$3.TRUE);
                                 printf("Cola false:\n");
-                                imprimirCola(&$3.FALSE);*/
+                                imprimirCola(&$3.FALSE);
                                 
                                 int nueva = TS_newtempt(&simbolos);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
@@ -417,7 +417,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_DIVISION expresion_aritmetica 
                             {
-                                /*printf(CYAN_F"Expresion aritmetica 3 entrada "RESET" \n");
+                                printf(CYAN_F"Expresion aritmetica 3 entrada "RESET" \n");
                                 printf("Datos de la primera expresión aritmética: \n");
                                 printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
                                 printf("Cola true:\n");
@@ -429,7 +429,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 printf("Cola true:\n");
                                 imprimirCola(&$3.TRUE);
                                 printf("Cola false:\n");
-                                imprimirCola(&$3.FALSE);*/
+                                imprimirCola(&$3.FALSE);
 
                                 int nueva = TS_newtempt(&simbolos);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
@@ -466,7 +466,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_DIV expresion_aritmetica 
                             {
-                                /*printf(CYAN_F"Expresion aritmetica 4 entrada "RESET" \n");
+                                printf(CYAN_F"Expresion aritmetica 4 entrada "RESET" \n");
                                 printf("Datos de la primera expresión aritmética: \n");
                                 printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
                                 printf("Cola true:\n");
@@ -478,7 +478,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 printf("Cola true:\n");
                                 imprimirCola(&$3.TRUE);
                                 printf("Cola false:\n");
-                                imprimirCola(&$3.FALSE);*/
+                                imprimirCola(&$3.FALSE);
 
                                 int nueva = TS_newtempt(&simbolos);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
@@ -499,7 +499,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_MOD expresion_aritmetica 
                             {
-                                /*printf(CYAN_F"Expresion aritmetica 5 entrada "RESET" \n");
+                                printf(CYAN_F"Expresion aritmetica 5 entrada "RESET" \n");
                                 printf("Datos de la primera expresión aritmética: \n");
                                 printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
                                 printf("Cola true:\n");
@@ -511,7 +511,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 printf("Cola true:\n");
                                 imprimirCola(&$3.TRUE);
                                 printf("Cola false:\n");
-                                imprimirCola(&$3.FALSE);*/
+                                imprimirCola(&$3.FALSE);
 
                                 /* SE PERMITE HACER MOD CON NUMEROS REALES? */
 
@@ -601,13 +601,13 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | operando 
                             {
-                                /*printf(CYAN_F"Expresion aritmetica 8 entrada "RESET" \n");
+                                printf(CYAN_F"Expresion aritmetica 8 entrada "RESET" \n");
                                 printf("Datos de la expresión aritmética: \n");
                                 printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
                                 printf("Cola true:\n");
                                 imprimirCola(&$1.TRUE);
                                 printf("Cola false:\n");
-                                imprimirCola(&$1.FALSE);*/
+                                imprimirCola(&$1.FALSE);
 
                                 $$.sitio = $1.sitio; 
                                 $$.tipo = $1.tipo;
@@ -694,95 +694,28 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 printf("Cola false:\n");
                                 imprimirCola(&$$.FALSE);*/
                             }
+                        
                         ;
 
 expresion_booleana:     expresion_booleana TK_Y M expresion_booleana 
                             {
-                                /*printf(VERDE_F"Expresion booleana entrada 1"RESET" \n");
-                                printf("Datos de la primera expresión: \n");
-                                printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$1.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$1.FALSE);
-                                printf("Dato de M: %d \n", $3);
-                                printf("Datos de la segunda expresión: \n");
-                                printf("Tipo: %d Sitio: %d \n", $4.tipo, $4.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$4.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$4.FALSE);*/
-
-                                //TC_imprimir(&cuadrupla);
-
-
-                                /* ERROR SI NO SON DE TIPO BOOLEANO? */
                                 $$.tipo = TIPO_BOOLEANO;
                                 backpatch(&cuadrupla, &$1.TRUE, $3);
                                 $$.FALSE = merge($1.FALSE, $4.FALSE);
                                 $$.TRUE = $4.TRUE;
-
-                                //TC_imprimir(&cuadrupla);
-
-                                /*printf(VERDE_F"Expresion booleana salida 1"RESET" \n");
-                                printf("Tipo: %d Sitio: %d \n", $$.tipo, $$.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$$.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$$.FALSE);*/
-
                             }
                         | expresion_booleana TK_O M expresion_booleana
                             {
-                                /*printf(VERDE_F"Expresion booleana entrada 2"RESET" \n");
-                                printf("Datos de la primera expresión: \n");
-                                printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$1.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$1.FALSE);
-                                printf("Dato de M: %d \n", $3);
-                                printf("Datos de la segunda expresión: \n");
-                                printf("Tipo: %d Sitio: %d \n", $4.tipo, $4.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$4.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$4.FALSE);*/
-
-                                /* ERROR SI NO SON DE TIPO BOOLEANO? */
                                 $$.tipo = TIPO_BOOLEANO;
                                 backpatch(&cuadrupla, &$1.FALSE, $3);
                                 $$.TRUE = merge($1.TRUE, $4.TRUE);
                                 $$.FALSE = $4.FALSE;  
-
-                                /*printf(VERDE_F"Expresion booleana salida 2"RESET" \n");
-                                printf("Tipo: %d Sitio: %d \n", $$.tipo, $$.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$$.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$$.FALSE);*/
                             }
                         | TK_NO expresion_booleana
                             {
-                                /*printf(VERDE_F"Expresion booleana entrada 3"RESET" \n");
-                                printf("Datos de la expresión: \n");
-                                printf("Tipo: %d Sitio: %d \n", $2.tipo, $2.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$2.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$2.FALSE);*/
-                               
-                               /* ERROR SI NO SON DE TIPO BOOLEANO? */
                                 $$.tipo = TIPO_BOOLEANO;
                                 $$.TRUE = $2.FALSE;
                                 $$.FALSE = $2.TRUE;
-                                
-                                /*printf(VERDE_F"Expresion booleana salida 3"RESET" \n");
-                                printf("Tipo: %d Sitio: %d \n", $$.tipo, $$.sitio);
-                                printf("Cola true:\n");
-                                imprimirCola(&$$.TRUE);
-                                printf("Cola false:\n");
-                                imprimirCola(&$$.FALSE);*/
                             }
                         | TK_VERDADERO 
                             {
@@ -971,7 +904,13 @@ operando:   TK_IDENTIFICADOR
                     }
                     
                     /* SI ES DIFERENTE A VARIABLE O CONSTANTE ERROR */
-                    $$.tipo = TS_consulta_tipo(&simbolos, $$.sitio);
+                    int tipo = TS_consulta_tipo(&simbolos, $$.sitio);
+                    if(tipo == TIPO_BOOLEANO){
+                        $$.tipo = TIPO_LITERAL_BOOLEANO;
+                    }else{
+                        $$.tipo = tipo;
+                    }
+                    
                     //nuevaCola(&$$.TRUE);
                     //nuevaCola(&$$.FALSE);  
                 }
@@ -1047,7 +986,7 @@ instruccion:    TK_CONTINUAR {}
                 ;
 asignacion:     operando TK_ASIGNACION expresion
                     {
-                        printf(YELLOW"Asignación entrada \n"RESET);
+                        /*printf(YELLOW"Asignación entrada \n"RESET);
                         printf("Datos del operando: \n");
                         printf("Tipo: %d Sitio: %d \n", $1.tipo, $1.sitio);
                         printf("Cola true: \n");
@@ -1059,43 +998,38 @@ asignacion:     operando TK_ASIGNACION expresion
                         printf("Cola true: \n");
                         imprimirCola(&$3.TRUE);
                         printf("Cola false: \n");
-                        imprimirCola(&$3.FALSE);
+                        imprimirCola(&$3.FALSE);*/
                         
-                        //printf(GREEN"Entro aqui con $1.sitio %d $1.tipo %d \n"RESET, $1.sitio, $1.tipo);
-                        //printf(GREEN"Entro aqui con $3.sitio %d $3.tipo %d \n"RESET, $3.sitio, $3.tipo);
+                        printf(GREEN"Entro aqui con $1.sitio %d $1.tipo %d \n"RESET, $1.sitio, $1.tipo);
+                        printf(GREEN"Entro aqui con $3.sitio %d $3.tipo %d \n"RESET, $3.sitio, $3.tipo);
                         /* Solo se puede modificar el tipo de las variables */
                         if(TS_consulta_tipo_simbolo(&simbolos, $1.sitio) == TS_VAR){
                             /* Se puede modificar*/
                             if($1.tipo == $3.tipo){  
-                                if($1.tipo == TIPO_BOOLEANO){
-                                    int nextquad = TC_elemento_siguiente(&cuadrupla);
-                                    //printf(MAGENTA"ASIGNACION %d \n"RESET, nextquad);
-                                    //backpatch(&cuadrupla, &$3.FALSE, nextquad+1);
-                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_FALSE, -1, -1, $1.sitio));
-                                    /* PUEDE QUE ESTO ESTÉ MAL */
-                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, nextquad+2));
-                                    //backpatch(&cuadrupla, &$3.TRUE, nextquad);
-                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE, -1, -1, $1.sitio));
-                                }else{
-                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, -1, $3.sitio));
-                                }
+                                TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, -1, $3.sitio));
+                            }else if((($1.tipo == TIPO_BOOLEANO) && ($3.tipo == TIPO_LITERAL_BOOLEANO)) 
+                            || (($1.tipo == TIPO_LITERAL_BOOLEANO) && ($3.tipo == TIPO_BOOLEANO)) ){
+                                int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                backpatch(&cuadrupla, &$3.FALSE, nextquad+2);
+                                TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE, -1, -1, $1.sitio));
+                                TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, nextquad+3));
+                                backpatch(&cuadrupla, &$3.TRUE, nextquad);
+                                TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_FALSE, -1, -1, $1.sitio));
                             }else if(($1.tipo == TIPO_REAL) && ($3.tipo == TIPO_ENTERO)){
                                 TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, -1, $3.sitio));
-                            }else if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
-                                TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION_ENTERO, $1.sitio, -1, $3.sitio));
                             }else if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_REAL)){
                                 //error;
-                                printf("ENTRO AQUI\n");
+                                printf("ENTRO AQUI PARSER ASIGNACION\n");
                             }
                         }else{
+                            printf("ENTRO AQUIIIIIIIIIIIIIIIIIIIII\n");
                             //printf("Entro en el else\n");
                             /* ERRORRRRRR*/
                         }
 
                         nuevaCola(&$$.siguiente);
                         printf(YELLOW"Asignación no produce ninguna salida \n"RESET);
-                    }
-                ;
+                    };
 
 alternativa:    TK_SI expresion TK_ENTONCES M instrucciones N lista_opciones TK_FSI
                 {
