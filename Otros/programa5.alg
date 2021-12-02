@@ -5,7 +5,7 @@ var
 	m,p,q : entero;
 	g,h : real;
 	a,b : booleano;
-fvar;
+fvar
 
 si m > p ->
 	g := h

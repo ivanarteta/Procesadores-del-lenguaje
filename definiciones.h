@@ -72,5 +72,10 @@ enum enum_operadores{
     OP_GOTO_MAYOR_O_IGUAL
 };
 
+enum enum_errores{
+    ERROR_TIPO, //Para cuando intentamos hacer una operación con tipos no compatibles
+    ERROR_OPERADOR,
+    ERROR_SIMBOLO
+};
 
 #endif

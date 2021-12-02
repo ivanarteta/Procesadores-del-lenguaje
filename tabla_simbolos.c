@@ -57,7 +57,10 @@ int TS_buscar_id(TS_lista *lista, char * nombre){
         }
         aux = aux->siguiente;  
     }
-    return aux->id;
+    if((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)){
+        return aux->id;
+    }
+    return -1;
 }
 
 //Lista, nombre, tipo, tipo_simbolo
