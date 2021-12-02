@@ -452,6 +452,28 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 }else if(($1.tipo == TIPO_REAL) && ($3.tipo == TIPO_REAL)){
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_DIVISION, $1.sitio, $3.sitio, nueva));
+                                }else if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
+                                    int nueva2 = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_VAR);
+                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_INT_TO_REAL, $1.sitio, -1, nueva));
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_INT_TO_REAL, $3.sitio, -1, nueva2));
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_DIVISION, nueva, nueva2, nueva));
+                                }else if(($1.tipo == TIPO_LITERAL_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
+                                    int nueva2 = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_REAL, TS_VAR);
+                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_INT_TO_REAL, $1.sitio, -1, nueva));
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_INT_TO_REAL, $3.sitio, -1, nueva2));
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_DIVISION, nueva, nueva2, nueva));
+                                }else if(($1.tipo == TIPO_REAL) && ($3.tipo == TIPO_LITERAL_REAL)){
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_DIVISION, $1.sitio, $3.sitio, nueva));
+                                }else if(($1.tipo == TIPO_LITERAL_REAL) && ($3.tipo == TIPO_LITERAL_REAL)){
+                                    int nueva2 = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_REAL, TS_VAR);
+                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_DIVISION, nueva, nueva2, nueva));
                                 }
                                 $$.tipo = TIPO_REAL;
                                 $$.sitio = nueva;
@@ -564,6 +586,26 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_MULTIPLICACION, $1.sitio, $3.sitio, nueva));
                                     $$.tipo = TIPO_REAL;
+                                }else if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_ENTERO, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_MULTIPLICACION, $1.sitio, $3.sitio, nueva));
+                                    $$.tipo = TIPO_ENTERO;
+                                }else if(($1.tipo == TIPO_LITERAL_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
+                                    int nueva2 = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_ENTERO, TS_VAR);
+                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_ENTERO, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_MULTIPLICACION, nueva, nueva2, nueva));
+                                    $$.tipo = TIPO_ENTERO;
+                                }else if(($1.tipo == TIPO_REAL) && ($3.tipo == TIPO_LITERAL_REAL)){
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_MULTIPLICACION, $1.sitio, $3.sitio, nueva));
+                                    $$.tipo = TIPO_REAL;
+                                }else if(($1.tipo == TIPO_LITERAL_REAL) && ($3.tipo == TIPO_LITERAL_REAL)){
+                                    int nueva2 = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_REAL, TS_VAR);
+                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_MULTIPLICACION, nueva, nueva2, nueva));
+                                    $$.tipo = TIPO_REAL;
                                 }
                                 $$.sitio = nueva;
 
@@ -623,12 +665,12 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                                 imprimirCola(&$2.TRUE);
                                 printf("Cola false:\n");
                                 imprimirCola(&$2.FALSE);*/
-                                
+
                                 int nueva = TS_newtempt(&simbolos);
                                 TS_modificar_tipo(&simbolos, nueva, $2.tipo, TS_VAR);
-                                if($2.tipo == TIPO_ENTERO){
+                                if(($2.tipo == TIPO_ENTERO)||($2.tipo == TIPO_LITERAL_ENTERO)){
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA_UNARIA_ENTERO, $2.sitio, -1, nueva));
-                                }else if($2.tipo == TIPO_REAL){
+                                }else if(($2.tipo == TIPO_REAL)||($2.tipo == TIPO_LITERAL_REAL)){
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA_UNARIA_REAL, $2.sitio, -1, nueva));
                                 }
                                 $$.sitio = nueva;
@@ -776,10 +818,14 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                         | TK_VERDADERO 
                             {
                                 printf(MAGENTA"Expresion booleana -> 4\n"RESET);
+                                /*$$.tipo = TIPO_BOOLEANO;
+                                $$.sitio = TRUE;*/
                             }
                         | TK_FALSO 
                             {
                                 printf(MAGENTA"Expresion booleana -> 5\n"RESET);
+                                /*$$.tipo = TIPO_BOOLEANO;
+                                $$.sitio = FALSE;*/
                             }
                         | expresion_aritmetica TK_OPERADOR_RELACIONAL expresion_aritmetica 
                             {
@@ -821,7 +867,7 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                     printf("<>\n");
                                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_DISTINTO, $1.sitio, $3.sitio, -1));
                                 }else{
-                                    printf("ENTROOO \n");
+                                    printf("Fallo en TK_OPERADOR_RELACIONAL \n");
                                 }
                                 /* Aquí tiene que ir el resultado al output (2) */
                                 //TC_imprimir(&cuadrupla);
@@ -860,6 +906,34 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                                     int nueva = TS_newtempt(&simbolos);
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_ENTERO, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION_ENTERO, nueva, -1, $3.sitio));
+                                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    pideTurnoCola(&$$.TRUE, nextquad);
+                                    pideTurnoCola(&$$.FALSE, nextquad+1);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_IGUAL, $1.sitio, nueva, -1));
+                                }else if(($1.tipo == TIPO_REAL) && ($3.tipo == TIPO_LITERAL_REAL)){
+                                    int nueva = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, nueva, -1, $3.sitio));
+                                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    pideTurnoCola(&$$.TRUE, nextquad);
+                                    pideTurnoCola(&$$.FALSE, nextquad+1);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_IGUAL, $1.sitio, nueva, -1));
+                                }else if(($1.tipo == TIPO_LITERAL_ENTERO) && ($3.tipo == TIPO_LITERAL_ENTERO)){
+                                    int nueva = TS_newtempt(&simbolos);
+                                    int nueva2 = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_ENTERO, TS_VAR);
+                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_ENTERO, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION_ENTERO, nueva, -1, nueva2));
+                                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    pideTurnoCola(&$$.TRUE, nextquad);
+                                    pideTurnoCola(&$$.FALSE, nextquad+1);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_IGUAL, $1.sitio, nueva, -1));
+                                }else if(($1.tipo == TIPO_LITERAL_REAL) && ($3.tipo == TIPO_LITERAL_REAL)){
+                                    int nueva = TS_newtempt(&simbolos);
+                                    int nueva2 = TS_newtempt(&simbolos);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_LITERAL_REAL, TS_VAR);
+                                    TS_modificar_tipo(&simbolos, nueva2, TIPO_LITERAL_REAL, TS_VAR);
+                                    TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, nueva, -1, nueva2));
                                     int nextquad = TC_elemento_siguiente(&cuadrupla);
                                     pideTurnoCola(&$$.TRUE, nextquad);
                                     pideTurnoCola(&$$.FALSE, nextquad+1);
