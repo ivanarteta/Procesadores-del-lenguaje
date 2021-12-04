@@ -1,6 +1,5 @@
 algoritmo foo;
 ent x: entero;
-sal f:booleano;
 { Ejemplo con varias instrucciones de asignación }
 var 
 	a,b : entero;
