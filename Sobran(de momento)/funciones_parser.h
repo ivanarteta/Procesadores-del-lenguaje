@@ -1,3 +1,0 @@
-
-
-void separar(char * lista);

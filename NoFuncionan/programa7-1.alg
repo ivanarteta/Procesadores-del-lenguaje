@@ -10,13 +10,7 @@ fvar
 	b := 1;
 	para j := 2 hasta a hacer
 		b := b + j
-	fpara;
-	
-
-	mientras (e y f) y (c > d) hacer
-		c := c - 1
-	fmientras
-	
+	fpara
 
 {  }
 falgoritmo

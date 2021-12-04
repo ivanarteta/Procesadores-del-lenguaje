@@ -52,7 +52,7 @@ int TC_elemento_siguiente(TC_tabla_cuadrupla *tabla){
 void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, int quad){
     
     while(!esNulaCola(*cola)){
-        printf(CYAN"Modificar registro %d asignandole %d \n"RESET, primeroCola(*cola), quad);
+        //printf(CYAN"Modificar registro %d asignandole %d \n"RESET, primeroCola(*cola), quad);
         /*if(tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO
             || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MAYOR_O_IGUAL 
             || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MENOR

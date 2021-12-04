@@ -1,13 +1,13 @@
 algoritmo intercambio;
-    ent a, b: entero;
-    sal a, b: entero;
+    ent a, b: booleano;
+    sal a, b: booleano;
 {Prec: a= A AND b = B}
     var
         aux: entero;
         x: booleano;
     fvar
-    aux:= a;
-    a:= b;
-    b:= aux;
+    x:= falso;
+    b:= verdadero;
+    a := b
 {Post: b=A AND a = B}
 falgoritmo

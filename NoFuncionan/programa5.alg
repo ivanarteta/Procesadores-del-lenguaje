@@ -1,6 +1,6 @@
 algoritmo factorial;
     ent fact, n: entero;
-    {Pre lo que sea}
+    {Prec lo que sea}
     var
         i,j:entero;
     fvar
@@ -12,10 +12,10 @@ algoritmo factorial;
         Si i+1 <= j
             fact := fact * i * j;
             i := i + 1;
-            j := j - 1;
+            j := j - 1
         [] i+1 > j
             fact := fact * j;
-            j := j - 1;
+            j := j - 1
         fsi
     fmientras
     {Post lo que sea}

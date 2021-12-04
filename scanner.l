@@ -170,8 +170,11 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+
                             }
 {DR_falso}                  {
                                 //printf("falso: %s \n", yytext); 
-                                yylval.itype =0;
-                                return TK_FALSO;
+                                //yylval.btype =0;
+                                //return TK_FALSO;
+                                yylval.literales_type.valor.entero = 0;
+                                yylval.literales_type.tipo = TIPO_BOOLEANO;
+                                return TK_LITERAL_BOOLEANO;
                             }
 {DR_funcion}                {
                                 //printf("funcion: %s \n", yytext); 
@@ -267,8 +270,11 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+
                             }
 {DR_verdadero}              {
                                 //printf("verdadero: %s \n", yytext); 
-                                yylval.itype = 1;
-                                return TK_VERDADERO;
+                                yylval.literales_type.valor.entero = 1;
+                                yylval.literales_type.tipo = TIPO_BOOLEANO;
+                                //yylval.btype = 1;
+                                //return TK_VERDADERO;
+                                return TK_LITERAL_BOOLEANO;
                             }
 {DR_y}                      {
                                 //printf("y: %s \n", yytext); 
@@ -364,7 +370,7 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+
  /* Identificadores */
 {DR_literal_entero} 	    {
                                 //printf("literal entero: %s \n", yytext);
-                                if(strstr(yytext, "e")){
+                                /*if(strstr(yytext, "e")){
                                     char *num = strtok(yytext,"e");
                                     char *exp = strtok(NULL, "e");
                                     int n = atoi(num);
@@ -375,12 +381,14 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+
                                     yylval.itype = n;
                                 }else{
                                     yylval.itype = atoi(yytext);
-                                }
+                                }*/
+                                yylval.literales_type.valor.entero = atoi(yytext);
+                                yylval.literales_type.tipo = TIPO_ENTERO;
                                 return TK_LITERAL_ENTERO;
                             }
 {DR_literal_real} 	        {
                                 //printf("literal real: %s \n", yytext);
-                                if(strstr(yytext, "e")){
+                                /*if(strstr(yytext, "e")){
                                     char *num = strtok(yytext,"e");
                                     char *exp = strtok(NULL, "e");
                                     char signo = exp[0];
@@ -407,7 +415,10 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+
                                     yylval.ftype = n;
                                 }else{
                                     yylval.ftype = atof(yytext);
-                                }
+                                }*/
+                                
+                                yylval.literales_type.valor.real = atof(yytext);
+                                
                                 return TK_LITERAL_REAL;
                             }
 {DR_id}                     {
