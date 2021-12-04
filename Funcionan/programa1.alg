@@ -10,7 +10,7 @@ algoritmo intercambio;
         x: booleano;
     fvar
     aux:= a;
-    a:= b;
-    b:= aux
+    a:= c + 5;
+    b:= 2
 {Post: b=A AND a = B}
 falgoritmo
