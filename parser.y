@@ -40,6 +40,7 @@ extern FILE * yyin;
 #define CYAN_F     "\x1b[46m"
 #define BLANCO_T   "\x1b[37m"
 #define BLANCO_F   "\x1b[47m"
+int tamCola = 0;
 
 TS_lista simbolos;
 TC_tabla_cuadrupla cuadrupla;
@@ -161,7 +162,7 @@ tipoPila pila;
 %type <itype> lista_id def_tipo M N
 %type <celda> tipo_base
 %type <literales_type> tipo_literal
-%type <exp_type> operando expresion expresion_aritmetica expresion_booleana
+%type <exp_type> operando expresion expresion_aritmetica expresion_booleana hasta
 %type <inst_type> it_cota_fija it_cota_variable instrucciones alternativa iteracion instruccion asignacion lista_opciones
 
 %%
@@ -576,9 +577,11 @@ instrucciones:  instruccion TK_COMPOSICION_SECUENCIAL M instrucciones
                     {
                         backpatch(&cuadrupla, &$1.siguiente, $3);
                         $$ = $1;
+                        tamCola = tamCola + 1;
                     }
                 | instruccion 
                     {
+                        tamCola = tamCola + 1;
                         $$ = $1;
                     }
                 ;
@@ -668,25 +671,35 @@ it_cota_variable:   TK_MIENTRAS M expresion_booleana TK_HACER N instrucciones TK
                             $$.siguiente = $3.FALSE;
                         }
                     ;
-it_cota_fija:   TK_PARA M TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA
+hasta: TK_HASTA
+        {
+            int nextquad = TC_elemento_siguiente(&cuadrupla);
+            pideTurnoCola(&$$.TRUE, nextquad);
+            TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
+        }
+    ;
+it_cota_fija:   TK_PARA M asignacion hasta expresion TK_HACER instrucciones TK_FPARA
                     {
+                        printf(ROJO"tamCola = %d\n"RESET, tamCola);
                         /*Primero metermos las instrucciones */
-                        if(!esNulaCola($9.siguiente)){
-                            int nextquad = TC_elemento_siguiente(&cuadrupla);
-                            backpatch(&cuadrupla, &$9.siguiente, nextquad);
+                        int nextquad = TC_elemento_siguiente(&cuadrupla);
+                        if(!esNulaCola($7.siguiente)){
+                            backpatch(&cuadrupla, &$7.siguiente, nextquad);
                         }
-                        //Esto es TK_IDENTIFICADOR := expresion, lo lo hace en el sitio que toca
-                        int id = TS_buscar_id(&simbolos, $3);
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION, id, -1 , $5.sitio));
+                        backpatch(&cuadrupla, &$4.TRUE, nextquad+tamCola);
+                        tamCola = 0;
                         // id = id + 1;
                         int nueva = TS_newConst(&simbolos);
                         TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
                         Constante_valor *valor = (Constante_valor*)malloc(sizeof(Constante_valor));
                         valor->entero = 1;
                         TS_modificar_valor_cte(&simbolos, nueva, *valor);
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_SUMA, id, nueva , id));
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, id, $7.sitio , $2));
-                        int nextquad = TC_elemento_siguiente(&cuadrupla);
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_SUMA, $2, nueva , $2));
+                        // id <= exp
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, $2, $5.sitio , $2 + 2));
+                        //
+                        nextquad = TC_elemento_siguiente(&cuadrupla);
+                        nuevaCola(&$7.siguiente);
                         TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, nextquad+1));
                     }
                 ;
@@ -743,7 +756,7 @@ int main(int argc, char **argv){
     TS_nuevaLista(&simbolos);
     TC_nuevaLista(&cuadrupla);
     //yydebug = 1;
-    yyparse(); 
+    yyparse();
     TS_imprimir(&simbolos);
     TC_imprimir(&cuadrupla);
     CTD_imprimir(&cuadrupla, &simbolos);
