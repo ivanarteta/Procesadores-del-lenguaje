@@ -858,30 +858,12 @@ it_cota_variable:   TK_MIENTRAS M expresion_booleana TK_HACER N instrucciones TK
                             $$.siguiente = $3.FALSE;
                         }
                     ;
-it_cota_fija:   TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA
+it_cota_fija:   TK_PARA M TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA
                     {
-                        //printf(GREEN"IT COTA FIJA, PARA\n"RESET);
-                        //printf("Datos del identificador: \n");
-                        //printf("tipo: %d sitio: %d \n", $2.tipo, $2.sitio);
-                        /*printf("Datos de expresión 1: \n");
-                        printf("tipo: %d sitio: %d \n", $4.tipo, $4.sitio);
-                        printf("Cola true: \n");
-                        imprimirCola(&$4.TRUE);
-                        printf("Cola false: \n");
-                        imprimirCola(&$4.FALSE);
-                        printf("Datos de expresión 2: \n");
-                        printf("tipo: %d sitio: %d \n", $6.tipo, $6.sitio);
-                        printf("Cola true: \n");
-                        imprimirCola(&$6.TRUE);
-                        printf("Cola false: \n");
-                        imprimirCola(&$6.FALSE);
-                        printf("Datos de instrucciones: \n");
-                        printf("Cola siguiente: \n");
-                        imprimirCola(&$8.siguiente);*/
-
                         /*Primero metermos las instrucciones */
-                        /*if(!esNulaCola($8.siguiente)){
+                        if(!esNulaCola($9.siguiente)){
                             int nextquad = TC_elemento_siguiente(&cuadrupla);
+<<<<<<< HEAD
                             backpatch(&cuadrupla, &$8.siguiente, nextquad);
                         }*/
 
@@ -899,6 +881,23 @@ it_cota_fija:   TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expres
                         //backpatch()
                         
 
+=======
+                            backpatch(&cuadrupla, &$9.siguiente, nextquad);
+                        }
+                        //Esto es TK_IDENTIFICADOR := expresion, lo lo hace en el sitio que toca
+                        int id = TS_buscar_id(&simbolos, $3);
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION, id, -1 , $5.sitio));
+                        // id = id + 1;
+                        int nueva = TS_newConst(&simbolos);
+                        TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
+                        Constante_valor *valor = (Constante_valor*)malloc(sizeof(Constante_valor));
+                        valor->entero = 1;
+                        TS_modificar_valor_cte(&simbolos, nueva, *valor);
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_SUMA, id, nueva , id));
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, id, $7.sitio , $2));
+                        int nextquad = TC_elemento_siguiente(&cuadrupla);
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, nextquad+1));
+>>>>>>> 8edf69a45cf4ec6851d7ff9e9822f14ef58e42c9
                     }
                 ;
 
