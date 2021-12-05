@@ -92,3 +92,16 @@ tipo_literal:   TK_LITERAL_CADENA
                 | TK_FALSO 
                 ;
 ```
+### Introducir los datos del bucle PARA en la TC
+En un principio hemos usado la siguiente gramática:
+```
+it_cota_fija:   TK_PARA M TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA
+```
+El problema es que primero se nos añadían a la TC los campos de las instrucciones y posteriormente el de la asignacion del para. Por lo que para controlar eso y que primero se añadan los de la asignacion y por último se añadan los de las instrucciones, hemos modificado la gramática, de forma que quede tal que:
+```
+it_cota_fija:   it_cota M instrucciones TK_FPARA
+
+it_cota: TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER
+
+```
+

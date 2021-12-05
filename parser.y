@@ -158,10 +158,10 @@ tipoPila pila;
 %left UMINUS
 
  /* TYPE */
-%type <itype> lista_id def_tipo M N
+%type <itype> lista_id def_tipo M N it_cota
 %type <celda> tipo_base
 %type <literales_type> tipo_literal
-%type <exp_type> operando expresion expresion_aritmetica expresion_booleana
+%type <exp_type>  operando expresion expresion_aritmetica expresion_booleana
 %type <inst_type> it_cota_fija it_cota_variable instrucciones alternativa iteracion instruccion asignacion lista_opciones
 
 %%
@@ -433,7 +433,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | operando 
                             {
-                                printf("Entro en operandoooooooooo \n");
+                                printf(YELLOW"Entro en operando \n"RESET);
                                 $$.sitio = $1.sitio; 
                                 $$.tipo = $1.tipo;
                             }
@@ -454,6 +454,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | TK_LITERAL_ENTERO 
                             {
+                                printf(YELLOW"Entro en literal entero \n"RESET);
                                 int nueva = TS_newConst(&simbolos);
                                 TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
                                 TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
@@ -462,11 +463,11 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | TK_LITERAL_REAL 
                             {
-                                /*int nueva = TS_newConst(&simbolos);
+                                int nueva = TS_newConst(&simbolos);
                                 TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_CONSTANTE);
                                 TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
                                 $$.tipo = TIPO_REAL;
-                                $$.sitio = nueva;*/
+                                $$.sitio = nueva;
                             }
                         ;
 
@@ -703,7 +704,7 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
 operando:   TK_IDENTIFICADOR 
                 {
                     /* ERROR AL COMPROBAR SI EXISTE */
-                    printf("%s \n", $1);
+                    printf(YELLOW"Entro en identificador \n"RESET);
                     int id = TS_buscar_id(&simbolos,$1); 
                     if(id == -1){
                         errores_parser(ERROR_SIMBOLO);
@@ -782,10 +783,11 @@ asignacion:     operando TK_ASIGNACION expresion
 
                         if(TS_consulta_tipo_simbolo(&simbolos, $1.sitio) == TS_VAR){
                             if($1.tipo == $3.tipo){
+                                printf(YELLOW"Entro en asignacion 1 \n"RESET);
                                 TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, -1, $3.sitio));   
                             }else if((($1.tipo == TIPO_BOOLEANO) && ($3.tipo == TIPO_EXPRESION_BOOLEANA)) 
                             || (($1.tipo == TIPO_EXPRESION_BOOLEANA) && ($3.tipo == TIPO_BOOLEANO)) ){
-                                //printf("Entro aqui 2\n");
+                                printf(YELLOW"Entro en asignacion 2 \n"RESET);
                                 int nextquad = TC_elemento_siguiente(&cuadrupla);
                                 backpatch(&cuadrupla, &$3.FALSE, nextquad+2);
                                 printf("%d \n", $1.sitio);
@@ -798,6 +800,7 @@ asignacion:     operando TK_ASIGNACION expresion
                                 TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_FALSE, -1, -1, $1.sitio));
                                 TC_imprimir(&cuadrupla);
                             }else if(($1.tipo == TIPO_REAL) && ($3.tipo == TIPO_ENTERO)){
+                                 printf(YELLOW"Entro en asignacion 3 \n"RESET);
                                 TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_ASIGNACION, $1.sitio, -1, $3.sitio));
                             }/*else if((($1.tipo == TIPO_BOOLEANO) && ($3.tipo == TIPO_FALSO)) 
                             || (($1.tipo == TIPO_LITERAL_BOOLEANO) && ($3.tipo == TIPO_FALSO)) ){
@@ -844,7 +847,7 @@ iteracion:  it_cota_fija
                     $$ = $1;
                 }
             ;               
-it_cota_variable:   TK_MIENTRAS M expresion_booleana TK_HACER N instrucciones TK_FMIENTRAS
+it_cota_variable:   TK_MIENTRAS M expresion TK_HACER N instrucciones TK_FMIENTRAS
                         {
                             backpatch(&cuadrupla, &$3.TRUE, $5);
                             if(!esNulaCola($6.siguiente)){
@@ -858,49 +861,56 @@ it_cota_variable:   TK_MIENTRAS M expresion_booleana TK_HACER N instrucciones TK
                             $$.siguiente = $3.FALSE;
                         }
                     ;
-it_cota_fija:   TK_PARA M TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER instrucciones TK_FPARA
+
+it_cota:    TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER
+                {
+                    int id = TS_buscar_id(&simbolos, $2);
+
+                    /* Comprobamos que existe el id */
+                    if(id == -1){
+                        errores_parser(ERROR_SIMBOLO);
+                    }else if(TS_consulta_tipo_simbolo(&simbolos, id) != TS_VAR){ //Comprobamos que sea una variable
+                        errores_parser(ERROR_OPERANDO);
+                    }
+                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION, id, -1, $4.sitio));
+                    //¿COMO VAMOS A SABER SI ES HASTA QUE SEA MAYOR O IGUAL, MENOR O IGUAL O LO QUE SEA?
+                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, id, $6.sitio, nextquad+2));
+                    /* A donde tiene que ir si la expresión es falsa */
+                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
+
+                    //Le pasamos la posicion
+                    $$ = id;
+                }
+
+it_cota_fija:   M it_cota instrucciones TK_FPARA
                     {
-                        /*Primero metermos las instrucciones */
-                        if(!esNulaCola($9.siguiente)){
-                            int nextquad = TC_elemento_siguiente(&cuadrupla);
-<<<<<<< HEAD
-                            backpatch(&cuadrupla, &$8.siguiente, nextquad);
-                        }*/
-
-                        //Tiene que ser una constante
-                        //Creamos una constante con un 1
-                        /*int nextquad = TC_elemento_siguiente(&cuadrupla);
-                        int nueva = TS_newConst(&simbolos);
-                        TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
-                        Constante_valor constante;
-                        constante.entero = 1;
-                        TS_modificar_valor_cte(&simbolos, nueva, constante);
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_SUMA, $2.sitio, nueva ,$2.sitio));
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1,-1 ,nextquad+2));*/
+                        TC_imprimir(&cuadrupla);
+                        printf(YELLOW"Entro en it cota fija \n"RESET);
+                        printf("%d \n", $1);
+                        printf("%d \n", $2);
                         
-                        //backpatch()
-                        
-
-=======
-                            backpatch(&cuadrupla, &$9.siguiente, nextquad);
+                        int nextquad = TC_elemento_siguiente(&cuadrupla);
+                        if(!esNulaCola($3.siguiente)){
+                            backpatch(&cuadrupla, &$3.siguiente, nextquad);
                         }
-                        //Esto es TK_IDENTIFICADOR := expresion, lo lo hace en el sitio que toca
-                        int id = TS_buscar_id(&simbolos, $3);
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION, id, -1 , $5.sitio));
-                        // id = id + 1;
+
+                        //Creamos una constante con el valor 1
                         int nueva = TS_newConst(&simbolos);
                         TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
                         Constante_valor *valor = (Constante_valor*)malloc(sizeof(Constante_valor));
                         valor->entero = 1;
                         TS_modificar_valor_cte(&simbolos, nueva, *valor);
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_SUMA, id, nueva , id));
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, id, $7.sitio , $2));
-                        int nextquad = TC_elemento_siguiente(&cuadrupla);
-                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, nextquad+1));
->>>>>>> 8edf69a45cf4ec6851d7ff9e9822f14ef58e42c9
+
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_SUMA, $2, nueva, $2));
+                        TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, $1+1));
+
+                        nextquad = TC_elemento_siguiente(&cuadrupla);
+                        nuevaCola(&$$.siguiente);
+                        pideTurnoCola(&$$.siguiente, $1+2);
+                        backpatch(&cuadrupla, &$$.siguiente, nextquad);
                     }
                 ;
-
 /* ACCIONES Y FUNCIONES */
 definicion_accion:  TK_ACCION cabecera_accion bloque TK_FACCION
                     ;

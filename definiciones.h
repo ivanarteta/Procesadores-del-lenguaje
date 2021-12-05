@@ -81,7 +81,8 @@ enum enum_operadores{
 enum enum_errores{
     ERROR_TIPO, //Para cuando intentamos hacer una operación con tipos no compatibles
     ERROR_OPERADOR,
-    ERROR_SIMBOLO
+    ERROR_SIMBOLO,
+    ERROR_OPERANDO
 };
 
 #endif

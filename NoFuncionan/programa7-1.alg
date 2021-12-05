@@ -7,9 +7,9 @@ var
 	e,f : booleano;
 fvar
 
-	b := 1;
-	para j := 2 hasta a hacer
-		b := b + j
+	para j := 1 hasta a hacer
+		b := b + j;
+		a:=1
 	fpara
 
 {  }
