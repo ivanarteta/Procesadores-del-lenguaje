@@ -1,21 +1,20 @@
 algoritmo foo;
+	const 
+		pi = 3.1415;
+		msg = 'Hello World';
+	fconst
 	ent x: entero;
 { Ejemplo en donde se declaran símbolos de distinto tipo: ctes, variables y literales. Mirar la tabla de simbolos para ver los símbolos almacenados}
 var 
 	a,b : entero;
 	c : real;
 	letra : caracter;
-	texto : string;
-	e : booleano;
-fvar;
+	texto : cadena;
+	e, f, g : booleano;
+fvar
 
-const 
-	pi = 3.1415;
-	msg = "Hello World!";
-fconst;
+e := (e y verdadero) o falso
 
-a := b + (c * 4) / pi;
-e := falso o (verdadero y e)
 
-{  }
+{  asdasd}
 falgoritmo

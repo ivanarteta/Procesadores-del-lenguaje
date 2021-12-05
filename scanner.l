@@ -93,12 +93,16 @@ DR_literal_real             {DR_cifra}+(\.{DR_cifra}+)?((e|E)(\+|\-)?{DR_cifra}+
  /* Reglas para literales */
 {DR_literal_cadena}	        {
                                 //printf("literal cadena: %s \n", yytext);
-                                yylval.ctype = yytext;
+                                //yylval.ctype = yytext;
+                                yylval.literales_type.valor.caracteres = strdup(yytext);
+                                yylval.literales_type.tipo = TIPO_CADENA;
                                 return TK_LITERAL_CADENA;
                             }
 {DR_literal_caracter}	    {
                                 //printf("literal caracter: %s \n", yytext);
-                                yylval.ctype = yytext;
+                                //yylval.ctype = yytext;
+                                yylval.literales_type.valor.caracteres = strdup(yytext);
+                                yylval.literales_type.tipo = TIPO_CARACTER;
                                 return TK_LITERAL_CARACTER;
                             }
 
