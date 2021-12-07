@@ -16,8 +16,14 @@ typedef struct constante{
     Constante_valor valor;
 }Constante;
 
+/*typedef struct accion_funcion{
+
+}AccionFuncion;*/
+
+
 typedef struct ts_celda{
     int tipo; //Tipo será entero, real, booleano, caracter o cadena
+    int ambito;
     int id; //Para la posición
     int tipo_simbolo; //Tipo del símbolo, que será var, const, accion, función, ...
     char* nombre;
@@ -32,15 +38,16 @@ typedef struct ts_lista{
 
 /* Funciones para todo */
 TS_celda* TS_devolver_celda(TS_lista *, int);
+int TS_insertar_accion_funcion(TS_lista *, char* , int );
 void TS_nuevaLista(TS_lista *); //Para generar la lista vacía
-int TS_new(TS_lista *, TS_celda *); //Funcion con codigo común para crear cualquier tipo de simbolo
+int TS_new(TS_lista *, TS_celda *, int); //Funcion con codigo común para crear cualquier tipo de simbolo
 int TS_insertar(TS_lista *, char*); // Para insertar cualquier tipo de simbolo a la TS
 void TS_modificar_tipo(TS_lista *, int , int, int); //Nombre, tipo (entero, real,...) y tipo de simbolo (var, cte, ...)
 bool TS_esVacio(TS_lista *); //Para comprobar si está vacía la lista
 char* TS_buscar_nombre(TS_lista *, int);
 int TS_consulta_tipo(TS_lista *, int);
 int TS_consulta_tipo_simbolo(TS_lista *, int);
-bool TS_buscar(TS_lista *, char *); //Busca si existe un nombre en la tabla o no
+bool TS_buscar(TS_lista *, char *, int); //Busca si existe un nombre en la tabla o no
 int TS_buscar_id(TS_lista *, char *);
 bool comprobarTipo(TS_celda *, char *);
 void TS_imprimir(TS_lista *); //Para mostrar la tabla de símbolos

@@ -264,9 +264,6 @@ void CTD_imprimir(TC_tabla_cuadrupla *cuadrupla, TS_lista *simbolos){
                 printf("Entro en OP_O\n");
                 break;*/
             case OP_INT_TO_REAL:
-                /*
-                    TENER EN CUENTA LAS CONSTANTES
-                */
                 if(TS_consulta_tipo_simbolo(simbolos, cuadrupla->cuadruplas[i].operando1) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla->cuadruplas[i].operando1);
                     Constante* cte = (Constante*)celda->otros;

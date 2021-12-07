@@ -1,4 +1,4 @@
-algoritmo sumaDeCoeficientesBinomiales;
+algoritmo suma;
     ent n, r: entero;
 {Prec: n = N AND N >= 1}
     var

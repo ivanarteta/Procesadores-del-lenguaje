@@ -8,6 +8,10 @@ algoritmo megaEjemplo;
         d = 156;
         e = 'Esto es una cadena';
     fconst
+
+    accion MCDmcm(ent a, b: entero; sal mcd, mcm: entero);
+    funcion maxComDiv(a, b: entero) dev mcd: entero;
+
     accion MCDmcm(ent a, b: entero; sal mcd, mcm: entero);
         var
             x, y: entero;

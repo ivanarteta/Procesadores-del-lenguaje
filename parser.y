@@ -13,6 +13,9 @@ void yyerror(char *s);
 int yylex(void);
 int yyparse(void);
 
+int ambito = 1;
+
+
 int separar_cadena(char *);
 extern FILE * yyin;
 
@@ -432,11 +435,8 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             {
                                 int nueva = TS_newtempt(&simbolos);
                                 TS_modificar_tipo(&simbolos, nueva, $2.tipo, TS_VAR);
-                                /* ¿NO DEBERÍA SER EL MISMO? */
                                 if($2.tipo == TIPO_ENTERO || $2.tipo == TIPO_REAL){
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA_UNARIA, $2.sitio, -1, nueva));
-                                //}//else if($2.tipo == TIPO_REAL){
-                                    //TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA_UNARIA_REAL, $2.sitio, -1, nueva));
                                 }else{
                                     errores_parser(ERROR_TIPO);
                                 }
@@ -545,7 +545,6 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
 operando:   TK_IDENTIFICADOR 
                 {
                     /* ERROR AL COMPROBAR SI EXISTE */
-                    //printf(YELLOW"Entro en identificador \n"RESET);
                     int id = TS_buscar_id(&simbolos,$1); 
                     if(id == -1){
                         errores_parser(ERROR_SIMBOLO);
@@ -554,15 +553,11 @@ operando:   TK_IDENTIFICADOR
                     }
                     
                     /* SI ES DIFERENTE A VARIABLE O CONSTANTE ERROR */
-                    //$$.tipo = TS_consulta_tipo(&simbolos, $$.sitio);
                     int tipo = TS_consulta_tipo(&simbolos, $$.sitio);
                     if(tipo == TIPO_BOOLEANO){
                         $$.tipo = TIPO_BOOLEANO;
-                        //int nextquad = TC_elemento_siguiente(&cuadrupla);
                         nuevaCola(&$$.TRUE);
                         nuevaCola(&$$.FALSE);
-                        //pideTurnoCola(&$$.TRUE, nextquad);
-                        //pideTurnoCola(&$$.FALSE, nextquad+1);
                     }else{
                         $$.tipo = tipo;
                     }
@@ -676,36 +671,17 @@ it_cota_variable:   TK_MIENTRAS M expresion TK_HACER N instrucciones TK_FMIENTRA
                         }
                     ;
 
-it_cota:    TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER
+it_cota:    TK_PARA M asignacion TK_HASTA expresion TK_HACER
                 {
-                    int id = TS_buscar_id(&simbolos, $2);
-
-                    /* Comprobamos que existe el id */
-                    if(id == -1){
-                        errores_parser(ERROR_SIMBOLO);
-                    }else if(TS_consulta_tipo_simbolo(&simbolos, id) != TS_VAR){ //Comprobamos que sea una variable
-                        errores_parser(ERROR_OPERANDO);
-                    }
-                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION, id, -1, $4.sitio));
-                    //¿COMO VAMOS A SABER SI ES HASTA QUE SEA MAYOR O IGUAL, MENOR O IGUAL O LO QUE SEA?
-                    int nextquad = TC_elemento_siguiente(&cuadrupla);
-                    
-                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, id, $6.sitio, nextquad+2));
-                    /* A donde tiene que ir si la expresión es falsa */
+                    int nextquad = TC_elemento_siguiente(&cuadrupla);  
+                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO_MENOR_O_IGUAL, $2, $5.sitio, nextquad+2));
                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
-
-                    //Le pasamos la posicion
-                    $$ = id;
+                    $$ = $2;
                 }
                 ;
 
 it_cota_fija:   M it_cota instrucciones TK_FPARA
                     {
-                        /*TC_imprimir(&cuadrupla);
-                        printf(YELLOW"Entro en it cota fija \n"RESET);
-                        printf("%d \n", $1);
-                        printf("%d \n", $2);*/
-                        
                         int nextquad = TC_elemento_siguiente(&cuadrupla);
                         if(!esNulaCola($3.siguiente)){
                             backpatch(&cuadrupla, &$3.siguiente, nextquad);
@@ -725,21 +701,40 @@ it_cota_fija:   M it_cota instrucciones TK_FPARA
                         nuevaCola(&$$.siguiente);
                         pideTurnoCola(&$$.siguiente, $1+2);
                         backpatch(&cuadrupla, &$$.siguiente, nextquad);
-
-                        //SALGO
-                        //printf(MAGENTA"SALGO en el PARA \n"RESET);
                     }
                 ;
 /* ACCIONES Y FUNCIONES */
-definicion_accion:  TK_ACCION cabecera_accion bloque TK_FACCION
+definicion_accion:  TK_ACCION cabecera_accion /*bloque TK_FACCION*/
                     ;
-definicion_funcion: TK_FUNCION cabecera_funcion bloque TK_DEV expresion TK_FFUNCION
+definicion_funcion: TK_FUNCION cabecera_funcion /*bloque*/ TK_DEV expresion /*TK_FFUNCION*/
                     ;
-cabecera_accion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS defParForm TK_FIN_PARENTESIS TK_COMPOSICION_SECUENCIAL
+cabecera_accion:    accion defParForm TK_FIN_PARENTESIS TK_COMPOSICION_SECUENCIAL
+                        {
+                            //ambito +=1;
+                            //printf("holi %d \n", ambito);
+                            //int id = TS_insertar_accion_funcion(&simbolos, $1, ambito);
+                            //TS_modificar_tipo(&simbolos, id, 0, TS_ACCION);
+                        }
                     ;
+
+accion:     TK_IDENTIFICADOR TK_INICIO_PARENTESIS 
+                {
+                    ambito +=1;
+                    printf("holi %d \n", ambito);
+                    int id = TS_insertar_accion_funcion(&simbolos, $1, ambito);
+                    TS_modificar_tipo(&simbolos, id, 0, TS_ACCION);
+                }
+            ;
+
 cabecera_funcion:   TK_IDENTIFICADOR TK_INICIO_PARENTESIS lista_definiciones_var TK_FIN_PARENTESIS TK_DEV definicion_tipo TK_COMPOSICION_SECUENCIAL
+                        {
+
+                        }
                     ;
 defParForm:     dParForm TK_COMPOSICION_SECUENCIAL defParForm
+                    {
+                        ambito +=1;
+                    }
                 | /* vacio */
                 ;
 

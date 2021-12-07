@@ -1,7 +1,7 @@
 algoritmo intercambio;
-    const
-        c = 5;
-    fconst
+
+    accion hola(ent a, b: entero sal mcd, mcm: entero);
+    
     ent a, b: entero;
     sal a, b: entero;
 {Prec: a= A AND b = B}

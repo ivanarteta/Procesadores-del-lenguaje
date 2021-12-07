@@ -11,7 +11,7 @@ algoritmo seno;
     s:= x;
     mientras k <> n hacer
         r:= r * (-1);
-        p:= p * x * x:
+        p:= p * x * x;
         q:= q * (2 * k + 2) * (2 * k + 3);
         s:= s + (r * p div q);
         k:= k + 1

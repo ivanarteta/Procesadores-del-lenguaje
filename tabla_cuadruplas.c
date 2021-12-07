@@ -89,8 +89,8 @@ char* mostrar_operador(int operador){
             return ":= false";
         case OP_ASIGNACION_TRUE:
             return ":= true";
-        case OP_ASIGNACION_ENTERO:
-            return ":= (entero)";
+        //case OP_ASIGNACION_ENTERO:
+          //  return ":= (entero)";
         case OP_SUMA:
             return "+";
         case OP_RESTA:
@@ -103,20 +103,20 @@ char* mostrar_operador(int operador){
             return "mod";
         case OP_DIV:
             return "div";
-        case OP_IGUAL:
-            return "=";
-        case OP_NO:
-            return "no";
-        case OP_Y:
-            return "y";
-        case OP_O:
-            return "o";
+        //case OP_IGUAL:
+        //    return "=";
+        //case OP_NO:
+          //  return "no";
+        //case OP_Y:
+         //   return "y";
+        //case OP_O:
+         //   return "o";
         case OP_INT_TO_REAL:
             return "IntToReal";
-        case OP_RESTA_UNARIA_ENTERO:
-            return "-ent";
-        case OP_RESTA_UNARIA_REAL:
-            return "-real";
+        //case OP_RESTA_UNARIA_ENTERO:
+          //  return "-ent";
+        //case OP_RESTA_UNARIA_REAL:
+          //  return "-real";
         case OP_GOTO:
             return "goto";
         case OP_GOTO_IGUAL:

@@ -21,10 +21,11 @@ void TS_nuevaLista(TS_lista *elemento){
     elemento->contador = 1;
 }
 
-int TS_insertar(TS_lista *lista, char* nombre){
+int TS_insertar_accion_funcion(TS_lista *lista, char* nombre, int ambito){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     celda->nombre = nombre;
+    celda->ambito = ambito;
     if(TS_esVacio(lista)){
         celda->siguiente = NULL;
         lista->inicio = celda;
@@ -32,7 +33,37 @@ int TS_insertar(TS_lista *lista, char* nombre){
         celda->id = lista->contador;
         lista->contador++;
     }else{
-        if(!TS_buscar(lista, nombre)){
+        if(!TS_buscar(lista, nombre, celda->ambito)){
+            celda->siguiente = NULL;
+            celda->id = lista->contador;
+            lista->contador++;
+            TS_celda *aux = lista->inicio;
+            while(aux->siguiente != NULL){
+                aux = aux->siguiente;
+            }
+            aux->siguiente = celda;
+            lista->final = celda;       
+        }else{
+            return TS_buscar_id(lista, nombre);
+        }
+    }
+    return celda->id;
+
+}
+
+int TS_insertar(TS_lista *lista, char* nombre){
+    TS_celda *celda;
+    celda = (TS_celda*)malloc(sizeof(TS_celda));
+    celda->nombre = nombre;
+    celda->ambito = 1;
+    if(TS_esVacio(lista)){
+        celda->siguiente = NULL;
+        lista->inicio = celda;
+        lista->final = celda;
+        celda->id = lista->contador;
+        lista->contador++;
+    }else{
+        if(!TS_buscar(lista, nombre, celda->ambito)){
             celda->siguiente = NULL;
             celda->id = lista->contador;
             lista->contador++;
@@ -107,7 +138,7 @@ void TS_modificar_valor_cte(TS_lista *lista, int id, Constante_valor valor){
     }
 }
 
-int TS_new(TS_lista *lista, TS_celda *celda){
+int TS_new(TS_lista *lista, TS_celda *celda, int ambito){
     if(TS_esVacio(lista)){
         celda->siguiente = NULL;
         celda->id = lista->contador;
@@ -115,7 +146,7 @@ int TS_new(TS_lista *lista, TS_celda *celda){
         lista->inicio = celda;
         lista->final = celda;
     }else{
-        if(!TS_buscar(lista, celda->nombre)){
+        if(!TS_buscar(lista, celda->nombre, ambito)){
             celda->siguiente = NULL;
             celda->id = lista->contador;
             lista->contador++;
@@ -136,20 +167,21 @@ int TS_newtempt(TS_lista *lista){
     char nombre[10];
     sprintf(nombre, "t%d", contadorTemp);
     celda->nombre =strdup(nombre);
+    celda->ambito = 1;
     contadorTemp++;
-    return TS_new(lista, celda);
+    return TS_new(lista, celda, celda->ambito);
 }
 
-bool TS_buscar(TS_lista *lista, char * nombre){ 
+bool TS_buscar(TS_lista *lista, char * nombre, int ambito){ 
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL){
-        if((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)){
+        if(((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) && aux->ambito == ambito){
             return true;
         }
         aux = aux->siguiente;  
     }
-    return ((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) ? true : false;
+    return (((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) && aux->ambito == ambito)? true : false;
 }
 
 bool TS_esVacio(TS_lista *lista){
@@ -163,9 +195,9 @@ char* mostrar_tipo(int tipo){
         case TS_CONSTANTE:
             return "Const";
         case TS_ACCION:
-            return "Acción";
+            return "Accion";
         case TS_FUNCION:
-            return "Función";
+            return "Funcion";
         case TS_TIPO:
             return "Tipo";
         case TIPO_ENTERO:
@@ -194,15 +226,23 @@ void TS_imprimir(TS_lista *lista){
     while (aux->siguiente != NULL){
         if(aux->tipo_simbolo == TS_CONSTANTE){
             TS_imprimir_cte(aux);
-        }else{
+        }else if(aux->tipo_simbolo == TS_VAR){
             printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "VAR");
+        }else if(aux->tipo_simbolo == TS_ACCION){
+            printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "ACCION");
+        }else if(aux->tipo_simbolo == TS_FUNCION){
+            printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "FUNCION");
         }
         aux = aux->siguiente;
     }
     if(aux->tipo_simbolo == TS_CONSTANTE){
         TS_imprimir_cte(aux);
-    }else{
+    }else if(aux->tipo_simbolo == TS_VAR){
         printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "VAR");
+    }else if(aux->tipo_simbolo == TS_ACCION){
+        printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "ACCION");
+    }else if(aux->tipo_simbolo == TS_FUNCION){
+        printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "FUNCION");
     }
 }
 
@@ -292,6 +332,7 @@ int TS_newConst(TS_lista *lista){
     char nombre[10];
     sprintf(nombre, "t_const_%d", contadorConst);
     celda->nombre =strdup(nombre);
+    celda->ambito = 1;
     contadorConst++;
-    return TS_new(lista, celda);
+    return TS_new(lista, celda, celda->ambito);
 }

@@ -39,10 +39,10 @@ enum enum_operadores{
     OP_ASIGNACION,
     OP_ASIGNACION_TRUE,
     OP_ASIGNACION_FALSE,
-    OP_ASIGNACION_ENTERO,
-    OP_ASIGNACION_TIPO_FALSO,
-    OP_ASIGNACION_TIPO_VERDADERO,
-    OP_ASIGNACION_TRUE_IF,
+    //OP_ASIGNACION_ENTERO,
+    //OP_ASIGNACION_TIPO_FALSO,
+    //OP_ASIGNACION_TIPO_VERDADERO,
+    //OP_ASIGNACION_TRUE_IF,
     
     /*OP_ASIGNACION_ENTERO,
     OP_ASIGNACION_REAL,
@@ -55,21 +55,21 @@ enum enum_operadores{
     OP_DIVISION,
     OP_MOD,
     OP_DIV,
-    OP_IGUAL,
+    //OP_IGUAL,
 
     /* Operadores logicos */
-    OP_NO,
-    OP_Y,
-    OP_O,
+    //OP_NO,
+    //OP_Y,
+    //OP_O,
 
     /* Para conversiones */
     OP_INT_TO_REAL,
-    OP_REAL_TO_INT,
+    //OP_REAL_TO_INT,
 
     /* Resta unaria */
     OP_RESTA_UNARIA,
-    OP_RESTA_UNARIA_ENTERO,
-    OP_RESTA_UNARIA_REAL,
+    //OP_RESTA_UNARIA_ENTERO,
+    //OP_RESTA_UNARIA_REAL,
 
     /* Para los GOTO */
     OP_GOTO,
