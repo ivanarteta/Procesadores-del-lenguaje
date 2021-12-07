@@ -15,7 +15,7 @@ var
 	e : booleano;
 fvar
 a := b + (c * 4) / pi;
-e := falso o (verdadero y e)
+e := falso o (verdadero = e)
 
 {Post: ...  }
 falgoritmo

@@ -42,6 +42,8 @@ enum enum_operadores{
     OP_ASIGNACION_ENTERO,
     OP_ASIGNACION_TIPO_FALSO,
     OP_ASIGNACION_TIPO_VERDADERO,
+    OP_ASIGNACION_TRUE_IF,
+    
     /*OP_ASIGNACION_ENTERO,
     OP_ASIGNACION_REAL,
 
@@ -65,6 +67,7 @@ enum enum_operadores{
     OP_REAL_TO_INT,
 
     /* Resta unaria */
+    OP_RESTA_UNARIA,
     OP_RESTA_UNARIA_ENTERO,
     OP_RESTA_UNARIA_REAL,
 

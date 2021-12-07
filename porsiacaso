@@ -1,0 +1,35 @@
+/*| expresion_aritmetica TK_Y M expresion_aritmetica
+                            {
+                                /*if($1.tipo == $4.tipo && $1.tipo == TIPO_BOOLEANO){
+                                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE_IF, $1.sitio, -1, nextquad+2));
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
+                                    nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    pideTurnoCola(&$$.FALSE, nextquad-1);
+                                    pideTurnoCola(&$$.FALSE, nextquad+1);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE_IF, $4.sitio, -1, nextquad+2));
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
+                                }  */
+                            }
+                        | expresion_aritmetica TK_O M expresion_aritmetica
+                            {
+                                /* Entro aquí */         
+                                /*printf("Entro en el y de expresion aritmetica");
+                                printf("tipo %d sitio %d \n", $1.tipo, $1.sitio);
+                                printf("tipo %d sitio %d \n", $4.tipo, $4.sitio);
+                                printf("%d \n", $3);*/
+                                
+                                /*if($1.tipo == $4.tipo && $1.tipo == TIPO_BOOLEANO){
+                                    int nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE_IF, $1.sitio, -1, -1));
+                                    pideTurnoCola(&$$.TRUE, nextquad);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, nextquad+2));
+                                    nextquad = TC_elemento_siguiente(&cuadrupla);
+                                    pideTurnoCola(&$$.FALSE, nextquad+1);
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_ASIGNACION_TRUE_IF, $4.sitio, -1, nextquad+2));
+                                    TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
+                                        
+                                } */ 
+                            }*/

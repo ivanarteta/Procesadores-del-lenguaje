@@ -7,12 +7,7 @@ var
 	g,h,i : booleano;
 fvar
 
-d := ((a + b) * c) mod a;
-d := (c - a) div c;
-d := (e / f) * (a + b + c);
-
-g := (h o i) y g;
-g := no (h o i) y ((a >= b) o (d < e))
+g := h o i
 
 
 {  }

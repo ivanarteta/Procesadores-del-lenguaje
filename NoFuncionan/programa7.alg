@@ -7,10 +7,14 @@ var
 	e,f : booleano;
 fvar
 
-	para j := 1 hasta a hacer
-		b := b + j;
-		a:=1
-	fpara
+	b := 1;
+	para j := 2 hasta a hacer
+		b := b + j
+	fpara;
+
+	mientras (e y f) y (c > d) hacer
+		c := c - 1
+	fmientras
 
 {  }
 falgoritmo
