@@ -21,7 +21,7 @@ void TS_nuevaLista(TS_lista *elemento){
     elemento->contador = 1;
 }
 
-int TS_insertar_accion_funcion(TS_lista *lista, char* nombre, int ambito){
+int TS_insertar(TS_lista *lista, char* nombre, int ambito){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     celda->nombre = nombre;
@@ -33,7 +33,7 @@ int TS_insertar_accion_funcion(TS_lista *lista, char* nombre, int ambito){
         celda->id = lista->contador;
         lista->contador++;
     }else{
-        if(!TS_buscar(lista, nombre, celda->ambito)){
+        if(!TS_buscar(lista, nombre, ambito)){
             celda->siguiente = NULL;
             celda->id = lista->contador;
             lista->contador++;
@@ -44,59 +44,27 @@ int TS_insertar_accion_funcion(TS_lista *lista, char* nombre, int ambito){
             aux->siguiente = celda;
             lista->final = celda;       
         }else{
-            return TS_buscar_id(lista, nombre);
-        }
-    }
-    return celda->id;
-
-}
-
-int TS_insertar(TS_lista *lista, char* nombre){
-    TS_celda *celda;
-    celda = (TS_celda*)malloc(sizeof(TS_celda));
-    celda->nombre = nombre;
-    celda->ambito = 1;
-    if(TS_esVacio(lista)){
-        celda->siguiente = NULL;
-        lista->inicio = celda;
-        lista->final = celda;
-        celda->id = lista->contador;
-        lista->contador++;
-    }else{
-        if(!TS_buscar(lista, nombre, celda->ambito)){
-            celda->siguiente = NULL;
-            celda->id = lista->contador;
-            lista->contador++;
-            TS_celda *aux = lista->inicio;
-            while(aux->siguiente != NULL){
-                aux = aux->siguiente;
-            }
-            aux->siguiente = celda;
-            lista->final = celda;       
-        }else{
-            return TS_buscar_id(lista, nombre);
+            return TS_buscar_id(lista, nombre, ambito);
         }
     }
     return celda->id;
 }
 
-int TS_buscar_id(TS_lista *lista, char * nombre){ 
+int TS_buscar_id(TS_lista *lista, char * nombre, int ambito){ 
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL){
-        if((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)){
+        if(((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) && aux->ambito == ambito){
             return aux->id;
         }
         aux = aux->siguiente;  
     }
-    if((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)){
+    if(((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) && aux->ambito == ambito){
         return aux->id;
     }
     return -1;
 }
 
-//Lista, nombre, tipo, tipo_simbolo
-//Aquí en vez del nombre se le pasa la posicion
 void TS_modificar_tipo(TS_lista *lista, int id, int tipo, int tipoSimbolo){
     TS_celda *aux;
     aux = lista->inicio;
@@ -107,6 +75,11 @@ void TS_modificar_tipo(TS_lista *lista, int id, int tipo, int tipoSimbolo){
     if(aux->id == id){
         aux->tipo = tipo;
         aux->tipo_simbolo = tipoSimbolo;
+        if(tipoSimbolo == TS_ACCION ||tipoSimbolo == TS_FUNCION){
+            aux->otros = (AccionFuncion*)malloc(sizeof(AccionFuncion));
+            AccionFuncion *accion_funcion = aux->otros;
+            accion_funcion->contador = 0;
+        }
     }
 }
 
@@ -138,6 +111,24 @@ void TS_modificar_valor_cte(TS_lista *lista, int id, Constante_valor valor){
     }
 }
 
+void TS_insertar_param(TS_lista *lista, int tipoSimbolo, int ambito, int id, int tipoPaso){
+    printf("Estoy dentro de insertar param");
+    TS_celda *aux;
+    aux = lista->inicio;
+    while(aux->siguiente != NULL && aux->tipo_simbolo != tipoSimbolo && aux->ambito != ambito){
+        aux = aux->siguiente;
+    }
+
+    if(aux->tipo_simbolo == tipoSimbolo && aux->ambito == ambito){
+        AccionFuncion *accion_funcion = aux->otros;
+        Params params;
+        params.id = id;
+        params.tipoPaso = tipoPaso;
+        accion_funcion->params[accion_funcion->contador] = params;
+        accion_funcion->contador++;
+    }
+}
+
 int TS_new(TS_lista *lista, TS_celda *celda, int ambito){
     if(TS_esVacio(lista)){
         celda->siguiente = NULL;
@@ -161,15 +152,15 @@ int TS_new(TS_lista *lista, TS_celda *celda, int ambito){
     return celda->id;
 }
 
-int TS_newtempt(TS_lista *lista){
+int TS_newtempt(TS_lista *lista, int ambito){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     char nombre[10];
     sprintf(nombre, "t%d", contadorTemp);
     celda->nombre =strdup(nombre);
-    celda->ambito = 1;
+    celda->ambito = ambito;
     contadorTemp++;
-    return TS_new(lista, celda, celda->ambito);
+    return TS_new(lista, celda, ambito);
 }
 
 bool TS_buscar(TS_lista *lista, char * nombre, int ambito){ 
@@ -187,6 +178,8 @@ bool TS_buscar(TS_lista *lista, char * nombre, int ambito){
 bool TS_esVacio(TS_lista *lista){
     return (lista->inicio == NULL && lista->final == NULL);
 }
+
+
 
 char* mostrar_tipo(int tipo){
     switch (tipo){
@@ -217,9 +210,17 @@ char* mostrar_tipo(int tipo){
     }
 }
 
+void TS_mostrar_params(TS_celda *celda){
+    AccionFuncion* accion_funcion = (AccionFuncion*)celda->otros;
+    for(int i=0; i<accion_funcion->contador; i++){
+        printf("Id: %d TipoPaso: %d \n", accion_funcion->params[i].id, accion_funcion->params[i].tipoPaso);
+    }
+}
+
+
 void TS_imprimir(TS_lista *lista){
 	printf("\n\n______________ Contenido de la tabla de simbolos _____________\n");
-	printf("%5s %10s %25s %25s %25s\n", "ID",  "NOMBRE", "TIPO", "TIPO SIMBOLO", "VALOR");
+	printf("%5s %10s %10s %10s %10s %10s \n", "ID",  "NOMBRE", "TIPO", "AMBITO", "SIMBOLO", "VALOR");
     /* Recorremos todos los elementos de la tabla */
     TS_celda *aux;
     aux = lista->inicio; 
@@ -227,22 +228,26 @@ void TS_imprimir(TS_lista *lista){
         if(aux->tipo_simbolo == TS_CONSTANTE){
             TS_imprimir_cte(aux);
         }else if(aux->tipo_simbolo == TS_VAR){
-            printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "VAR");
+            printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "VAR");
         }else if(aux->tipo_simbolo == TS_ACCION){
-            printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "ACCION");
+            TS_mostrar_params(aux);
+            printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "ACCION");
         }else if(aux->tipo_simbolo == TS_FUNCION){
-            printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "FUNCION");
+            TS_mostrar_params(aux);
+            printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "FUNCION");
         }
         aux = aux->siguiente;
     }
     if(aux->tipo_simbolo == TS_CONSTANTE){
         TS_imprimir_cte(aux);
     }else if(aux->tipo_simbolo == TS_VAR){
-        printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "VAR");
+        printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "VAR");
     }else if(aux->tipo_simbolo == TS_ACCION){
-        printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "ACCION");
+        TS_mostrar_params(aux);
+        printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "ACCION");
     }else if(aux->tipo_simbolo == TS_FUNCION){
-        printf("%5d %10s %25s %25s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), "FUNCION");
+        TS_mostrar_params(aux);
+        printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "FUNCION");
     }
 }
 
@@ -266,20 +271,19 @@ void TS_imprimir_cte(TS_celda *celda){
     switch (celda->tipo){
         case TIPO_ENTERO:
         case TIPO_BOOLEANO:
-            printf("%5d %10s %25s %25s %25d \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), "CONST", cte->valor.entero);
+            printf("%5d %10s %10s %10d %10s %10d \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), celda->ambito, "CONST", cte->valor.entero);
             break;
         case TIPO_REAL:
-            printf("%5d %10s %25s %25s %25f \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), "CONST", cte->valor.real);
+            printf("%5d %10s %10s %10d %10s %10f \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), celda->ambito, "CONST", cte->valor.real);
             break;
         case TIPO_CARACTER:
         case TIPO_CADENA:
-            printf("%5d %10s %25s %25s %25s \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), "CONST", cte->valor.caracteres);
+            printf("%5d %10s %10s %10d %10s %10s \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), celda->ambito, "CONST", cte->valor.caracteres);
             break;
         default:
             break;
     }  
 }
-
 
 int TS_consulta_tipo_simbolo(TS_lista *lista, int id){
     TS_celda *aux;
@@ -326,13 +330,13 @@ char* TS_buscar_nombre(TS_lista *lista, int id){
     return NULL;
 }
 
-int TS_newConst(TS_lista *lista){
+int TS_newConst(TS_lista *lista, int ambito){
     TS_celda *celda;
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     char nombre[10];
     sprintf(nombre, "t_const_%d", contadorConst);
     celda->nombre =strdup(nombre);
-    celda->ambito = 1;
+    celda->ambito = ambito;
     contadorConst++;
-    return TS_new(lista, celda, celda->ambito);
+    return TS_new(lista, celda, ambito);
 }

@@ -1,5 +1,5 @@
 all:
-	bison -v -d parser.y
+	bison -v -d -t parser.y
 	flex scanner.l
 	gcc -c lex.yy.c 
 	gcc -c tabla_simbolos.c tabla_simbolos.h -Wall

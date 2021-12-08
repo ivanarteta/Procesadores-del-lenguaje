@@ -180,9 +180,9 @@ definiciones_globales:  definicion_tipo definiciones_globales
                         ;
 definiciones_acciones_funciones:    definicion_accion definiciones_acciones_funciones 
                                     | definicion_funcion definiciones_acciones_funciones
-                                    | /* vacio */
+                                    | /* vacio */   {ambito = 1;}
                                     ;
-bloque: declaraciones instrucciones
+bloque: declaraciones instrucciones 
         ;      
 declaraciones:  definicion_tipo declaraciones
                 | definicion_const declaraciones 
@@ -222,7 +222,7 @@ lista_campos:   TK_IDENTIFICADOR TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL 
 /* DECLARACION DE CONSTANTES Y VARIABLES */
 lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL tipo_literal TK_COMPOSICION_SECUENCIAL lista_definiciones_const 
                                 {   
-                                    int id = TS_insertar(&simbolos, $1);   
+                                    int id = TS_insertar(&simbolos, $1, ambito);   
                                     TS_modificar_tipo(&simbolos, id, $3.tipo, TS_CONSTANTE);
                                     TS_modificar_valor_cte(&simbolos, id, $3.valor);
                                 }
@@ -240,23 +240,23 @@ lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definicione
                             ;
 lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id 
                 {  
-                    int id = TS_insertar(&simbolos, $1);
+                    int id = TS_insertar(&simbolos, $1, ambito);
                     TS_modificar_tipo(&simbolos, id, $3, TS_VAR);
                     apilar(&pila, id);
                     $$=$3;
                 }
             | TK_IDENTIFICADOR TK_DEF_TIPO def_tipo 
                 {
-                    int id = TS_insertar(&simbolos, $1);
+                    int id = TS_insertar(&simbolos, $1, ambito);
                     TS_modificar_tipo(&simbolos, id, $3, TS_VAR);
                     apilar(&pila, id);
                     $$ = $3;
                 }
-            /*| vacio */
+            /*| vacio */ 
             ;
-definiciones_variables_interaccion: definicion_entrada
-                                    | definicion_entrada definicion_salida
-                                    | definicion_salida
+definiciones_variables_interaccion: definicion_entrada 
+                                    | definicion_entrada definicion_salida 
+                                    | definicion_salida 
                                     ;
 definicion_entrada: TK_ENT lista_definiciones_var 
                         {
@@ -296,7 +296,7 @@ expresion:  expresion_aritmetica
 /* FALTAN POR COMPROBAR CASOS */
 expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica 
                             {
-                                int nueva = TS_newtempt(&simbolos);
+                                int nueva = TS_newtempt(&simbolos, ambito);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_SUMA, $1.sitio, $3.sitio, nueva));
@@ -322,7 +322,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_RESTA expresion_aritmetica 
                             {
-                                int nueva = TS_newtempt(&simbolos);
+                                int nueva = TS_newtempt(&simbolos, ambito);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA, $1.sitio, $3.sitio, nueva));
@@ -348,7 +348,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_DIVISION expresion_aritmetica 
                             {
-                                int nueva = TS_newtempt(&simbolos);
+                                int nueva = TS_newtempt(&simbolos, ambito);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_DIVISION, $1.sitio, $3.sitio, nueva));
@@ -375,7 +375,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_DIV expresion_aritmetica 
                             {
-                                int nueva = TS_newtempt(&simbolos);
+                                int nueva = TS_newtempt(&simbolos, ambito);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_DIV, $1.sitio, $3.sitio, nueva));
@@ -387,7 +387,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_MOD expresion_aritmetica 
                             {
-                                int nueva = TS_newtempt(&simbolos);
+                                int nueva = TS_newtempt(&simbolos, ambito);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_MOD, $1.sitio, $3.sitio, nueva));
@@ -399,7 +399,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | expresion_aritmetica TK_MULTIPLICACION expresion_aritmetica 
                             {
-                                int nueva = TS_newtempt(&simbolos);
+                                int nueva = TS_newtempt(&simbolos, ambito);
                                 if(($1.tipo == TIPO_ENTERO) && ($3.tipo == TIPO_ENTERO)){
                                     TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_VAR);
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_MULTIPLICACION, $1.sitio, $3.sitio, nueva));
@@ -433,7 +433,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | TK_RESTA expresion_aritmetica %prec UMINUS 
                             {
-                                int nueva = TS_newtempt(&simbolos);
+                                int nueva = TS_newtempt(&simbolos, ambito);
                                 TS_modificar_tipo(&simbolos, nueva, $2.tipo, TS_VAR);
                                 if($2.tipo == TIPO_ENTERO || $2.tipo == TIPO_REAL){
                                     TC_insertar(&cuadrupla,TC_crear_cuadrupla(OP_RESTA_UNARIA, $2.sitio, -1, nueva));
@@ -445,7 +445,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | TK_LITERAL_ENTERO 
                             {
-                                int nueva = TS_newConst(&simbolos);
+                                int nueva = TS_newConst(&simbolos, ambito);
                                 TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
                                 TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
                                 $$.tipo = TIPO_ENTERO;
@@ -453,7 +453,7 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | TK_LITERAL_REAL 
                             {
-                                int nueva = TS_newConst(&simbolos);
+                                int nueva = TS_newConst(&simbolos, ambito);
                                 TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_CONSTANTE);
                                 TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
                                 $$.tipo = TIPO_REAL;
@@ -487,7 +487,7 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                             }
                         | TK_LITERAL_BOOLEANO
                             {
-                                int nueva = TS_newConst(&simbolos);
+                                int nueva = TS_newConst(&simbolos, ambito);
                                 TS_modificar_tipo(&simbolos, nueva, TIPO_BOOLEANO, TS_CONSTANTE);
                                 TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
                                 int nextquad = TC_elemento_siguiente(&cuadrupla);
@@ -545,7 +545,7 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
 operando:   TK_IDENTIFICADOR 
                 {
                     /* ERROR AL COMPROBAR SI EXISTE */
-                    int id = TS_buscar_id(&simbolos,$1); 
+                    int id = TS_buscar_id(&simbolos,$1, ambito); 
                     if(id == -1){
                         errores_parser(ERROR_SIMBOLO);
                     }else{
@@ -688,7 +688,7 @@ it_cota_fija:   M it_cota instrucciones TK_FPARA
                         }
 
                         //Creamos una constante con el valor 1
-                        int nueva = TS_newConst(&simbolos);
+                        int nueva = TS_newConst(&simbolos, ambito);
                         TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
                         Constante_valor *valor = (Constante_valor*)malloc(sizeof(Constante_valor));
                         valor->entero = 1;
@@ -704,44 +704,81 @@ it_cota_fija:   M it_cota instrucciones TK_FPARA
                     }
                 ;
 /* ACCIONES Y FUNCIONES */
-definicion_accion:  TK_ACCION cabecera_accion /*bloque TK_FACCION*/
+definicion_accion:  TK_ACCION cabecera_accion bloque TK_FACCION
                     ;
-definicion_funcion: TK_FUNCION cabecera_funcion /*bloque*/ TK_DEV expresion /*TK_FFUNCION*/
+definicion_funcion: TK_FUNCION cabecera_funcion bloque TK_DEV expresion TK_FFUNCION
                     ;
 cabecera_accion:    accion defParForm TK_FIN_PARENTESIS TK_COMPOSICION_SECUENCIAL
                         {
-                            //ambito +=1;
-                            //printf("holi %d \n", ambito);
-                            //int id = TS_insertar_accion_funcion(&simbolos, $1, ambito);
-                            //TS_modificar_tipo(&simbolos, id, 0, TS_ACCION);
+                            //Desde aqui a la accion hay que añadirle los valores de entrada y de salida en params
                         }
                     ;
 
 accion:     TK_IDENTIFICADOR TK_INICIO_PARENTESIS 
                 {
                     ambito +=1;
-                    printf("holi %d \n", ambito);
-                    int id = TS_insertar_accion_funcion(&simbolos, $1, ambito);
+                    int id = TS_insertar(&simbolos, $1, ambito);
                     TS_modificar_tipo(&simbolos, id, 0, TS_ACCION);
                 }
             ;
 
-cabecera_funcion:   TK_IDENTIFICADOR TK_INICIO_PARENTESIS lista_definiciones_var TK_FIN_PARENTESIS TK_DEV definicion_tipo TK_COMPOSICION_SECUENCIAL
+cabecera_funcion:   funcion lista_definiciones_var TK_FIN_PARENTESIS TK_DEV TK_IDENTIFICADOR TK_DEF_TIPO def_tipo TK_COMPOSICION_SECUENCIAL
                         {
-
+                            
+                            while(!esNulaPila(pila)){
+                                printf("Entro en la pila %d \n", cima(pila));
+                                TS_insertar_param(&simbolos, TS_FUNCION, ambito, cima(pila),1);
+                                desapilar(&pila);
+                            }
+                            
+                            int id = TS_insertar(&simbolos, $5, ambito);
+                            TS_modificar_tipo(&simbolos, id, $7, TS_VAR);
+                            TS_insertar_param(&simbolos, TS_FUNCION, ambito, id, 4);
                         }
                     ;
+
+funcion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS
+                {
+                    ambito +=1;
+                    int id = TS_insertar(&simbolos, $1, ambito);
+                    TS_modificar_tipo(&simbolos, id, 0, TS_FUNCION);
+                }
+            ;
+
 defParForm:     dParForm TK_COMPOSICION_SECUENCIAL defParForm
                     {
-                        ambito +=1;
+                        //ambito +=1;
                     }
                 | /* vacio */
                 ;
 
-dParForm:       TK_ENT lista_id TK_DEF_TIPO def_tipo
-                | TK_SAL lista_id TK_DEF_TIPO def_tipo
-                | TK_ENT_SAL lista_id TK_DEF_TIPO def_tipo
+dParForm:       TK_ENT lista_id
+                    {
+                        //Aqui añadimos a params los de tipo entrada
+                        while(!esNulaPila(pila)){
+                            TS_insertar_param(&simbolos, TS_ACCION, ambito, cima(pila),1);
+                            desapilar(&pila);
+                        }
+                    }
+                | TK_SAL lista_id
+                    {
+                        //Aqui añadimos a params los de tipo salida
+                        while(!esNulaPila(pila)){
+                            TS_insertar_param(&simbolos, TS_ACCION, ambito, cima(pila), 2);
+                            desapilar(&pila);
+                        }
+                    }
+                | TK_ENT_SAL lista_id
+                    {
+                        //Aqui añadimos a params los de tipo entrada salida
+                        while(!esNulaPila(pila)){
+                            TS_insertar_param(&simbolos, TS_ACCION, ambito, cima(pila), 3);
+                            desapilar(&pila);
+                        }
+
+                    }
                 ;
+
 llamada_funcion:    TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS
                     ;
 llamada_accion:     TK_IDENTIFICADOR TK_INICIO_PARENTESIS parametros_reales TK_FIN_PARENTESIS
@@ -775,7 +812,7 @@ int main(int argc, char **argv){
     nuevaPila(&pila);
     TS_nuevaLista(&simbolos);
     TC_nuevaLista(&cuadrupla);
-    //yydebug = 1;
+    yydebug = 1;
     yyparse(); 
     TS_imprimir(&simbolos);
     TC_imprimir(&cuadrupla);
