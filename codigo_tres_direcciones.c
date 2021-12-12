@@ -37,26 +37,12 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     printf("%d %s := %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado));
                 }                   
                 break;
-            /*case OP_ASIGNACION_TRUE_IF:
-                printf("%d if %s := TRUE goto %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1), cuadrupla.cuadruplas[i].resultado - numOutputs);
-                break;*/
             case OP_ASIGNACION_TRUE:
-                /* MIRAR ESTE COMO SE MUESTRA EN LA TC PARA CAMBIAR COSAS */
                 printf("%d %s := TRUE \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado));
                 break;
             case OP_ASIGNACION_FALSE:
-                /* MIRAR ESTE COMO SE MUESTRA EN LA TC PARA CAMBIAR COSAS */
                 printf("%d %s := FALSE \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado));
                 break;
-            /*case OP_ASIGNACION_TIPO_FALSO:
-                printf("%d %s := falso \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
-                break;
-            case OP_ASIGNACION_TIPO_VERDADERO:
-                printf("%d %s := verdadero \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
-                break;*/
-            /*case OP_ASIGNACION_ENTERO:
-                printf("%d %s := %d \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1), cuadrupla.cuadruplas[i].resultado);
-                break;*/
             case OP_SUMA:
                 if((TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando1) == TS_CONSTANTE) &&
                     (TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando2) == TS_CONSTANTE)){
@@ -152,7 +138,6 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                 }else{
                     printf("%d %s := %s * %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                 }
-                //printf("%d %s := %s * %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                 break;
             case OP_DIVISION:
                 if((TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando1) == TS_CONSTANTE) &&
@@ -250,19 +235,6 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     printf("%d %s := %s div %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                 }
                 break;
-            /*case OP_IGUAL:
-                printf("Entro en OP_IGUAL\n");
-                //printf("%d %s := %s * %s \n", cont+1, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
-                break;
-            case OP_NO:
-                printf("Entro en OP_NO\n");
-                break;
-            case OP_Y:
-                printf("Entro en OP_Y\n");
-                break;
-            case OP_O:
-                printf("Entro en OP_O\n");
-                break;*/
             case OP_INT_TO_REAL:
                 if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando1) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
@@ -277,9 +249,6 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                 }
                 
                 break;
-            /*case OP_REAL_TO_INT:
-                printf("%d %s := int_to_real %s \n", cont,TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
-                break;*/
             case OP_RESTA_UNARIA:
                 if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando1) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
@@ -293,12 +262,6 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     printf("%d %s := -%s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
                 }
                 break;
-            /*
-            case OP_RESTA_UNARIA_ENTERO:
-            case OP_RESTA_UNARIA_REAL:
-                
-                printf("Entro en OP_RESTA_UNARIA_REAL\n");
-                break;*/
             case OP_GOTO:
                 printf("%d goto %d \n", cont, cuadrupla.cuadruplas[i].resultado - numOutputs);
                 break;
@@ -500,6 +463,8 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
         }
         cont = cont + 1;
     }
+
+    // Bucle para imprimir el output al final
     for(int i=0; i < nOut; i++){
 		printf("%d output %s \n", cont + i, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[pos + i].operando1));
 	}

@@ -10,20 +10,22 @@ void errorCola(char s[]){
 
 void nuevaCola(Cola *c){
 	c->i = NULL;
-	c->f= NULL;
+	c->f = NULL;
 }
 
 void pideTurnoCola(Cola *c, tElem x){
 	NodoDeCola * q;
-	if ((q=malloc(sizeof(NodoDeCola)))==NULL)
-		errorCola("no hay memoria para pideTurno");
+	if((q = malloc(sizeof(NodoDeCola))) == NULL){
+		errorCola("No hay memoria para pideTurno");
+	}
 	q->e = x;
 	q->s = NULL;
-	if (c->f == NULL)
+	if(c->f == NULL){
 		c->i = q;
-	else
-		c->f->s=q;
-	c->f=q;
+	}else{
+		c->f->s = q;
+	}
+	c->f = q;
 }
 
 bool esNulaCola(Cola c){
@@ -32,24 +34,26 @@ bool esNulaCola(Cola c){
 
 void avanceCola(Cola *c){
 	NodoDeCola * q;
-	if (esNulaCola(*c))
-		errorCola("avanzando en cola nula");
-	q= c->i;
+	if(esNulaCola(*c)){
+		errorCola("Avanzando en cola nula");
+	}
+	q = c->i;
 	c->i = c->i->s;
-	if (c->i == NULL)
+	if(c->i == NULL){
 		c->f = NULL;
+	}
 	free(q);
 }
 
 tElem primeroCola(Cola c){
-	if (esNulaCola(c))
-		errorCola("primero en cola nula");
-	return c.i->e;
+	if(esNulaCola(c)){
+		errorCola("Primero en cola nula");
+	}
+	return (c.i->e);
 }
 
 void imprimirCola(Cola cola){
-	//printf("Printeamos la cola \n");
-	if (!esNulaCola(cola)){
+	if(!esNulaCola(cola)){
 		NodoDeCola *aux;
 		aux = cola.i;
 		while(aux->s != NULL){
@@ -58,4 +62,11 @@ void imprimirCola(Cola cola){
 		}
 		printf("%d \n", aux->e);
 	}
+}
+
+void vaciarCola(Cola *cola){
+	while(!esNulaCola(*cola)){
+		avanceCola(cola);
+	}
+	free(cola);
 }

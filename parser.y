@@ -13,36 +13,10 @@ void yyerror(char *s);
 int yylex(void);
 int yyparse(void);
 
-int ambito = 1;
-
+int ambito = 1; // Variable para guardar el ambito
 
 int separar_cadena(char *);
 extern FILE * yyin;
-
-#define ROJO "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define RESET "\x1b[0m"
-#define RESET_COLOR    "\x1b[0m"
-#define NEGRO_T        "\x1b[30m"
-#define NEGRO_F        "\x1b[40m"
-#define ROJO_T     "\x1b[31m"
-#define ROJO_F     "\x1b[41m"
-#define VERDE_T        "\x1b[32m"
-#define VERDE_F        "\x1b[42m"
-#define AMARILLO_T "\x1b[33m"
-#define    AMARILLO_F  "\x1b[43m"
-#define AZUL_T     "\x1b[34m"
-#define    AZUL_F      "\x1b[44m"
-#define MAGENTA_T  "\x1b[35m"
-#define MAGENTA_F  "\x1b[45m"
-#define CYAN_T     "\x1b[36m"
-#define CYAN_F     "\x1b[46m"
-#define BLANCO_T   "\x1b[37m"
-#define BLANCO_F   "\x1b[47m"
 
 TS_lista simbolos;
 TC_tabla_cuadrupla cuadrupla;
@@ -59,7 +33,6 @@ tipoPila pila;
 %union{
     char* ctype; /* Para las cadenas de caracteres (id, string, ...) */
     int itype; /* Para los números enteros y los booleanos */
-    int btype;
     float ftype; /* Para los números reales */   
     enum enum_tipo_celda celda;
     enum enum_literales literales;
@@ -102,7 +75,7 @@ tipoPila pila;
 %token TK_ENT_SAL
 %token TK_FACCION
 %token TK_FALGORITMO
-%token <btype>TK_FALSO
+%token TK_FALSO
 %token TK_FCONST
 %token TK_FFUNCION
 %token TK_FMIENTRAS
@@ -123,7 +96,7 @@ tipoPila pila;
 %token TK_TIPO 
 %token TK_TUPLA 
 %token TK_VAR 
-%token <btype>TK_VERDADERO
+%token TK_VERDADERO
 %token TK_REF
 %token TK_COMENTARIO
 
@@ -150,17 +123,17 @@ tipoPila pila;
 %left TK_Y
 %left TK_NO
 
- /* Operadores comparativos */
+/* Operadores comparativos */
 %left TK_OPERADOR_RELACIONAL TK_IGUAL
 
- /* Operadores aritmeticos */
+/* Operadores aritmeticos */
 %left TK_SUMA TK_RESTA
 %left TK_MOD
 %left TK_DIV
 %left TK_MULTIPLICACION TK_DIVISION
 %left UMINUS
 
- /* TYPE */
+/* TYPE */
 %type <itype> lista_id def_tipo M N it_cota
 %type <celda> tipo_base
 %type <literales_type> tipo_literal
@@ -180,7 +153,10 @@ definiciones_globales:  definicion_tipo definiciones_globales
                         ;
 definiciones_acciones_funciones:    definicion_accion definiciones_acciones_funciones 
                                     | definicion_funcion definiciones_acciones_funciones
-                                    | /* vacio */   {ambito = 1;}
+                                    | /* vacio */ 
+                                        {
+                                            ambito = 1;
+                                        }
                                     ;
 bloque: declaraciones instrucciones 
         ;      
@@ -207,11 +183,26 @@ def_tipo:   TK_TUPLA lista_campos TK_FTUPLA {}
             | TK_REF def_tipo {}
             | tipo_base {}
             ;
-tipo_base:  TK_ENTERO {$$ = TIPO_ENTERO;}
-            | TK_BOOLEANO {$$ = TIPO_BOOLEANO;}
-            | TK_CARACTER {$$ = TIPO_CARACTER;}
-            | TK_REAL {$$ = TIPO_REAL;}
-            | TK_CADENA {$$ = TIPO_CADENA;}
+tipo_base:  TK_ENTERO
+                {
+                    $$ = TIPO_ENTERO;
+                }
+            | TK_BOOLEANO
+                {
+                    $$ = TIPO_BOOLEANO;
+                }
+            | TK_CARACTER
+                {
+                    $$ = TIPO_CARACTER;
+                }
+            | TK_REAL
+                {
+                    $$ = TIPO_REAL;
+                }
+            | TK_CADENA
+                {
+                    $$ = TIPO_CADENA;
+                }
             ;
 expresion_tabla:    TK_LITERAL_ENTERO 
                     | TK_LITERAL_CARACTER
@@ -228,11 +219,31 @@ lista_definiciones_const:   TK_IDENTIFICADOR TK_IGUAL tipo_literal TK_COMPOSICIO
                                 }
                             | /* vacio */ 
                             ;
-tipo_literal:   TK_LITERAL_CADENA {$$.tipo = TIPO_CADENA; $$.valor.caracteres = $1.valor.caracteres;}
-                | TK_LITERAL_CARACTER {$$.tipo = TIPO_CARACTER; $$.valor.caracteres = $1.valor.caracteres;}
-                | TK_LITERAL_ENTERO {$$.tipo = TIPO_ENTERO; $$.valor.entero = $1.valor.entero;}
-                | TK_LITERAL_REAL {$$.tipo = TIPO_REAL; $$.valor.real = $1.valor.real;}
-                | TK_LITERAL_BOOLEANO {$$.tipo = TIPO_BOOLEANO; $$.valor.entero = $1.valor.entero;}
+tipo_literal:   TK_LITERAL_CADENA
+                    {
+                        $$.tipo = TIPO_CADENA;
+                        $$.valor.caracteres = $1.valor.caracteres;
+                    }
+                | TK_LITERAL_CARACTER
+                    {
+                        $$.tipo = TIPO_CARACTER;
+                        $$.valor.caracteres = $1.valor.caracteres;
+                    }
+                | TK_LITERAL_ENTERO
+                    {
+                        $$.tipo = TIPO_ENTERO;
+                        $$.valor.entero = $1.valor.entero;
+                    }
+                | TK_LITERAL_REAL
+                    {
+                        $$.tipo = TIPO_REAL;
+                        $$.valor.real = $1.valor.real;
+                    }
+                | TK_LITERAL_BOOLEANO
+                    {
+                        $$.tipo = TIPO_BOOLEANO;
+                        $$.valor.entero = $1.valor.entero;
+                    }
                 ;
 
 lista_definiciones_var:     lista_id TK_COMPOSICION_SECUENCIAL lista_definiciones_var
@@ -568,9 +579,17 @@ operando:   TK_IDENTIFICADOR
             | operando TK_REF {}
             ;   
 
-M:  /* Vacío */ {$$ = TC_elemento_siguiente(cuadrupla);};    
+M:  /* Vacío */ 
+        {
+            $$ = TC_elemento_siguiente(cuadrupla);
+        }
+    ;    
 
-N: /* Vacío */ {$$ = TC_elemento_siguiente(cuadrupla);};
+N:  /* Vacío */ 
+        {
+            $$ = TC_elemento_siguiente(cuadrupla);
+        }
+    ;
 
 /* INSTRUCCIONES */
 instrucciones:  instruccion TK_COMPOSICION_SECUENCIAL M instrucciones 
@@ -629,22 +648,26 @@ asignacion:     operando TK_ASIGNACION expresion
                             errores_parser(ERROR_TIPO);
                         }
                         nuevaCola(&$$.siguiente);
-                    };
+                    }
+                ;
 
 alternativa:    TK_SI expresion TK_ENTONCES M instrucciones N lista_opciones TK_FSI
-                {
-                    $$.siguiente = $5.siguiente;
-                    backpatch(&cuadrupla, &$2.TRUE, $4);
-                    backpatch(&cuadrupla, &$2.FALSE, $6);
-                }   
+                    {
+                        $$.siguiente = $5.siguiente;
+                        backpatch(&cuadrupla, &$2.TRUE, $4);
+                        backpatch(&cuadrupla, &$2.FALSE, $6);
+                    }   
                 ;
 lista_opciones: TK_SI_NO_SI expresion TK_ENTONCES M instrucciones N lista_opciones
-                {
-                    backpatch(&cuadrupla, &$2.TRUE, $4);
-                    backpatch(&cuadrupla, &$2.FALSE, $6);
-                    $$.siguiente = $5.siguiente;
-                }
-                | /* vacio */ {nuevaCola(&$$.siguiente);}
+                    {
+                        backpatch(&cuadrupla, &$2.TRUE, $4);
+                        backpatch(&cuadrupla, &$2.FALSE, $6);
+                        $$.siguiente = $5.siguiente;
+                    }
+                | /* vacio */ 
+                    {
+                        nuevaCola(&$$.siguiente);
+                    }
                 ;
 iteracion:  it_cota_fija
                 {
@@ -678,7 +701,7 @@ it_cota:    TK_PARA M asignacion TK_HASTA expresion TK_HACER
                     TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, -1));
                     $$ = $2;
                 }
-                ;
+            ;
 
 it_cota_fija:   M it_cota instrucciones TK_FPARA
                     {
@@ -756,7 +779,7 @@ dParForm:       TK_ENT lista_id
                     {
                         //Aqui añadimos a params los de tipo entrada
                         while(!esNulaPila(pila)){
-                            TS_insertar_param(&simbolos, TS_ACCION, ambito, cima(pila),1);
+                            TS_insertar_param(&simbolos, TS_ACCION, ambito, cima(pila), 1);
                             desapilar(&pila);
                         }
                     }
@@ -807,7 +830,7 @@ void errores_parser(int tipo_error){
 
 int main(int argc, char **argv){  
     if (argc > 1) {
-        yyin = fopen(argv[1],"r");
+        yyin = fopen(argv[1], "r");
     }
     nuevaPila(&pila);
     TS_nuevaLista(&simbolos);
@@ -817,9 +840,12 @@ int main(int argc, char **argv){
     TS_imprimir(simbolos);
     TC_imprimir(cuadrupla);
     CTD_imprimir(cuadrupla, simbolos);
+    // Como la TS es dinamica, hay que liberarla
+    TS_vaciar(&simbolos);
+    // Como la TC es estatica, no se libera
 }
 	
 void yyerror(char* s){
     //Poner aqui otro mensaje, tipo "error en la sintaxis en la linea nosecual"
-    printf(ROJO"PARSER ERROR: %s\n" RESET,s);
+    printf("PARSER ERROR: %s\n", s);
 }

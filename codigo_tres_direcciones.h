@@ -6,6 +6,7 @@
 #include "definiciones.h"
 #include <stdio.h>
 
+// Imprimir la tabla de cuádruplas en código en 3 direcciones
 void CTD_imprimir(TC_tabla_cuadrupla, TS_lista);
 
 #endif

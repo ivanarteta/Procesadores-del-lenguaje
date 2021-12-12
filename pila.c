@@ -11,9 +11,11 @@ void nuevaPila(tipoPila *pila){
 	*pila = NULL;
 }
 
-void apilar(tipoPila *pila, tipoElementoPila elemento){
+void apilar(tipoPila *pila, tElem elemento){
 	celdaPila *nuevo;
-	nuevo = (celdaPila*)malloc(sizeof(celdaPila));
+	if((nuevo = (celdaPila*)malloc(sizeof(celdaPila))) == NULL){
+		errorPila("No hay memoria para apilar");
+	}
 	nuevo->elem = elemento;
 	nuevo->sig = *pila;
 	*pila = nuevo;
@@ -25,16 +27,27 @@ void desapilar(tipoPila *pila){
 		aux = *pila;
 		*pila = (*pila)->sig;
 		free(aux);
+	}else{
+		errorPila("Desapilar en pila vacia");
 	}
 }
 
-tipoElementoPila cima(tipoPila pila){
-	if (!esNulaPila(pila))
+tElem cima(tipoPila pila){
+	if (!esNulaPila(pila)){
 		return (pila->elem);
-	else
+	}else{
+		errorPila("Primero en pila vacia");
 		return -1;
+	}
 }
 
 bool esNulaPila(tipoPila pila){
 	return pila == NULL;
+}
+
+void vaciarPila(tipoPila *pila){
+	while(!esNulaPila(*pila)){
+		desapilar(pila);
+	}
+	free(pila);
 }

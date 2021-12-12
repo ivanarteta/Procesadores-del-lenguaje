@@ -4,14 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ROJO "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define RESET "\x1b[0m"
-
 int contadorTemp = 1;
 int contadorConst = 1;
 
@@ -178,8 +170,6 @@ bool TS_esVacio(TS_lista lista){
     return (lista.inicio == NULL && lista.final == NULL);
 }
 
-
-
 char* mostrar_tipo(int tipo){
     switch (tipo){
         case TS_VAR:
@@ -202,8 +192,6 @@ char* mostrar_tipo(int tipo){
             return "Cadena";
         case TIPO_CARACTER:
             return "Caracter";
-        //case TIPO_LITERAL_ENTERO:
-            //return "Literal entero";
         default:
             return "-";
     }
@@ -215,7 +203,6 @@ void TS_mostrar_params(TS_celda celda){
         printf("Id: %d TipoPaso: %d \n", accion_funcion->params[i].id, accion_funcion->params[i].tipoPaso);
     }
 }
-
 
 void TS_imprimir(TS_lista lista){
 	printf("\n\n______________ Contenido de la tabla de simbolos _____________\n");
@@ -338,4 +325,17 @@ int TS_newConst(TS_lista *lista, int ambito){
     celda->ambito = ambito;
     contadorConst++;
     return TS_new(lista, celda, ambito);
+}
+
+void TS_vaciar(TS_lista *lista){
+    TS_celda *celda;
+    if(!TS_esVacio(*lista)){
+        while(lista->inicio != lista->final){
+            celda = (TS_celda*)malloc(sizeof(TS_celda));
+            celda = lista->inicio;
+            lista->inicio = lista->inicio->siguiente;
+            free(celda);
+        }
+        free(lista->inicio);
+    }
 }
