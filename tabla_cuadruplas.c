@@ -45,14 +45,14 @@ char *parse(int elemento){
     return strdup(aux);
 }
 
-int TC_elemento_siguiente(TC_tabla_cuadrupla *tabla){
-    return tabla->siguiente;
+int TC_elemento_siguiente(TC_tabla_cuadrupla tabla){
+    return tabla.siguiente;
 }
 
 void backpatch(TC_tabla_cuadrupla *tabla, Cola *cola, int quad){
     
     while(!esNulaCola(*cola)){
-        printf(CYAN"Modificar registro %d asignandole %d \n"RESET, primeroCola(*cola), quad);
+        //printf(CYAN"Modificar registro %d asignandole %d \n"RESET, primeroCola(*cola), quad);
         /*if(tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO
             || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MAYOR_O_IGUAL 
             || tabla->cuadruplas[primeroCola(*cola)].operador == OP_GOTO_MENOR
@@ -136,15 +136,15 @@ char* mostrar_operador(int operador){
     }
 }
 
-void TC_imprimir(TC_tabla_cuadrupla *tabla){
+void TC_imprimir(TC_tabla_cuadrupla tabla){
     printf("\n\n______________ Contenido de la tabla de cuadruplas _____________\n");
 	printf("%5s %25s %25s %25s %25s \n", "ID", "OPERADOR", "OPERANDO1", "OPERANDO2", "RESULTADO");
     /* Recorremos todos los elementos de la tabla */
-    for(int i=0; i < tabla->siguiente; i++){
+    for(int i=0; i < tabla.siguiente; i++){
         /*if((strcmp(mostrar_operador(tabla->cuadruplas[i].operador),"goto")==0) && (tabla->cuadruplas[i].resultado == -1)){
             tabla->cuadruplas[i].resultado = TC_elemento_siguiente(tabla);
         }*/
         //printf("%5d %25s %25d %25d %25d \n", i, mostrar_operador(tabla->cuadruplas[i].operador), tabla->cuadruplas[i].operando1, tabla->cuadruplas[i].operando2, tabla->cuadruplas[i].resultado);
-        printf("%5d %25s %25s %25s %25s \n", i, mostrar_operador(tabla->cuadruplas[i].operador), parse(tabla->cuadruplas[i].operando1), parse(tabla->cuadruplas[i].operando2), parse(tabla->cuadruplas[i].resultado));
+        printf("%5d %25s %25s %25s %25s \n", i, mostrar_operador(tabla.cuadruplas[i].operador), parse(tabla.cuadruplas[i].operando1), parse(tabla.cuadruplas[i].operando2), parse(tabla.cuadruplas[i].resultado));
     }
 }

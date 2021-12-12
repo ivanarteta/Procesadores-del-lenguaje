@@ -47,11 +47,11 @@ tElem primeroCola(Cola c){
 	return c.i->e;
 }
 
-void imprimirCola(Cola *cola){
+void imprimirCola(Cola cola){
 	//printf("Printeamos la cola \n");
-	if (!esNulaCola(*cola)){
+	if (!esNulaCola(cola)){
 		NodoDeCola *aux;
-		aux = cola->i;
+		aux = cola.i;
 		while(aux->s != NULL){
 			printf("%d ", aux->e);
 			aux = aux->s;

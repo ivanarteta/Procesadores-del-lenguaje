@@ -56,12 +56,27 @@ lista_id:   TK_IDENTIFICADOR TK_SEPARADOR lista_id
 Para introducir las expresiones booleanas, hemos tenido que redefinir algunas funciones tal y como aparecían en los apuntes. Es decir, en algunos puntos concretos hemos tenido que introducir una nueva variable M.
 Por lo que partiendo de nuestra gramática original:
 ```
-//CODIGO ORIGINAL
+expresion_booleana: expresion_booleana TK_Y expresion_booleana
+                    | expresion_booleana TK_O expresion_booleana
+                    | TK_NO expresion_booleana
+                    | TK_LITERAL_BOOLEANO
+                    | expresion_aritmetica TK_OPERADOR_RELACIONAL expresion_aritmetica
+                    | expresion_aritmetica TK_IGUAL expresion_aritmetica
+                    | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS
+                    ;
 ```
-hemos modificado la gramática añadiendole la variable M, de forma que la nueva gramática sea la siguiente:
+Hemos modificado la gramática añadiendole la variable M, de forma que la nueva gramática sea la siguiente:
 ```
-//NUEVA GRAMÁTICA
+expresion_booleana: expresion_booleana TK_Y M expresion_booleana
+                    | expresion_booleana TK_O M expresion_booleana
+                    | TK_NO expresion_booleana
+                    | TK_LITERAL_BOOLEANO
+                    | expresion_aritmetica TK_OPERADOR_RELACIONAL expresion_aritmetica
+                    | expresion_aritmetica TK_IGUAL expresion_aritmetica
+                    | TK_INICIO_PARENTESIS expresion_booleana TK_FIN_PARENTESIS
+                    ;
 ```
+Esta variable M se utilizará también en otros sitios, como por ejemplo los bucles. Para indicar el lugar a donde se realiza el salto.
 
 ### Campos de la TC
 En un principio teniamos los 4 campos (operador, operando1, operando2 y resultado) como enteros ya que se supone que nos indican que elemento de la TS tiene el valor en tiempo de ejecución. 
@@ -88,8 +103,7 @@ tipo_literal:   TK_LITERAL_CADENA
                 | TK_LITERAL_CARACTER 
                 | TK_LITERAL_ENTERO 
                 | TK_LITERAL_REAL 
-                | TK_VERDADERO 
-                | TK_FALSO 
+                | TK_LITERAL_BOOLEANO
                 ;
 ```
 ### Introducir los datos del bucle PARA en la TC
@@ -99,9 +113,27 @@ it_cota_fija:   TK_PARA M TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expr
 ```
 El problema es que primero se nos añadían a la TC los campos de las instrucciones y posteriormente el de la asignacion del para. Por lo que para controlar eso y que primero se añadan los de la asignacion y por último se añadan los de las instrucciones, hemos modificado la gramática, de forma que quede tal que:
 ```
-it_cota_fija:   it_cota M instrucciones TK_FPARA
+it_cota_fija:   M it_cota instrucciones TK_FPARA
 
-it_cota: TK_PARA TK_IDENTIFICADOR TK_ASIGNACION expresion TK_HASTA expresion TK_HACER
+it_cota: TK_PARA M asignacion TK_HASTA expresion TK_HACER
 
 ```
+De esta forma el código queda más reducido y el funcionamiento es el esperado.
 
+### Introducir acciones y funciones
+Hemos introducido acciones y funciones sin meternos en la llamada a las mismas. El resultado es que metemos los identificadores de los parámetros de entrada/salida junto su tipo de paso en la TS. De forma que el identificador es la posición en la TS del parámetro que se pasa y el tipo de paso es un entero con los siguientes valores:
+
+---
+1 | Parámetro de entrada
+
+---
+2 | Parámetro de salida
+
+---
+3 | Parmámetro de entrada/salida
+
+---
+4 | Parámetro devuelto por una función
+
+---
+El código de dentro de las acciones y funciones (los bloques), se leen y se añaden a las tablas igual que el de un algoritmo normal, salvo las partes de input y output, que se opera con ellas con la información de la TS referente a su id y tipo de paso. Los inputs y outputs que se ven son los del algoritmo.

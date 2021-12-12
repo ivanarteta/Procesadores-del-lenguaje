@@ -1,4 +1,7 @@
 algoritmo intercambio;
+    const 
+		c = 4;
+	fconst
     ent a, b: entero;
     sal a, b: entero;
 {Prec: a= A AND b = B}

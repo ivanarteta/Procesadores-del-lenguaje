@@ -6,6 +6,6 @@
 #include "definiciones.h"
 #include <stdio.h>
 
-void CTD_imprimir(TC_tabla_cuadrupla *, TS_lista *);
+void CTD_imprimir(TC_tabla_cuadrupla, TS_lista);
 
 #endif

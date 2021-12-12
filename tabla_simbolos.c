@@ -26,14 +26,14 @@ int TS_insertar(TS_lista *lista, char* nombre, int ambito){
     celda = (TS_celda*)malloc(sizeof(TS_celda));
     celda->nombre = nombre;
     celda->ambito = ambito;
-    if(TS_esVacio(lista)){
+    if(TS_esVacio(*lista)){
         celda->siguiente = NULL;
         lista->inicio = celda;
         lista->final = celda;
         celda->id = lista->contador;
         lista->contador++;
     }else{
-        if(!TS_buscar(lista, nombre, ambito)){
+        if(!TS_buscar(*lista, nombre, ambito)){
             celda->siguiente = NULL;
             celda->id = lista->contador;
             lista->contador++;
@@ -44,15 +44,15 @@ int TS_insertar(TS_lista *lista, char* nombre, int ambito){
             aux->siguiente = celda;
             lista->final = celda;       
         }else{
-            return TS_buscar_id(lista, nombre, ambito);
+            return TS_buscar_id(*lista, nombre, ambito);
         }
     }
     return celda->id;
 }
 
-int TS_buscar_id(TS_lista *lista, char * nombre, int ambito){ 
+int TS_buscar_id(TS_lista lista, char * nombre, int ambito){ 
     TS_celda *aux;
-    aux = lista->inicio;
+    aux = lista.inicio;
     while(aux->siguiente != NULL){
         if(((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) && aux->ambito == ambito){
             return aux->id;
@@ -112,7 +112,6 @@ void TS_modificar_valor_cte(TS_lista *lista, int id, Constante_valor valor){
 }
 
 void TS_insertar_param(TS_lista *lista, int tipoSimbolo, int ambito, int id, int tipoPaso){
-    printf("Estoy dentro de insertar param");
     TS_celda *aux;
     aux = lista->inicio;
     while(aux->siguiente != NULL && aux->tipo_simbolo != tipoSimbolo && aux->ambito != ambito){
@@ -130,14 +129,14 @@ void TS_insertar_param(TS_lista *lista, int tipoSimbolo, int ambito, int id, int
 }
 
 int TS_new(TS_lista *lista, TS_celda *celda, int ambito){
-    if(TS_esVacio(lista)){
+    if(TS_esVacio(*lista)){
         celda->siguiente = NULL;
         celda->id = lista->contador;
         lista->contador++;
         lista->inicio = celda;
         lista->final = celda;
     }else{
-        if(!TS_buscar(lista, celda->nombre, ambito)){
+        if(!TS_buscar(*lista, celda->nombre, ambito)){
             celda->siguiente = NULL;
             celda->id = lista->contador;
             lista->contador++;
@@ -163,9 +162,9 @@ int TS_newtempt(TS_lista *lista, int ambito){
     return TS_new(lista, celda, ambito);
 }
 
-bool TS_buscar(TS_lista *lista, char * nombre, int ambito){ 
+bool TS_buscar(TS_lista lista, char * nombre, int ambito){ 
     TS_celda *aux;
-    aux = lista->inicio;
+    aux = lista.inicio;
     while(aux->siguiente != NULL){
         if(((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) && aux->ambito == ambito){
             return true;
@@ -175,8 +174,8 @@ bool TS_buscar(TS_lista *lista, char * nombre, int ambito){
     return (((aux->nombre == nombre) || !strcmp(aux->nombre, nombre)) && aux->ambito == ambito)? true : false;
 }
 
-bool TS_esVacio(TS_lista *lista){
-    return (lista->inicio == NULL && lista->final == NULL);
+bool TS_esVacio(TS_lista lista){
+    return (lista.inicio == NULL && lista.final == NULL);
 }
 
 
@@ -210,50 +209,50 @@ char* mostrar_tipo(int tipo){
     }
 }
 
-void TS_mostrar_params(TS_celda *celda){
-    AccionFuncion* accion_funcion = (AccionFuncion*)celda->otros;
+void TS_mostrar_params(TS_celda celda){
+    AccionFuncion* accion_funcion = (AccionFuncion*)celda.otros;
     for(int i=0; i<accion_funcion->contador; i++){
         printf("Id: %d TipoPaso: %d \n", accion_funcion->params[i].id, accion_funcion->params[i].tipoPaso);
     }
 }
 
 
-void TS_imprimir(TS_lista *lista){
+void TS_imprimir(TS_lista lista){
 	printf("\n\n______________ Contenido de la tabla de simbolos _____________\n");
 	printf("%5s %10s %10s %10s %10s %10s \n", "ID",  "NOMBRE", "TIPO", "AMBITO", "SIMBOLO", "VALOR");
     /* Recorremos todos los elementos de la tabla */
     TS_celda *aux;
-    aux = lista->inicio; 
+    aux = lista.inicio; 
     while (aux->siguiente != NULL){
         if(aux->tipo_simbolo == TS_CONSTANTE){
-            TS_imprimir_cte(aux);
+            TS_imprimir_cte(*aux);
         }else if(aux->tipo_simbolo == TS_VAR){
             printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "VAR");
         }else if(aux->tipo_simbolo == TS_ACCION){
-            TS_mostrar_params(aux);
+            TS_mostrar_params(*aux);
             printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "ACCION");
         }else if(aux->tipo_simbolo == TS_FUNCION){
-            TS_mostrar_params(aux);
+            TS_mostrar_params(*aux);
             printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "FUNCION");
         }
         aux = aux->siguiente;
     }
     if(aux->tipo_simbolo == TS_CONSTANTE){
-        TS_imprimir_cte(aux);
+        TS_imprimir_cte(*aux);
     }else if(aux->tipo_simbolo == TS_VAR){
         printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "VAR");
     }else if(aux->tipo_simbolo == TS_ACCION){
-        TS_mostrar_params(aux);
+        TS_mostrar_params(*aux);
         printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "ACCION");
     }else if(aux->tipo_simbolo == TS_FUNCION){
-        TS_mostrar_params(aux);
+        TS_mostrar_params(*aux);
         printf("%5d %10s %10s %10d %10s \n",aux->id, aux->nombre, mostrar_tipo(aux->tipo), aux->ambito, "FUNCION");
     }
 }
 
-TS_celda* TS_devolver_celda(TS_lista *lista, int id){
+TS_celda* TS_devolver_celda(TS_lista lista, int id){
     TS_celda *aux;
-    aux = lista->inicio; 
+    aux = lista.inicio; 
     while (aux->siguiente != NULL){
         if(aux->id == id){
             return aux;
@@ -266,28 +265,28 @@ TS_celda* TS_devolver_celda(TS_lista *lista, int id){
     return NULL;
 }
 
-void TS_imprimir_cte(TS_celda *celda){
-    Constante* cte = (Constante*)celda->otros;
-    switch (celda->tipo){
+void TS_imprimir_cte(TS_celda celda){
+    Constante* cte = (Constante*)celda.otros;
+    switch (celda.tipo){
         case TIPO_ENTERO:
         case TIPO_BOOLEANO:
-            printf("%5d %10s %10s %10d %10s %10d \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), celda->ambito, "CONST", cte->valor.entero);
+            printf("%5d %10s %10s %10d %10s %10d \n",celda.id, celda.nombre, mostrar_tipo(celda.tipo), celda.ambito, "CONST", cte->valor.entero);
             break;
         case TIPO_REAL:
-            printf("%5d %10s %10s %10d %10s %10f \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), celda->ambito, "CONST", cte->valor.real);
+            printf("%5d %10s %10s %10d %10s %10f \n",celda.id, celda.nombre, mostrar_tipo(celda.tipo), celda.ambito, "CONST", cte->valor.real);
             break;
         case TIPO_CARACTER:
         case TIPO_CADENA:
-            printf("%5d %10s %10s %10d %10s %10s \n",celda->id, celda->nombre, mostrar_tipo(celda->tipo), celda->ambito, "CONST", cte->valor.caracteres);
+            printf("%5d %10s %10s %10d %10s %10s \n",celda.id, celda.nombre, mostrar_tipo(celda.tipo), celda.ambito, "CONST", cte->valor.caracteres);
             break;
         default:
             break;
     }  
 }
 
-int TS_consulta_tipo_simbolo(TS_lista *lista, int id){
+int TS_consulta_tipo_simbolo(TS_lista lista, int id){
     TS_celda *aux;
-    aux = lista->inicio;
+    aux = lista.inicio;
     while(aux->siguiente != NULL){
         if(aux->id == id){
             return aux->tipo_simbolo;
@@ -300,9 +299,9 @@ int TS_consulta_tipo_simbolo(TS_lista *lista, int id){
     return -1;
 }
 
-int TS_consulta_tipo(TS_lista *lista, int id){
+int TS_consulta_tipo(TS_lista lista, int id){
     TS_celda *aux;
-    aux = lista->inicio;
+    aux = lista.inicio;
     while(aux->siguiente != NULL){
         if(aux->id == id){
             return aux->tipo;
@@ -315,9 +314,9 @@ int TS_consulta_tipo(TS_lista *lista, int id){
     return -1;
 }
 
-char* TS_buscar_nombre(TS_lista *lista, int id){
+char* TS_buscar_nombre(TS_lista lista, int id){
     TS_celda *aux;
-    aux = lista->inicio;
+    aux = lista.inicio;
     while(aux->siguiente != NULL){
         if(aux->id == id){
             return aux->nombre;
