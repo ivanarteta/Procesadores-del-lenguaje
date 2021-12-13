@@ -1,27 +1,16 @@
-algoritmo megaEjemplo;
-    const 
-        a = 156;
-        b = 159.65;
-        c = 'Esto es una cadena';
-        d = "c";
-        e = verdadero;
-    fconst 
-    ent f, g: entero; h,i: real;
-    sal f, g: entero;
-{Precondicion}
-    var 
-        x,z: entero;
-        mcd:entero;
-        mcm: real;
+algoritmo hastaDondePuedoLlegar;
+    ent m, r: entero;
+{Prec: m = M AND M >= 1}
+    var
+        q, p: entero;
     fvar
-    x:= a;
-    z:= a;
-    mientras 1 <> z hacer
-        si x > z -> x := x-z
-        [] x < z -> z := z-x
-        fsi
-    fmientras;
-    mcd:= x;
-    mcm := (a*b) div mcd
-{Postcondicion}
+    r:= 0;
+    q:= 1;
+    p:= 2;
+    mientras (p+q) <= m hacer
+        q:= q + p;
+        p:= p * 2;
+        r:= r + 1
+    fmientras
+{Post: SUMATORIO[r, k=0] 2^k <= m < SUMATORIO[r+1, k=0] 2^k AND m = M}
 falgoritmo

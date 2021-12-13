@@ -1,14 +1,21 @@
-algoritmo factorialInferior;
-    ent x, n: entero;
-{Prec: x = X AND X > 0}
+algoritmo otraSumaMasDeFactoriales;
+    ent x, n, s: entero;
+{Prec1: x = X AND X >= 1}
     var
-        f: entero;
+        j, f: entero;
     fvar
     n:= 0;
     f:= 1;
-    mientras f <= x hacer
-        f:= f * (n + 2);
+    mientras (f * (n+1)) <= x hacer
+        f:= f * (n+1);
         n:= n + 1
+    fmientras;
+    j:= n;
+    s:= f;
+    mientras j <> 0 hacer
+        f:= f div j;
+        s:= s + f;
+        j:= j - 1
     fmientras
-{Post: x = X AND n! <= x < (n+1)!}
+{Post2: s = SUMATORIO[n, i=1] i! AND n! <= x < (n+1)! AND x = X}
 falgoritmo

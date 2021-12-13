@@ -1,16 +1,16 @@
-algoritmo fibonacciInferior;
-    ent n, i: entero;
-{Prec: n = N AND N > 0}
+algoritmo suma;
+    ent n, r: entero;
+{Prec: n = N AND N >= 1}
     var
-        f, g: entero;
+        c, j: entero;
     fvar
-    f:= 1;
-    g:= 1;
-    i:= 0;
-    mientras g <= n hacer
-        g:= g + f;
-        f:= g - f;
-        i:= i + 1
+    j:= 0;
+    c:= 1;
+    r:= 1;
+    mientras j <> n hacer
+        c:= (c * (n - j)) div (j + 1);
+        r:= r + c;
+        j := j + 1
     fmientras
-{Post: n = N AND fib(i) <= N <= fib(i+1)}
+{Post: n = N AND r= SUMATORIO[n, i=0] C(n,i) }
 falgoritmo
