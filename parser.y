@@ -456,19 +456,30 @@ expresion_aritmetica:   expresion_aritmetica TK_SUMA expresion_aritmetica
                             }
                         | TK_LITERAL_ENTERO 
                             {
-                                int nueva = TS_newConst(&simbolos, ambito);
-                                TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
-                                TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
-                                $$.tipo = TIPO_ENTERO;
-                                $$.sitio = nueva;
+                                //printf("Ambito: %d\n", ambito);
+                                int id = TS_buscar_const(simbolos, ambito, TIPO_ENTERO, TS_CONSTANTE, $1.valor);
+                                if(id == -1){
+                                    int nueva = TS_newConst(&simbolos, ambito);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
+                                    TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
+                                    $$.sitio = nueva;
+                                }else{
+                                    $$.sitio = id;
+                                }
+                                $$.tipo = TIPO_ENTERO;  
                             }
                         | TK_LITERAL_REAL 
                             {
-                                int nueva = TS_newConst(&simbolos, ambito);
-                                TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_CONSTANTE);
-                                TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
-                                $$.tipo = TIPO_REAL;
+                                int id = TS_buscar_const(simbolos, ambito, TIPO_REAL, TS_CONSTANTE, $1.valor);
+                                if(id == -1){
+                                    int nueva = TS_newConst(&simbolos, ambito);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_REAL, TS_CONSTANTE);
+                                    TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
                                 $$.sitio = nueva;
+                                }else{
+                                    $$.sitio = id;
+                                }
+                                $$.tipo = TIPO_REAL;
                             }
                         ;
 
@@ -498,15 +509,22 @@ expresion_booleana:     expresion_booleana TK_Y M expresion_booleana
                             }
                         | TK_LITERAL_BOOLEANO
                             {
-                                int nueva = TS_newConst(&simbolos, ambito);
-                                TS_modificar_tipo(&simbolos, nueva, TIPO_BOOLEANO, TS_CONSTANTE);
-                                TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
+                                printf("Ambito: %d\n", ambito);
+
+                                int id = TS_buscar_const(simbolos, ambito, TIPO_BOOLEANO, TS_CONSTANTE, $1.valor);
+                                if(id == -1){
+                                    int nueva = TS_newConst(&simbolos, ambito);
+                                    TS_modificar_tipo(&simbolos, nueva, TIPO_BOOLEANO, TS_CONSTANTE);
+                                    TS_modificar_valor_cte(&simbolos, nueva, $1.valor);
+                                    $$.sitio = nueva;
+                                }else{
+                                    $$.sitio = id;
+                                } 
                                 int nextquad = TC_elemento_siguiente(cuadrupla);
                                 nuevaCola(&$$.TRUE);
                                 nuevaCola(&$$.FALSE);
                                 pideTurnoCola(&$$.TRUE, nextquad);
                                 pideTurnoCola(&$$.FALSE, nextquad+1);
-                                $$.sitio = nueva;
                                 $$.tipo = TIPO_BOOLEANO;
                             }
                         | expresion_aritmetica TK_OPERADOR_RELACIONAL expresion_aritmetica
@@ -711,11 +729,24 @@ it_cota_fija:   M it_cota instrucciones TK_FPARA
                         }
 
                         //Creamos una constante con el valor 1
-                        int nueva = TS_newConst(&simbolos, ambito);
-                        TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
-                        Constante_valor *valor = (Constante_valor*)malloc(sizeof(Constante_valor));
-                        valor->entero = 1;
-                        TS_modificar_valor_cte(&simbolos, nueva, *valor);
+                        Constante_valor valor;
+                        valor.entero = 1;
+                        int nueva;
+                        int id = TS_buscar_const(simbolos, ambito, TIPO_ENTERO, TS_CONSTANTE, valor);
+                        if(id == -1){
+                            nueva = TS_newConst(&simbolos, ambito);
+                            TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
+                            TS_modificar_valor_cte(&simbolos, nueva, valor);
+                        }else{
+                            nueva = id;
+                        }    
+
+
+                        //int nueva = TS_newConst(&simbolos, ambito);
+                        //TS_modificar_tipo(&simbolos, nueva, TIPO_ENTERO, TS_CONSTANTE);
+                        
+                        
+                        //TS_modificar_valor_cte(&simbolos, nueva, *valor);
 
                         TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_SUMA, $2, nueva, $2));
                         TC_insertar(&cuadrupla, TC_crear_cuadrupla(OP_GOTO, -1, -1, $1+1));

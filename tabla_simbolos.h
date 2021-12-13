@@ -103,4 +103,6 @@ void TS_modificar_valor_cte(TS_lista *, int, Constante_valor);
 // Imprime una constante
 void TS_imprimir_cte(TS_celda);
 
+int TS_buscar_const(TS_lista, int, int, int, Constante_valor);
+
 #endif

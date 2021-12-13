@@ -339,3 +339,54 @@ void TS_vaciar(TS_lista *lista){
         free(lista->inicio);
     }
 }
+
+int TS_buscar_const(TS_lista lista, int ambito, int tipo, int tipoSimbolo, Constante_valor valor){
+    TS_celda *aux;
+    aux = lista.inicio;
+    while(aux->siguiente != NULL){
+        if(aux->ambito == ambito && aux->tipo == tipo && aux->tipo_simbolo == tipoSimbolo){
+            Constante *constante = aux->otros;
+            switch (aux->tipo){
+                case TIPO_BOOLEANO:
+                case TIPO_ENTERO:
+                    if(constante->valor.entero == valor.entero)
+                        return aux->id;
+                    break;
+                case TIPO_REAL:
+                    if(constante->valor.real == valor.real)
+                        return aux->id;
+                    break;
+                case TIPO_CARACTER:
+                case TIPO_CADENA:
+                    if(constante->valor.caracteres == valor.caracteres)
+                        return aux->id;
+                    break;
+                default:
+                    break;
+            }
+        }
+        aux = aux->siguiente; 
+    }
+    if(aux->ambito == ambito && aux->tipo == tipo && aux->tipo_simbolo == tipoSimbolo){
+        Constante *constante = aux->otros;
+        switch (aux->tipo){
+            case TIPO_BOOLEANO:
+            case TIPO_ENTERO:
+                if(constante->valor.entero == valor.entero)
+                    return aux->id;
+                break;
+            case TIPO_REAL:
+                if(constante->valor.real == valor.real)
+                    return aux->id;
+                break;
+            case TIPO_CARACTER:
+            case TIPO_CADENA:
+                if(constante->valor.caracteres == valor.caracteres)
+                    return aux->id;
+                break;
+            default:
+                break;
+        }
+    }
+    return -1;
+}
