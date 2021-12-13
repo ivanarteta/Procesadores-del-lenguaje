@@ -59,9 +59,9 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
                     Constante* cte = (Constante*)celda->otros;
                     if(celda->tipo == TIPO_ENTERO){
-                        printf("%d %s := %d + %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %d + %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }else if(celda->tipo == TIPO_REAL){
-                        printf("%d %s := %f + %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %f + %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }
                 }else if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando2) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando2);
@@ -91,9 +91,9 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
                     Constante* cte = (Constante*)celda->otros;
                     if(celda->tipo == TIPO_ENTERO){
-                        printf("%d %s := %d - %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %d - %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }else if(celda->tipo == TIPO_REAL){
-                        printf("%d %s := %f - %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %f - %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }
                 }else if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando2) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando2);
@@ -123,9 +123,9 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
                     Constante* cte = (Constante*)celda->otros;
                     if(celda->tipo == TIPO_ENTERO){
-                        printf("%d %s := %d * %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %d * %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }else if(celda->tipo == TIPO_REAL){
-                        printf("%d %s := %f * %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %f * %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }
                 }else if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando2) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando2);
@@ -155,9 +155,9 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
                     Constante* cte = (Constante*)celda->otros;
                     if(celda->tipo == TIPO_ENTERO){
-                        printf("%d %s := %d / %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %d / %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }else if(celda->tipo == TIPO_REAL){
-                        printf("%d %s := %f / %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %f / %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }
                 }else if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando2) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando2);
@@ -187,9 +187,9 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
                     Constante* cte = (Constante*)celda->otros;
                     if(celda->tipo == TIPO_ENTERO){
-                        printf("%d %s := %d mod %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %d mod %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }else if(celda->tipo == TIPO_REAL){
-                        printf("%d %s := %f mod %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %f mod %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }
                 }else if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando2) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando2);
@@ -219,9 +219,9 @@ void CTD_imprimir(TC_tabla_cuadrupla cuadrupla, TS_lista simbolos){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando1);
                     Constante* cte = (Constante*)celda->otros;
                     if(celda->tipo == TIPO_ENTERO){
-                        printf("%d %s := %d div %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %d div %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.entero, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }else if(celda->tipo == TIPO_REAL){
-                        printf("%d %s := %f div %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando1));
+                        printf("%d %s := %f div %s \n", cont, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].resultado), cte->valor.real, TS_buscar_nombre(simbolos, cuadrupla.cuadruplas[i].operando2));
                     }
                 }else if(TS_consulta_tipo_simbolo(simbolos, cuadrupla.cuadruplas[i].operando2) == TS_CONSTANTE){
                     TS_celda* celda = TS_devolver_celda(simbolos, cuadrupla.cuadruplas[i].operando2);
