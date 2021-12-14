@@ -137,3 +137,5 @@ Hemos introducido acciones y funciones sin meternos en la llamada a las mismas. 
 
 ---
 El código de dentro de las acciones y funciones (los bloques), se leen y se añaden a las tablas igual que el de un algoritmo normal, salvo las partes de input y output, que se opera con ellas con la información de la TS referente a su id y tipo de paso. Los inputs y outputs que se ven son los del algoritmo.
+
+Para comprobar la ejecución en acciones y funciones, ejecutar ./a.out Programas/programa20.alg en el que hay implementada una accion y una funcion.
